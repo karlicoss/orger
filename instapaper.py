@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+from argparse import ArgumentParser
 import logging
 from typing import NamedTuple, List, Any, Iterable, Tuple, Optional
 
 from my.instapaper import get_pages # type: ignore
 
 from kython import group_by_key
+from kython import atomic_write
 from kython.klogging import setup_logzero
 from kython.org_tools import as_org_entry as as_org, link as org_link
 
@@ -40,7 +42,7 @@ def make_tree(pages) -> OrgTree:
             level=0,
             created=bm.dt,
             inline_created=True,
-            heading=f'{org_link(title="ip link", url=bm.instapaper_link)}   {org_link(title=bm.title, url=bm.url)}',
+            heading=f'{org_link(title="ip", url=bm.instapaper_link)}   {org_link(title=bm.title, url=bm.url)}',
             # TODO make sure as_org figures out the date
         ).strip()
         # TODO autostrip could be an option for formatter
@@ -52,7 +54,7 @@ def make_tree(pages) -> OrgTree:
                 level=0,
                 created=hl.dt,
                 inline_created=True,
-                heading=org_link(title="ip link", url=bm.instapaper_link),
+                heading=org_link(title="ip", url=bm.instapaper_link),
                 body=hl.text,
             ).strip()
             hls_org.append(OrgTree(item=hl_org))
@@ -64,6 +66,7 @@ def make_tree(pages) -> OrgTree:
         # TODO reverse order? not sure...
         # TODO unique id meaning that instapaper manages the item?
         # TODO spacing top level items could be option of dumper as well?
+        # TODO better error handling, cooperate with org_tools
 
     return OrgTree(
         item=file_header,
@@ -82,6 +85,8 @@ def pick_heading(root: OrgTree, text: str) -> Optional[OrgTree]:
 
 # TODO FIXME run ruci against it?
 # TODO FIXME careful, sanitize stars somehow.... perhaps replace?
+# TODO FIXME need to make sure it's excluded from wereyouhere... otherwise too many duplications and unncessary links?
+# TODO hmm. wereyouhere could explore automatically, perhaps even via porg?
 # make it a feature of renderer?
 # although just need to make one space tabulation, that'd solve all my problems
 def test():
@@ -95,8 +100,13 @@ def main():
     logger = get_logger()
     setup_logzero(logger, level=logging.DEBUG)
 
+    p = ArgumentParser()
+    p.add_argument('--to', default='instapaper.org')
+    args = p.parse_args()
+
     org_tree = make_tree(get_pages())
-    print(org_tree.render())
+    with atomic_write(args.to, 'w', overwrite=True) as fo:
+        fo.write(org_tree.render())
 
 
 if __name__ == '__main__':
