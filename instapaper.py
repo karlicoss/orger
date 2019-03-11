@@ -17,12 +17,28 @@ def main():
     for page in get_pages():
         bm = page.bookmark
         print(as_org(
-            heading=bm.title,
             todo=False,
-            # TODO created??
+            level=1,
+            created=bm.dt,
+            inline_created=True,
+            heading=f'{bm.title} {bm.url}',
+            body=bm.instapaper_link,
             # TODO make sure as_org figures out the date
-            # TODO inline created
-        ))
+        ).strip())
+        # TODO autostrip could be an option for formatter
+
+        for hl in page.highlights:
+            print(as_org(
+                todo=False,
+                level=2,
+                created=hl.dt,
+                inline_created=True,
+                heading=hl.text, # TODO hmmm, what if it's multiple lines?
+                body=hl.instapaper_link,
+            ).strip())
+        # TODO could put links in org mode links? so not as much stuff is displayed?
+        # TODO reverse order? not sure...
+        # TODO unique id meaning that instapaper manages the item?
     # for k, gr in groups.items():
     #     ss = sorted(gr, key=lambda h: h.dt)
     #     rep = ss[0] # TODO repr should be bookmark?
