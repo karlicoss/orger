@@ -1,5 +1,5 @@
 from typing import NamedTuple, Sequence, Any, List, Tuple, Optional
-from kython.org_tools import as_org_entry as as_org, link as org_link
+from kython.org_tools import as_org_entry
 
 # TODO FIXME compare before saving?
 
@@ -28,3 +28,13 @@ def pick_heading(root: OrgTree, text: str) -> Optional[OrgTree]:
             return chr
     else:
         return None
+
+
+# TODO hacky...
+def as_org(**kwargs):
+    return as_org_entry(
+        todo=False,
+        level=0,
+        inline_created=True,
+        **kwargs,
+    ).strip()
