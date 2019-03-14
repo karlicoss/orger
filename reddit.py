@@ -10,7 +10,6 @@ from org_utils import OrgTree, as_org
 
 # TODO mm, yeah, perhaps favoriting date makes a bit more sense...
 # TODO show deleted somehow
-# TODO sanitize bodies
 class RedditView(OrgView):
     def make_tree(self) -> OrgTree:
         return OrgTree(
@@ -18,7 +17,7 @@ class RedditView(OrgView):
             [
                 OrgTree(as_org(
                     created=f.dt,
-                    heading=org_link(title=f.title, url=f.url),
+                    heading=org_link(title=f.title, url=f.url) + f' /r/{f.subreddit}',
                     body=f.text,
                 )) for f in get_saves(all_=False)
             ]
