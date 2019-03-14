@@ -8,6 +8,7 @@ from kython.org_tools import link as org_link
 from org_view import OrgView
 from org_utils import OrgTree, as_org
 
+
 class HypView(OrgView):
     def make_tree(self) -> OrgTree:
         return OrgTree(
