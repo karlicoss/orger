@@ -32,3 +32,11 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# ok, so far:
+# adding -- tracked via json state; kinda ok.
+# hmmm! just keep reddit bookmarks intact! whatever, serously!
+# one reason for using reddit ('native') favoriting is that you get more metadata for free
+# hypothesis and instapaper views do not update state and clear the file before writing
+# reddit view tracks the state and appends only
