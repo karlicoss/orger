@@ -55,13 +55,18 @@ class OrgViewOverwrite(OrgView):
         args = p.parse_args()
         self.run(args.to)
 
-    def run(self, to: Path) -> None:
-        # TODO make it read only??
+
+    def make_tree(self) -> OrgTree:
         items = [p[1] for p in self.get_items()] # we don't need keys here
-        org_tree = OrgTree(
+        return  OrgTree(
             self.file_header,
             items,
         )
+
+
+    def run(self, to: Path) -> None:
+        # TODO make it read only??
+        org_tree = self.make_tree()
         rtree = org_tree.render()
         with atomic_write(str(to), mode='w', overwrite=True) as fo:
             fo.write(rtree)
