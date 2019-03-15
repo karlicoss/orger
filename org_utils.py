@@ -15,8 +15,10 @@ class OrgTree(NamedTuple):
             res.extend((l + 1, x) for l, x in ch.render_hier())
         return res
 
-    def render(self) -> str:
-        return '\n'.join('*' * l + (' ' if l > 0 else '') + x for l, x in self.render_hier())
+    def render(self, level=0) -> str:
+        rh = self.render_hier()
+        rh = [(level + l, x) for l, x in rh]
+        return '\n'.join('*' * l + (' ' if l > 0 else '') + x for l, x in rh)
 
 
 def pick_heading(root: OrgTree, text: str) -> Optional[OrgTree]:
