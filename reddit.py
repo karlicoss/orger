@@ -43,7 +43,7 @@ class RedditView(OrgViewAppend):
                     heading=('' if is_alive(s.url) else '[#A] *DEAD* ') + org_link(title=s.title, url=s.url) + f' /r/{s.subreddit}',
                     body=s.text,
             ))
-        ) for s in get_saves(all_=True)]
+        ) for s in get_saves(all_=True, parallel=False)]
 
 
 def main():
