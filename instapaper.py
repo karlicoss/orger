@@ -38,7 +38,6 @@ class IpView(OrgViewOverwrite):
 
 
 # TODO FIXME run ruci against it?
-# TODO FIXME careful, sanitize stars somehow.... perhaps replace?
 # TODO FIXME need to make sure it's excluded from wereyouhere... otherwise too many duplications and unncessary links?
 # TODO hmm. wereyouhere could explore automatically, perhaps even via porg?
 # make it a feature of renderer?

@@ -11,7 +11,6 @@ from org_view import OrgViewAppend, OrgWithKey
 from org_utils import OrgTree, as_org
 
 # TODO mm, yeah, perhaps favoriting date makes a bit more sense...
-# TODO FIXME show deleted somehow
 # I guess, sort of reasonable to test at rendering time
 
 # TODO actually might be useful to store forever a read only version...

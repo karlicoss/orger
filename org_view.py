@@ -2,33 +2,23 @@
 from argparse import ArgumentParser
 import logging
 from tempfile import TemporaryDirectory
-from typing import NamedTuple, List, Any, Iterable, Tuple, Optional, Collection
+from typing import List, Tuple, Collection
 from pathlib import Path
 
-from kython import group_by_key
 from kython.ktyping import PathIsh
 from kython.klogging import setup_logzero
 from kython.kos import atomic_append
 from kython.state import JsonState
-from kython.org_tools import as_org_entry as as_org, link as org_link
 
-from org_utils import OrgTree, pick_heading
+from org_utils import OrgTree
 
 from atomicwrites import atomic_write
-# TODO tests for determinism
-# TODO unused imports? maybe even ruci?..
-
-"""
-TODO
-OverWriteView -- basically what we have now
-appendview -- also takes json state to track
-both need new file header now...
-"""
+# TODO tests for determinism? not sure where should they be...
+# think of some generic thing to test that?
 
 Key = str
 OrgWithKey = Tuple[Key, OrgTree]
 
-# TODO abc???
 class OrgView:
     def __init__(
             self,
@@ -40,7 +30,6 @@ class OrgView:
 
     def get_items(self) -> Collection[OrgWithKey]:
         raise NotImplementedError
-            # TODO nicer tree generation? yieldy?
 
     def main_common(self) -> None:
         setup_logzero(self.logger, level=logging.DEBUG)
@@ -98,14 +87,13 @@ class OrgViewAppend(OrgView):
                 raise RuntimeError("target %s doesn't exist! Try running with --create")
 
         for key, item in items:
-            def action():
+            def action(item=item):
                 # better to have extra whitespace than rely on trailing
                 rendered = '\n' + item.render(level=1)
                 atomic_append(
                     to,
                     rendered,
                 )
-            # TODO come up with better name?
             state.feed(
                 key=key,
                 value=item, # TODO not sure about this one... perhaps only link?

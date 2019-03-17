@@ -1,7 +1,7 @@
 from typing import NamedTuple, Sequence, Any, List, Tuple, Optional, TypeVar, Callable, Union, Type
 from kython.org_tools import as_org_entry
 
-# TODO FIXME compare before saving?
+# TODO compare before saving? not sure if necessary..
 
 # TODO kython?...
 T = TypeVar('T')
