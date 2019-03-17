@@ -10,6 +10,7 @@ from org_utils import OrgTree, as_org, pick_heading
 
 
 class IpView(OrgViewOverwrite):
+    # pylint: disable=unsubscriptable-object
     def get_items(self) -> Collection[OrgWithKey]:
         return [(
             page.bookmark.bid,

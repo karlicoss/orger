@@ -1,11 +1,25 @@
-from typing import NamedTuple, Sequence, Any, List, Tuple, Optional
+from typing import NamedTuple, Sequence, Any, List, Tuple, Optional, TypeVar, Callable, Union, Type
 from kython.org_tools import as_org_entry
 
 # TODO FIXME compare before saving?
 
+# TODO kython?...
+T = TypeVar('T')
+Lazy = Union[T, Callable[[], T]]
+
+def from_lazy(x: Lazy[T], type_: Type[T]) -> T:
+    if isinstance(x, type_):
+        return x
+    else:
+        return x() # type: ignore
+
 class OrgTree(NamedTuple):
-    item: str
+    item_: Lazy[str]
     children: Sequence[Any] = ()
+
+    @property
+    def item(self) -> str:
+        return from_lazy(self.item_, type_=str)
 
     def render_hier(self) -> List[Tuple[int, str]]:
         res = [(0, self.item)]

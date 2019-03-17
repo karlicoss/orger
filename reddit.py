@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+from multiprocessing import Pool
 from typing import NamedTuple, List, Any, Iterable, Tuple, Optional, Collection
 
-from my.reddit import get_saves # type: ignore
+from my.reddit import Save, get_saves # type: ignore
 
 from kython.org_tools import link as org_link
+from kython.knetwork import is_alive
 
 from org_view import OrgViewAppend, OrgWithKey
 from org_utils import OrgTree, as_org
@@ -14,16 +16,34 @@ from org_utils import OrgTree, as_org
 
 # TODO actually might be useful to store forever a read only version...
 
+
+# eh, turned out easier to make it lazy..
+# def get_saves_with_state():
+#     # TODO don't query for dead so often. We actually only want to get it for new items..
+#     saves = get_saves(all_=False)
+#     with Pool() as p:
+#         res = p.map(_helper, saves)
+#     dead = [r for r, s in res if not s]
+#     # if len(dead) / (len(saves) + 1) > 0.3:
+#     #     raise RuntimeError('something must be wrong with reddit! bailing')
+#     return res
+
+
+# TODO FIXME is_alive should handle DELETED comments...
+# TODO maybe, track that in reddit provider? since we have all version of saved items over time
 class RedditView(OrgViewAppend):
+    # pylint: disable=unsubscriptable-object
     def get_items(self) -> Collection[OrgWithKey]:
         return [(
-            f.sid,
-            OrgTree(as_org(
-                    created=f.dt,
-                    heading=org_link(title=f.title, url=f.url) + f' /r/{f.subreddit}',
-                    body=f.text,
+            s.sid,
+            # need to make it lazy due to is_alive
+            # TODO shit. bad lambda...
+            OrgTree(lambda s=s: as_org( # type: ignore
+                    created=s.dt,
+                    heading=('' if is_alive(s.url) else '[#A] *DEAD* ') + org_link(title=s.title, url=s.url) + f' /r/{s.subreddit}',
+                    body=s.text,
             ))
-        ) for f in get_saves(all_=False)] # TODO FIXME need all!
+        ) for s in get_saves(all_=True)]
 
 
 def main():

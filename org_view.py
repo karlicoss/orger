@@ -85,6 +85,7 @@ class OrgViewAppend(OrgView):
         )
         items = self.get_items()
         assert len(set(i[0] for i in items)) == len(items), 'duplicate item keys!'
+        # TODO hmm, perhaps use make_dict as well?
 
         if not to.exists():
             if create:
@@ -144,8 +145,8 @@ def test_org_view_overwrite(tmp_path: Path):
 
     TestView([
         # TODO shit, it's gonna use implicit date??
-        ('first' , OrgTree(item='whatever')),
-        ('second', OrgTree(item='alala')),
+        ('first' , OrgTree(item_='whatever')),
+        ('second', OrgTree(item_=lambda: 'alala')),
     ]).run(to=rpath)
     # TODO eh, perhaps use trailing space?
     assert rpath.read_text() == """
