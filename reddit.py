@@ -31,6 +31,7 @@ from org_utils import OrgTree, as_org
 
 
 # TODO is_alive should handle DELETED comments...
+# ah, sometimes it's [removed]
 # TODO maybe, track that in reddit provider? since we have all version of saved items over time
 class RedditView(OrgViewAppend):
     # pylint: disable=unsubscriptable-object
