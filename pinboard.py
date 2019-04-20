@@ -30,8 +30,8 @@ class PinboardView(OrgViewOverwrite):
                 return b.uid, OrgTree(as_org(
                     created=b.created,
                     heading=org_link(title=b.title, url=b.url),
+                    body=b.description,
                     tags=b.tags,
-                    # TODO FIXME sanitize tags
                 ))
         return [make_item(b) for b in pinboard.get_entries()]
 
