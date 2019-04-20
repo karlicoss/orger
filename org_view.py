@@ -2,9 +2,10 @@
 from argparse import ArgumentParser
 import logging
 from tempfile import TemporaryDirectory
-from typing import List, Tuple, Collection
+from typing import List, Tuple, Collection, Optional
 from pathlib import Path
 
+from kython import make_dict
 from kython.ktyping import PathIsh
 from kython.klogging import setup_logzero
 from kython.kos import atomic_append
@@ -73,8 +74,8 @@ class OrgViewAppend(OrgView):
             logger=self.logger,
         )
         items = self.get_items()
-        assert len(set(i[0] for i in items)) == len(items), 'duplicate item keys!'
-        # TODO hmm, perhaps use make_dict as well?
+
+        make_dict(items, lambda x: x[0]) # checks that no duplicate keys as a collateral
 
         if not to.exists():
             if create:

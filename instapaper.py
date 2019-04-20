@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 from typing import NamedTuple, List, Any, Iterable, Tuple, Optional, Collection
 
-from my.instapaper import get_pages # type: ignore
-
 from kython.org_tools import link as org_link
 
 from org_view import OrgViewOverwrite, OrgWithKey
 from org_utils import OrgTree, as_org, pick_heading
+
+from my.instapaper import get_pages
 
 
 class IpView(OrgViewOverwrite):
@@ -37,8 +37,6 @@ class IpView(OrgViewOverwrite):
         # TODO better error handling, cooperate with org_tools
 
 
-# TODO FIXME run ruci against it?
-# TODO FIXME need to make sure it's excluded from wereyouhere... otherwise too many duplications and unncessary links?
 # TODO hmm. wereyouhere could explore automatically, perhaps even via porg?
 # make it a feature of renderer?
 # although just need to make one space tabulation, that'd solve all my problems
