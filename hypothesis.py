@@ -26,7 +26,7 @@ class HypView(OrgViewOverwrite):
                     OrgTree(as_org(
                         created=hl.dt,
                         heading=org_link(title='hyp', url=hl.hyp_link),
-                        body=hl.content,
+                        body=hl.content, # TODO annotation??
                     )) for hl in page.highlights
                 ]
             )
