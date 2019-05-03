@@ -23,19 +23,26 @@ class PolarView(OrgViewOverwrite):
             else:
                 return b.uid, OrgTree(as_org(
                     created=b.created,
-                    # TODO what's in body??
                     heading=f'{b.title} {b.filename}',
-                    # body=b.description, 
-                    # tags=b.tags,
-                ))
+                    # tags=b.tags, # TODO?
+                ), [
+                    OrgTree(as_org(
+                        created=hl.created,
+                        heading=hl.selection, # TODO some shitty characters; generally concatenated text doesn't look great...
+                    ), [
+                        OrgTree(as_org(
+                            created=c.created,
+                            heading=c.text,
+                        )) for c in hl.comments
+                    ]) for hl in b.items
+                ])
         return [make_item(b) for b in polar.get_entries()]
 
 def test():
-    # TODO FIXME
-    tree = PinboardView().make_tree()
-    ll = pick_heading(tree, 'Cartesian Closed Comic #21')
+    tree = PolarView().make_tree()
+    ll = pick_heading(tree, 'I missed the bit where he only restricted to spin')
     assert ll is not None
-    assert 'doctorwho' in ll.item
+    # TODO more tests?
 
 
 def main():
