@@ -47,10 +47,10 @@ def pick_heading(root: OrgTree, text: str) -> Optional[OrgTree]:
 
 
 # TODO hacky...
-def as_org(**kwargs):
+def as_org(todo=False, inline_created=True, **kwargs):
     return as_org_entry(
-        todo=False,
+        todo=todo,
+        inline_created=inline_created,
         level=0,
-        inline_created=True,
         **kwargs,
     ).strip()

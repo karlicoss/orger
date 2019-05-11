@@ -97,7 +97,7 @@ class OrgViewAppend(OrgView):
                     self.file_header + '\n',
                 )
             else:
-                raise RuntimeError("target %s doesn't exist! Try running with --create")
+                raise RuntimeError(f"target {to} doesn't exist! Try running with --create")
 
         for key, item in items:
             def action(item=item):

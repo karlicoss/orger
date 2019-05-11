@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from typing import NamedTuple, List, Any, Iterable, Tuple, Optional, Collection
+from typing import Collection
 
 from kython.org_tools import link as org_link
 
