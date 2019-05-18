@@ -28,7 +28,7 @@ class KoboView(OrgViewOverwrite):
             OrgTree(
                 as_org(
                     created=page.dt,
-                    heading=page.book,
+                    heading=str(page.book),
                 ),
                 [render_highlight(h) for h in page.highlights],
             )
