@@ -80,10 +80,12 @@ class OrgViewAppend(OrgView):
             to: Path,
             state_path: Path,
             init: bool=False,
+            dry_run: bool=False,
     ) -> None:
         state = JsonState(
             path=state_path,
             logger=self.logger,
+            dry_run=dry_run,
         )
         items = self.get_items()
 
@@ -119,6 +121,7 @@ class OrgViewAppend(OrgView):
         p.add_argument('--to', type=Path, default=Path(default_to))
         p.add_argument('--state', type=Path, default=Path(default_state))
         p.add_argument('--init', action='store_true')
+        p.add_argument('--dry-run', action='store_true')
         args = p.parse_args()
 
         inst = cls(cmdline_args=args)
@@ -127,6 +130,7 @@ class OrgViewAppend(OrgView):
             to=args.to,
             state_path=args.state,
             init=args.init,
+            dry_run=args.dry_run,
         )
 
 
