@@ -5,8 +5,8 @@ from my.hypothesis import get_pages # type: ignore
 
 from kython.org_tools import link as org_link
 
-from org_view import OrgViewOverwrite, OrgWithKey
-from org_utils import OrgTree, as_org
+from orger.org_view import OrgViewOverwrite, OrgWithKey
+from orger.org_utils import OrgTree, as_org
 
 
 class HypView(OrgViewOverwrite):

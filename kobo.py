@@ -4,8 +4,8 @@ from typing import Collection
 from my.books.kobo import get_pages, Highlight # type: ignore
 # TODO rename to get_books?
 
-from org_view import OrgViewOverwrite, OrgWithKey
-from org_utils import OrgTree, as_org, pick_heading
+from orger.org_view import OrgViewOverwrite, OrgWithKey
+from orger.org_utils import OrgTree, as_org, pick_heading
 
 class KoboView(OrgViewOverwrite):
     file = __file__

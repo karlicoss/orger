@@ -6,8 +6,8 @@ from kython.org_tools import link as org_link
 from kython import parse_date_new
 today = parse_date_new('today')
 
-from org_view import OrgViewOverwrite, OrgWithKey
-from org_utils import OrgTree, as_org, pick_heading
+from orger.org_view import OrgViewOverwrite, OrgWithKey
+from orger.org_utils import OrgTree, as_org, pick_heading
 
 import my.tweets
 

@@ -3,8 +3,8 @@ from typing import Collection
 
 from kython.org_tools import link as org_link
 
-from org_view import OrgViewAppend, OrgWithKey
-from org_utils import OrgTree, as_org, pick_heading
+from orger.org_view import OrgViewAppend, OrgWithKey
+from orger.org_utils import OrgTree, as_org, pick_heading
 
 from my.instapaper import get_todos # type: ignore
 

@@ -5,8 +5,8 @@ from my.hypothesis import get_todos # type: ignore
 
 from kython.org_tools import link as org_link
 
-from org_view import OrgViewAppend, OrgWithKey
-from org_utils import OrgTree, as_org
+from orger.org_view import OrgViewAppend, OrgWithKey
+from orger.org_utils import OrgTree, as_org
 
 
 class HypTodos(OrgViewAppend):

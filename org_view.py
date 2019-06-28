@@ -11,7 +11,7 @@ from kython.klogging import setup_logzero
 from kython.kos import atomic_append
 from kython.state import JsonState
 
-from org_utils import OrgTree
+from orger.org_utils import OrgTree
 
 from atomicwrites import atomic_write
 # TODO tests for determinism? not sure where should they be...

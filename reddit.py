@@ -9,8 +9,8 @@ from kython.org_tools import link as org_link
 from kython.knetwork import is_alive
 from kython.klogging import setup_logzero
 
-from org_view import OrgViewAppend, OrgWithKey
-from org_utils import OrgTree, as_org
+from orger.org_view import OrgViewAppend, OrgWithKey
+from orger.org_utils import OrgTree, as_org
 
 # TODO mm, yeah, perhaps favoriting date makes a bit more sense...
 # I guess, sort of reasonable to test at rendering time
