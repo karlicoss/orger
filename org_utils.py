@@ -48,9 +48,32 @@ def pick_heading(root: OrgTree, text: str) -> Optional[OrgTree]:
 
 # TODO hacky...
 def as_org(todo=False, inline_created=True, **kwargs):
-    return as_org_entry(
+    res = as_org_entry(
         todo=todo,
         inline_created=inline_created,
         level=0,
         **kwargs,
     )
+    return res
+
+
+def test_render():
+    xx = OrgTree(
+        'file header',
+        [
+            OrgTree('subitem'),
+        ],
+    )
+    assert xx.render() == """
+file header
+* subitem""".lstrip()
+
+
+def test_render_2():
+    xxx = OrgTree('TODO something')
+    assert xxx.render(level=1) == "* TODO something"
+
+
+def test_render_3():
+    zzz = OrgTree(as_org(todo=True, heading='hi', inline_created=False))
+    assert zzz.render(level=1).startswith('* TODO hi')

@@ -50,6 +50,8 @@ def test():
     assert len(ll.children) > 4
     assert any('sleep a lot' in c.item for c in ll.children)
 
+    assert org_tree.render().splitlines()[2].startswith('* [') # meh
+
 
 def main():
     IpView.main(default_to='instapaper.org')
