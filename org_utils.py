@@ -53,4 +53,4 @@ def as_org(todo=False, inline_created=True, **kwargs):
         inline_created=inline_created,
         level=0,
         **kwargs,
-    ).strip()
+    )
