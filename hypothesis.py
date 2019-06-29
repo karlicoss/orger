@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-from typing import Collection
-
-from my.hypothesis import get_pages # type: ignore
+from my.hypothesis import get_pages
 
 from kython.org_tools import link as org_link
 
@@ -13,11 +11,9 @@ class HypView(OrgViewOverwrite):
     file = __file__
     logger_tag = 'hypothesis-view'
 
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
-        return [(
-            page.link,
-            OrgTree(
+    def get_items(self):
+        for page in get_pages():
+            yield (page.link, OrgTree(
                 as_org(
                     created=page.dt,
                     heading=org_link(title=page.title, url=page.link),

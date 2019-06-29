@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from typing import Collection
-
 from kython.org_tools import link as org_link
 
 from orger.org_view import OrgViewOverwrite, OrgWithKey
@@ -13,8 +11,7 @@ class IpView(OrgViewOverwrite):
     file = __file__
     logger_tag = 'instapaper-view'
 
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
+    def get_items(self):
         return [(
             page.bookmark.bid,
             OrgTree(
