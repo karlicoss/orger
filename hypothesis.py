@@ -21,15 +21,16 @@ class HypView(OrgViewOverwrite):
                 [
                     OrgTree(as_org(
                         created=hl.dt,
-                        heading=org_link(title='hyp', url=hl.hyp_link),
-                        body=hl.content, # TODO annotation??
-                    )) for hl in page.highlights
+                        heading=org_link(title='context', url=hl.hyp_link),
+                        body=hl.content,
+                        tags=hl.tags,
+                    ), [] if hl.annotation is None else [OrgTree(as_org(body=hl.annotation))]) for hl in page.highlights
                 ]
-            )
-        ) for page in get_pages()]
+            ))
 
 
 # TODO tests for determinism
+# TODO they could also be extracted to common routine and used in each provider
 
 def main():
     HypView.main(default_to='hypothesis.org')
