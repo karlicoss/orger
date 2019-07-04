@@ -12,7 +12,8 @@ class IpView(OrgViewOverwrite):
     logger_tag = 'instapaper-view'
 
     def get_items(self):
-        return [(
+        for page in get_pages():
+            yield (
             page.bookmark.bid,
             OrgTree(
                 as_org(
@@ -29,7 +30,7 @@ class IpView(OrgViewOverwrite):
             )
         # TODO make sure as_org figures out the date
     # TODO autostrip could be an option for formatter
-        ) for page in get_pages()]
+        )
         # TODO could put links in org mode links? so not as much stuff is displayed?
         # TODO reverse order? not sure...
         # TODO unique id meaning that instapaper manages the item?

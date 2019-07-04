@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from typing import Collection
-
 from my.hypothesis import get_todos # type: ignore
 
 from kython.org_tools import link as org_link
@@ -13,9 +11,9 @@ class HypTodos(OrgViewAppend):
     file = __file__
     logger_tag = 'hypothesis-todos'
 
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
-        return [(
+    def get_items(self):
+        for t in get_todos():
+            yield (
             t.eid,
             OrgTree(as_org(
                 todo=True,
@@ -29,11 +27,12 @@ class HypTodos(OrgViewAppend):
                 created=t.dt,
                 tags=['hyp2org', *t.tags],
             ))
-        ) for t in get_todos()]
+        )
 
 
 def main():
     HypTodos.main(default_to='hyp2org.org', default_state='hyp2org.state')
+
 
 if __name__ == '__main__':
     main()
