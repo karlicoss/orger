@@ -41,7 +41,7 @@ class Krill(OrgViewAppend):
                 todo=True,
                 inline_created=False,
                 heading=i.text,
-                body=f'from {i.title}',
+                body=f'from {i.book.title}',
                 created=i.dt,
                 tags=['drill'],
             ))
