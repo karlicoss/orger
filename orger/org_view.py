@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 from argparse import ArgumentParser, Namespace
 import logging
 from tempfile import TemporaryDirectory
@@ -47,7 +48,7 @@ class OrgView:
 class OrgViewOverwrite(OrgView):
     @classmethod
     def main(cls, default_to: PathIsh, setup_parser=None) -> None:
-        p = ArgumentParser()
+        p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         p.add_argument('--to', type=Path, default=Path(default_to))
         if setup_parser is not None:
             setup_parser(p)
@@ -115,9 +116,9 @@ class OrgViewAppend(OrgView):
 
     @classmethod
     def main(cls, default_to: PathIsh, default_state: PathIsh) -> None:
-        p = ArgumentParser()
-        p.add_argument('--to', type=Path, default=Path(default_to))
-        p.add_argument('--state', type=Path, default=Path(default_state))
+        p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        p.add_argument('--to', type=Path, default=Path(default_to), help='file where new atems are appended')
+        p.add_argument('--state', type=Path, default=Path(default_state), help='state file for remembering last handled item')
         p.add_argument('--init', action='store_true')
         p.add_argument('--dry-run', action='store_true')
         args = p.parse_args()
