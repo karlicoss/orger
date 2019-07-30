@@ -18,7 +18,7 @@ def is_drill(i: Highlight):
         ann = ''
     if ann.strip().lower() == 'drill':
         return True
-    words = i.text.strip().split()
+    words = (i.text or '').strip().split()
     if len(words) <= 1:
         # might result in a false positive but can just not drill it and remove
         return True

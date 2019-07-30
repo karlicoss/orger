@@ -24,7 +24,7 @@ class KoboView(OrgViewOverwrite):
             ))
 
         return [(
-            page.book,
+            str(page.book),
             OrgTree(
                 as_org(
                     created=page.dt,
