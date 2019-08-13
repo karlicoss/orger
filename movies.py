@@ -11,9 +11,11 @@ class Movies(Overwrite):
 
     def get_items(self):
         movies = get_movies()
-        for movie in movies:
-            yield (movie.title, OrgTree(as_org(
-                heading=movie.title,
+        for m in movies:
+            yield (m.title, OrgTree(as_org(
+                created=m.created,
+                heading=m.title,
+                body=f'rating: {m.rating}',
             )))
 
 
