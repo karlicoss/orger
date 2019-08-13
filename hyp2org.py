@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from my.hypothesis import get_todos # type: ignore
+from my.hypothesis import get_todos
 
 from kython.org_tools import link as org_link
 
-from orger.org_view import OrgViewAppend, OrgWithKey
+from orger import OrgViewAppend, OrgWithKey
 from orger.org_utils import OrgTree, as_org
 
 

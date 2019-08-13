@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-from my.media.youtube import get_watched # type: ignore
+from my.media.youtube import get_watched
 
 from kython import group_by_key
 from kython.org_tools import link as org_link
 
-from orger.org_view import OrgViewOverwrite, OrgWithKey
+from orger import Overwrite
 from orger.org_utils import OrgTree, as_org
 
 
-class YoutubeView(OrgViewOverwrite):
+class YoutubeView(Overwrite):
     file = __file__
     logger_tag = 'youtube-view'
 
@@ -23,9 +23,5 @@ class YoutubeView(OrgViewOverwrite):
                 heading=org_link(title=item.title, url=item.url),
             )))
 
-def main():
-    YoutubeView.main(default_to='youtube.org')
-
-
 if __name__ == '__main__':
-    main()
+    YoutubeView.main(default_to='youtube.org')
