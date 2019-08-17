@@ -31,11 +31,10 @@ class TwitterView(OrgViewOverwrite):
         dtime = t.dt
         text = t.text
         url = t.url
-        link = org_link(title=text, url=url)
         if self.mode == 'all':
             return OrgTree(as_org(
                 created=dtime,
-                heading=link,
+                heading=org_link(title=text, url=url),
                 tags=['tweet'],
             ))
         else:
@@ -45,7 +44,7 @@ class TwitterView(OrgViewOverwrite):
                 created=dd.date(),
                 active_created=True,
 
-                heading=f"at [{datetime2org(dtime)}] {link}",
+                heading=f"{org_link(title='TW', url=url)} at [{datetime2org(dtime)}] {text}",
                 tags=['ttweet'],
             ))
 
