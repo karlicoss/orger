@@ -3,6 +3,7 @@ import argparse
 from argparse import ArgumentParser, Namespace
 import logging
 from pathlib import Path
+from subprocess import check_call
 from tempfile import TemporaryDirectory
 from typing import List, Tuple, Iterable, Optional
 
@@ -11,9 +12,8 @@ from kython.klogging import setup_logzero
 from kython.state import JsonState
 
 from .org_utils import OrgTree
-from .common import PathIsh, atomic_append_check
+from .common import PathIsh, atomic_append_check, assert_not_edited
 
-from atomicwrites import atomic_write
 # TODO tests for determinism? not sure where should they be...
 # think of some generic thing to test that?
 
@@ -64,8 +64,14 @@ class OrgViewOverwrite(OrgView):
         # TODO make it read only??
         org_tree = self.make_tree()
         rtree = org_tree.render()
-        with atomic_write(str(to), mode='w', overwrite=True) as fo: # TODO just reuse kython?
-            fo.write(rtree)
+
+        assert_not_edited(to)
+        # again, not properly atomic, but hopefully enough
+        # TODO create a github issue, maybe someone comes up with proper way of solving this
+        to.touch()
+        check_call(['chmod', '+w', to])
+        to.write_text(rtree)
+        check_call(['chmod', '-w', to])
 
 
     def make_tree(self) -> OrgTree:
