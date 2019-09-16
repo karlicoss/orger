@@ -1,5 +1,7 @@
 from typing import NamedTuple, Sequence, Any, List, Tuple, Optional, TypeVar, Callable, Union, Type
-from kython.org_tools import as_org_entry
+
+# TODO move OrgTree to inorganic? not sure about pick_heading
+from .inorganic import as_org_entry
 
 # TODO compare before saving? not sure if necessary..
 
