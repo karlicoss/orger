@@ -2,21 +2,21 @@
 import argparse
 from argparse import ArgumentParser, Namespace
 import logging
-from tempfile import TemporaryDirectory
-from typing import List, Tuple, Iterable, Optional, Union
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from typing import List, Tuple, Iterable, Optional
 
+# TODO dekythonize
 from kython.klogging import setup_logzero
-from kython.kos import atomic_append
 from kython.state import JsonState
 
-from orger.org_utils import OrgTree
+from .org_utils import OrgTree
+from .common import PathIsh, atomic_append_check
 
 from atomicwrites import atomic_write
 # TODO tests for determinism? not sure where should they be...
 # think of some generic thing to test that?
 
-PathIsh = Union[str, Path]
 Key = str
 OrgWithKey = Tuple[Key, OrgTree]
 
@@ -64,7 +64,7 @@ class OrgViewOverwrite(OrgView):
         # TODO make it read only??
         org_tree = self.make_tree()
         rtree = org_tree.render()
-        with atomic_write(str(to), mode='w', overwrite=True) as fo:
+        with atomic_write(str(to), mode='w', overwrite=True) as fo: # TODO just reuse kython?
             fo.write(rtree)
 
 
@@ -99,7 +99,7 @@ class OrgViewAppend(OrgView):
         if not to.exists():
             if init:
                 self.logger.warning("target %s didn't exist, initializing!", to)
-                atomic_append(to, self.file_header + '\n')
+                atomic_append_check(to, self.file_header + '\n')
             else:
                 raise RuntimeError(f"target {to} doesn't exist! Try running with --init")
 
@@ -107,7 +107,7 @@ class OrgViewAppend(OrgView):
             def action(item=item):
                 # not sure about this newline, but better to have extra whitespace than rely on trailing
                 rendered = '\n' + item.render(level=1)
-                atomic_append(
+                atomic_append_check(
                     to,
                     rendered,
                 )
