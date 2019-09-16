@@ -8,11 +8,10 @@ from tempfile import TemporaryDirectory
 from typing import List, Tuple, Iterable, Optional
 
 # TODO dekythonize
-from kython.klogging import setup_logzero
 from kython.state import JsonState
 
 from .org_utils import OrgTree
-from .common import PathIsh, atomic_append_check, assert_not_edited
+from .common import PathIsh, atomic_append_check, assert_not_edited, setup_logger
 
 # TODO tests for determinism? not sure where should they be...
 # think of some generic thing to test that?
@@ -41,7 +40,7 @@ class OrgView:
         raise NotImplementedError
 
     def main_common(self) -> None:
-        setup_logzero(self.logger, level=logging.DEBUG)
+        setup_logger(self.logger, level=logging.DEBUG)
 
 
 # TODO wonder if I could reuse append bits here?
@@ -117,6 +116,7 @@ class OrgViewAppend(OrgView):
                     to,
                     rendered,
                 )
+            self.logger.debug('processing %s', key)
             state.feed(
                 key=key,
                 value=item, # TODO not sure about this one... perhaps only link?
