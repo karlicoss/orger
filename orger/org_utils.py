@@ -1,7 +1,7 @@
 from typing import NamedTuple, Sequence, Any, List, Tuple, Optional, TypeVar, Callable, Union, Type
 
 # TODO move OrgTree to inorganic? not sure about pick_heading
-from .inorganic import as_org_entry, OrgNode
+from .inorganic import as_org_entry, OrgNode, org_dt
 
 # TODO compare before saving? not sure if necessary..
 
@@ -69,6 +69,21 @@ def dt_heading(dt: datetime, heading: str):
     return '[{}] '.format(datetime2org(dt)) + heading
 
 
+# TODO not sure if belongs here
+def todo(dt: datetime, **kwargs):
+    pass
+    """
+    Helper to set some common todo item thing
+    """
+    return OrgNode(
+        todo='TODO',
+        scheduled=dt.date(),
+        properties={'CREATED': org_dt(dt, inactive=True)},
+        **kwargs,
+    )
+
+
+# TODO move tests to inorganic?
 def test_render():
     xx = OrgNode(
         'file header',

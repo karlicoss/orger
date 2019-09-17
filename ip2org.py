@@ -1,31 +1,22 @@
 #!/usr/bin/env python3
-from typing import Collection
-
-from kython.org_tools import link as org_link
-
-from orger.org_view import OrgViewAppend, OrgWithKey
-from orger.org_utils import OrgTree, as_org, pick_heading
+from orger import Interactive
+from orger.inorganic import node, link, org_dt
+from orger.org_utils import todo
 
 from my.instapaper import get_todos # type: ignore
 
-class IpTodos(OrgViewAppend):
-    file = __file__
-    logger_tag = 'instapaper-todos'
 
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
-        return [(
-            t.uid,
-            OrgTree(as_org(
-                todo=True,
-                inline_created=False,
+class IpTodos(Interactive):
+    def get_items(self):
+        for t in get_todos():
+            # TODO move erorr handling to base renderer?
+            yield t.uid, todo(
+                dt=t.dt,
+
                 heading=t.text,
-                body=f'{t.note}\nfrom {org_link(title="ip", url=t.instapaper_link)}   {org_link(title=t.title, url=t.url)}',
-                # TODO scheduled!, looks like it's automatic if todo=True? kinda makes sens
-                created=t.dt,
                 tags=['ip2org'],
-            ))
-        ) for t in get_todos()]
+                body=f'{t.note}\nfrom {link(title="ip", url=t.instapaper_link)}   {link(title=t.title, url=t.url)}',
+            )
 
 
 # TODO add some test
