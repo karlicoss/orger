@@ -10,7 +10,7 @@ from typing import List, Tuple, Iterable, Optional
 # TODO dekythonize
 from kython.state import JsonState
 
-from .org_utils import OrgTree
+from .org_utils import OrgTree, OrgNode
 from .common import PathIsh, atomic_append_check, assert_not_edited, setup_logger
 
 # TODO tests for determinism? not sure where should they be...
@@ -73,11 +73,12 @@ class OrgViewOverwrite(OrgView):
         check_call(['chmod', '-w', to])
 
 
-    def make_tree(self) -> OrgTree:
+    def make_tree(self) -> OrgNode:
+        # TODO shit; hacky...
         items = [p[1] for p in self.get_items()] # we don't need keys here
-        return OrgTree(
-            self.file_header,
-            items,
+        return OrgNode(
+            heading=self.file_header,
+            children=items,
         )
 
 

@@ -37,6 +37,42 @@ class OrgTree(NamedTuple):
         return '\n'.join('*' * l + (' ' if l > 0 else '') + x for l, x in rh)
 
 
+from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any
+# TODO what was the need for lazy?
+class OrgNode(NamedTuple):
+    heading: str
+    todo: Optional[str] = None
+    tags: Sequence[str] = ()
+    properties: Optional[Mapping[str, str]] = None
+    body: str=''
+    children: Sequence[Any]=() # mypy wouldn't allow recursive type here...
+
+    def render_self(self) -> str:
+        # TODO FIXME properties
+        return as_org(
+            heading=self.heading, # TODO FIXME todo keyword?
+            tags=self.tags,
+            body=self.body,
+            force_no_created=True,
+        )
+
+    def render_hier(self) -> List[Tuple[int, str]]:
+        res = [(0, self.render_self())]
+        for ch in self.children:
+            # TODO make sure there is a space??
+            # TODO shit, would be nice to tabulate?.. not sure
+            res.extend((l + 1, x) for l, x in ch.render_hier())
+        return res
+
+    def render(self, level=0) -> str:
+        rh = self.render_hier()
+        rh = [(level + l, x) for l, x in rh]
+        return '\n'.join('*' * l + (' ' if l > 0 else '') + x for l, x in rh)
+
+# TODO level -- I guess gonna be implicit...
+
+
+
 def pick_heading(root: OrgTree, text: str) -> Optional[OrgTree]:
     if text in root.item:
         return root
