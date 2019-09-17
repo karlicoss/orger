@@ -42,6 +42,7 @@ class RedditView(OrgViewAppend):
         return [(
             s.sid,
             # need to make it lazy due to is_alive
+            # TODO I guess makes more sense to make individual properties lazy
             OrgTree(lambda s=s: as_org( # type: ignore
                     created=s.save_dt,
                     heading=('' if is_alive(s.url) else '[#A] *DEAD* ') + org_link(title=s.title, url=s.url) + f' /r/{s.subreddit}',

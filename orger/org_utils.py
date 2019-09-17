@@ -1,7 +1,7 @@
 from typing import NamedTuple, Sequence, Any, List, Tuple, Optional, TypeVar, Callable, Union, Type
 
 # TODO move OrgTree to inorganic? not sure about pick_heading
-from .inorganic import as_org_entry
+from .inorganic import as_org_entry, OrgNode
 
 # TODO compare before saving? not sure if necessary..
 
@@ -70,10 +70,10 @@ def dt_heading(dt: datetime, heading: str):
 
 
 def test_render():
-    xx = OrgTree(
+    xx = OrgNode(
         'file header',
-        [
-            OrgTree('subitem'),
+        children=[
+            OrgNode('subitem'),
         ],
     )
     assert xx.render() == """
@@ -82,10 +82,10 @@ file header
 
 
 def test_render_2():
-    xxx = OrgTree('TODO something')
+    xxx = OrgNode('TODO something')
     assert xxx.render(level=1) == "* TODO something"
 
 
 def test_render_3():
-    zzz = OrgTree(as_org(todo=True, heading='hi', inline_created=False))
+    zzz = OrgNode(todo='TODO', heading='hi')
     assert zzz.render(level=1).startswith('* TODO hi')
