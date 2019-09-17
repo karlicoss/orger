@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
-from typing import NamedTuple, List, Any, Iterable, Tuple, Optional, Collection
+from orger import View
+from orger.inorganic import node, link, org_dt, OrgNode
+from orger.org_utils import pick_heading, dt_heading
 
-from kython.org import datetime2org
-from kython.org_tools import link as org_link
-from kython import parse_date_new
-today = parse_date_new('today')
-
-from orger.org_view import OrgViewOverwrite, OrgWithKey
-from orger.org_utils import OrgTree, as_org, pick_heading
+from typing import List
 
 import my.tweets
 
-class TwitterView(OrgViewOverwrite):
-    file = __file__
-    logger_tag = 'twitter-view'
+from kython import parse_date_new
+today = parse_date_new('today') # TODO get rid of it...
 
+
+class TwitterView(View):
     @property
     def mode(self) -> str:
         assert self.cmdline_args is not None
@@ -27,44 +24,32 @@ class TwitterView(OrgViewOverwrite):
             tw = my.tweets.predicate_date(lambda d: d.day == today.day and d.month == today.month) # not gonna work on 29 feb!!
             return tw
 
-    def _render(self, t: my.tweets.Tweet) -> OrgTree:
+    def _render(self, t: my.tweets.Tweet) -> OrgNode:
         dtime = t.dt
         text = t.text
         url = t.url
         if self.mode == 'all':
-            return OrgTree(as_org(
-                created=dtime,
-                heading=org_link(title=text, url=url),
+            return node(
+                heading=dt_heading(dtime, link(title=text, url=url)),
                 tags=['tweet'],
-            ))
+            )
         else:
             dd = dtime.replace(year=today.year)
-            return OrgTree(as_org(
-                # TODO instead wrap in something like active and passive
-                created=dd.date(),
-                active_created=True,
-
-                heading=f"{org_link(title='TW', url=url)} at [{datetime2org(dtime)}] {text}",
+            return node(
+                heading=org_dt(dd.date(), active=True) + ' ' + f"{link(title='TW', url=url)} at {org_dt(dtime, inactive=True)} {text}",
                 tags=['ttweet'],
-            ))
+            )
 
 
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
-        return [(
-            tweet.tid,
-            self._render(tweet),
-        ) for tweet in self._get_tweets()]
+    def get_items(self):
+        for tweet in self._get_tweets():
+            yield tweet.tid, self._render(tweet)
 
 
 def setup_parser(p):
     p.add_argument('--mode', choices=['thatday', 'all'], required=True)
 
 
-def main():
-    TwitterView.main(default_to='ttweets.org', setup_parser=setup_parser)
-
-
 if __name__ == '__main__':
-    main()
+    TwitterView.main(setup_parser=setup_parser)
 
