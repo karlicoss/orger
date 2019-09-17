@@ -7,7 +7,6 @@ from my.hypothesis import get_todos
 
 class HypTodos(Interactive):
     file = __file__
-    logger_tag = 'hypothesis-todos'
 
     def get_items(self):
         for t in get_todos():

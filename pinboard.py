@@ -10,9 +10,6 @@ from kython.kerror import unwrap
 from my.bookmarks import pinboard
 
 class PinboardView(View):
-    file = __file__
-    logger_tag  ='pinboard-view'
-
     def get_items(self):
         def make_item(res: pinboard.Result) -> OrgWithKey:
             try:

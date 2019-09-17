@@ -6,11 +6,7 @@ from orger.org_utils import dt_heading
 from my.hypothesis import get_pages
 
 
-# TODO FIXME logger tag could be class name?
 class HypView(View):
-    file = __file__
-    logger_tag = 'hypothesis-view'
-
     def get_items(self):
         # TODO FIXME View doesn't need pairs?
         for page in get_pages():

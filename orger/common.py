@@ -82,7 +82,7 @@ def setup_logger(logger, level=None, format=None, datefmt=None):
         logging.root = logger
         logging.basicConfig(
             level=level or logging.DEBUG,
-            format=format or '%(asctime)s %(levelname)-8s %(filename)s:%(lineno)-4d %(message)s',
+            format=format or '%(name)s %(asctime)s %(levelname)-8s %(filename)s:%(lineno)-4d %(message)s',
             datefmt=datefmt or '%Y-%m-%d %H:%M:%S',
         )
     finally:
