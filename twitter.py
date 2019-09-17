@@ -35,6 +35,7 @@ class TwitterView(View):
             )
         else:
             dd = dtime.replace(year=today.year)
+            text = '  ' + text if text.startswith('@') else text # pad replies a bit
             return node(
                 heading=org_dt(dd.date(), active=True) + ' ' + f"{link(title='TW', url=url)} at {org_dt(dtime, inactive=True)} {text}",
                 tags=['ttweet'],
