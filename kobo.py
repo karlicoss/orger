@@ -1,38 +1,28 @@
 #!/usr/bin/env python3
-from typing import Collection
+from orger import View
+from orger.inorganic import node, link
+from orger.org_utils import dt_heading, pick_heading
 
 from my.books.kobo import get_pages, Highlight # type: ignore
 # TODO rename to get_books?
 
-from orger.org_view import OrgViewOverwrite, OrgWithKey
-from orger.org_utils import OrgTree, as_org, pick_heading
 
-class KoboView(OrgViewOverwrite):
-    file = __file__
-    logger_tag = 'kobo-view'
-
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
-        def render_highlight(h: Highlight) -> OrgTree:
+class KoboView(View):
+    def get_items(self):
+        def render_highlight(h: Highlight):
             # TODO FIXME could use bookmark page??
-            heading = 'bookmark' if h.kind == 'bookmark' else h.text
+            heading = 'bookmark' if h.kind == 'bookmark' else (h.text or '')
             body = h.annotation # TODO check if empty
-            return OrgTree(as_org(
-                created=h.dt,
-                heading=heading,
+            return node(
+                heading=dt_heading(h.dt, heading),
                 body=body,
-            ))
-
-        return [(
-            str(page.book),
-            OrgTree(
-                as_org(
-                    created=page.dt,
-                    heading=str(page.book),
-                ),
-                [render_highlight(h) for h in page.highlights],
             )
-        ) for page in get_pages()]
+
+        for page in get_pages():
+            yield str(page.book), node(
+                heading=dt_heading(page.dt, str(page.book)),
+                children=[render_highlight(h) for h in page.highlights],
+            )
 
 
 def test():
@@ -43,8 +33,5 @@ def test():
     assert any('Singer' in c.item for c in ll.children)
 
 
-def main():
-    KoboView.main(default_to='kobo.org')
-
 if __name__ == '__main__':
-    main()
+    KoboView.main()
