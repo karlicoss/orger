@@ -1,37 +1,31 @@
 #!/usr/bin/env python3
-from kython.kerror import unwrap
+from orger import View, OrgWithKey
+from orger.inorganic import node, link
+from orger.org_utils import dt_heading
 
-from orger.org_view import OrgViewOverwrite, OrgWithKey
-from orger.org_utils import OrgTree, as_org
+from kython.kerror import unwrap
 
 from my.reading import polar
 
-class PolarView(OrgViewOverwrite):
-    file = __file__
-    logger_tag = 'polar-view'
-
+class PolarView(View):
     def get_items(self):
         def make_item(res: polar.Result) -> OrgWithKey:
             try:
                 b = unwrap(res)
             except polar.Error as e:
-                return f'error_{e.uid}', OrgTree(as_org(heading=str(e)))
+                return f'error_{e.uid}', node(heading=str(e))
             else:
-                return b.uid, OrgTree(as_org(
-                    created=b.created,
-                    heading=f'{b.title} {b.filename}',
+                return b.uid, node(
+                    heading=dt_heading(b.created, f'{b.title} {b.filename}'),
                     # tags=b.tags, # TODO?
-                ), [
-                    OrgTree(as_org(
-                        created=hl.created,
-                        heading=hl.selection, # TODO some shitty characters; generally concatenated text doesn't look great...
-                    ), [
-                        OrgTree(as_org(
-                            created=c.created,
-                            heading=c.text,
-                        )) for c in hl.comments
-                    ]) for hl in b.items
-                ])
+                    children=[node(
+                        heading=dt_heading(hl.created, hl.selection),
+                        # TODO some shitty characters; generally concatenated text doesn't look great...
+                        children=[node(
+                            heading=dt_heading(c.created, c.text)
+                        ) for c in hl.comments]
+                    ) for hl in b.items]
+                )
         for b in polar.get_entries():
             yield make_item(b)
 
