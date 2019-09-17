@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
 from orger import Interactive
-from orger.inorganic import node, link
-from orger.org_utils import dt_heading
+from orger.inorganic import node, link, org_dt
 
 from my.hypothesis import get_todos
-
-from kython.org_tools import link as org_link
-
-from orger import OrgViewAppend, OrgWithKey
-from orger.org_utils import OrgTree, as_org
 
 
 class HypTodos(Interactive):
@@ -19,18 +13,19 @@ class HypTodos(Interactive):
         for t in get_todos():
             yield (t.eid, node(
                 heading=t.content,
+                tags=['hyp2org', *t.tags],
+
+                # TODO could group these three into a helper
                 todo='TODO',
-                # TODO created property?
-                inline_created=False,
+                scheduled=t.dt.date(),
+                properties={'CREATED': org_dt(t.dt, inactive=True)},
+
                 body=f'''
 {t.annotation}
-{org_link(title=t.title, url=t.link)}
-{org_link(title="in context", url=t.context)}
-'''.strip(),
-                created=t.dt,
-                tags=['hyp2org', *t.tags],
+{link(title=t.title, url=t.link)}
+{link(title="in context", url=t.context)}
+'''.lstrip(),
             ))
-        )
 
 
 def main():
