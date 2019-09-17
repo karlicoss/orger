@@ -25,11 +25,7 @@ class HypView(View):
 
 # TODO tests for determinism
 # TODO they could also be extracted to common routine and used in each provider
-
-def main():
-    # TODO default_to could depend on filename?
-    HypView.main(default_to='hypothesis.org')
-    # TODO need to group by source??
+# TODO need to group by source??
 
 if __name__ == '__main__':
-    main()
+    HypView.main()

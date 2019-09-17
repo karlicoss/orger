@@ -39,8 +39,5 @@ def test():
     assert org_tree.render().splitlines()[2].startswith('* [') # meh
 
 
-def main():
-    IpView.main(default_to='instapaper.org')
-
 if __name__ == '__main__':
-    main()
+    IpView.main()

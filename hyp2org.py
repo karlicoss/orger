@@ -22,9 +22,5 @@ class HypTodos(Interactive):
             )
 
 
-def main():
-    HypTodos.main(default_to='hyp2org.org', default_state='hyp2org.state')
-
-
 if __name__ == '__main__':
-    main()
+    HypTodos.main()

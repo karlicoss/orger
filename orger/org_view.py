@@ -55,8 +55,7 @@ class OrgView:
 # TODO wonder if I could reuse append bits here?
 class OrgViewOverwrite(OrgView):
     @classmethod
-    def main(cls, default_to: PathIsh, setup_parser=None) -> None:
-        # TODO remove default_to
+    def main(cls, default_to=None, setup_parser=None) -> None:
         p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         p.add_argument('--to', type=Path, default=Path(cls.name() + '.org'))
         if setup_parser is not None:
@@ -141,10 +140,10 @@ class OrgViewAppend(OrgView):
             )
 
     @classmethod
-    def main(cls, default_to: PathIsh, default_state: PathIsh) -> None:
+    def main(cls, default_to=None, default_state=None) -> None:
         p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        p.add_argument('--to', type=Path, default=Path(default_to), help='file where new atems are appended')
-        p.add_argument('--state', type=Path, default=Path(default_state), help='state file for remembering last handled item')
+        p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are appended')
+        p.add_argument('--state', type=Path, default=Path(cls.name() + '.state.json'), help='state file for keeping track of handled items')
         p.add_argument('--init', action='store_true')
         p.add_argument('--dry-run', action='store_true')
         args = p.parse_args()
