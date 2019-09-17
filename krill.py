@@ -3,7 +3,7 @@
 # The name stands for K[oboD]rill. Also crustaceans are good for you. 🦐
 from orger import Interactive
 from orger.inorganic import node, link, org_dt
-from orger.org_utils import todo, pick_heading
+from orger.org_utils import todo
 
 from my.books.kobo import get_highlights, Highlight # type: ignore
 

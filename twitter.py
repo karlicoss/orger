@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import View
 from orger.inorganic import node, link, org_dt, OrgNode
-from orger.org_utils import pick_heading, dt_heading
+from orger.org_utils import dt_heading
 
 from typing import List
 

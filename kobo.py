@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import View
 from orger.inorganic import node, link
-from orger.org_utils import dt_heading, pick_heading
+from orger.org_utils import dt_heading
 
 from my.books.kobo import get_pages, Highlight # type: ignore
 # TODO rename to get_books?
@@ -26,11 +26,12 @@ class KoboView(View):
 
 
 def test():
+    from orger.org_utils import pick_heading
     org_tree = KoboView().make_tree()
     ll = pick_heading(org_tree, 'Unsong')
     assert ll is not None
     assert len(ll.children) > 4
-    assert any('Singer' in c.item for c in ll.children)
+    assert any('Singer' in c.render() for c in ll.children)
 
 
 if __name__ == '__main__':

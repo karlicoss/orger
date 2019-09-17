@@ -1,9 +1,9 @@
 from typing import NamedTuple, Sequence, Any, List, Tuple, Optional, TypeVar, Callable, Union, Type
 
-from .inorganic import as_org_entry, OrgNode, org_dt
+from .inorganic import as_org_entry, OrgNode, org_dt, from_lazy
 
 def pick_heading(root: OrgNode, text: str) -> Optional[OrgNode]:
-    if text in root.item:
+    if text in from_lazy(root.heading):
         return root
     for ch in root.children:
         chr = pick_heading(ch, text)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import View
 from orger.inorganic import node, link
-from orger.org_utils import dt_heading, pick_heading
+from orger.org_utils import dt_heading
 from orger.org_view import OrgWithKey
 
 from kython.kerror import unwrap
@@ -27,10 +27,11 @@ class PinboardView(View):
 
 # TODO FIXME could make test generic perhaps? so you'd only have to specify expected content
 def test():
+    from orger.org_utils import pick_heading
     tree = PinboardView().make_tree()
     ll = pick_heading(tree, 'Cartesian Closed Comic #21')
     assert ll is not None
-    assert 'doctorwho' in ll.item
+    assert 'doctorwho' in ll.render()
 
 
 if __name__ == '__main__':

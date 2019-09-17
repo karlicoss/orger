@@ -55,7 +55,7 @@ class OrgView:
 # TODO wonder if I could reuse append bits here?
 class OrgViewOverwrite(OrgView):
     @classmethod
-    def main(cls, default_to=None, setup_parser=None) -> None:
+    def main(cls, setup_parser=None) -> None:
         p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         p.add_argument('--to', type=Path, default=Path(cls.name() + '.org'))
         if setup_parser is not None:
@@ -140,7 +140,7 @@ class OrgViewAppend(OrgView):
             )
 
     @classmethod
-    def main(cls, default_to=None, default_state=None) -> None:
+    def main(cls) -> None:
         p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are appended')
         p.add_argument('--state', type=Path, default=Path(cls.name() + '.state.json'), help='state file for keeping track of handled items')

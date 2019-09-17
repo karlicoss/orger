@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import View
 from orger.inorganic import node, link
-from orger.org_utils import dt_heading, pick_heading
+from orger.org_utils import dt_heading
 
 from my.instapaper import get_pages
 
@@ -26,15 +26,13 @@ class IpView(View):
         # TODO better error handling, cooperate with org_tools
 
 
-# TODO hmm. promnesia could explore automatically, perhaps even via porg?
-# make it a feature of renderer?
-# although just need to make one space tabulation, that'd solve all my problems
 def test():
+    from orger.org_utils import pick_heading
     org_tree = IpView().make_tree()
     ll = pick_heading(org_tree, 'Life Extension Methods')
     assert ll is not None
     assert len(ll.children) > 4
-    assert any('sleep a lot' in c.item for c in ll.children)
+    assert any('sleep a lot' in c.render() for c in ll.children)
 
     assert org_tree.render().splitlines()[2].startswith('* [') # meh
 
