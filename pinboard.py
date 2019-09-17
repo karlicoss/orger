@@ -33,12 +33,6 @@ def test():
     assert 'doctorwho' in ll.item
 
 
-def main():
-    PinboardView.main(default_to='pinboard.org')
-
-
 if __name__ == '__main__':
-    main()
-
-
+    PinboardView.main()
 

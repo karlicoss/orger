@@ -39,7 +39,7 @@ def test():
 
 
 def main():
-    PolarView.main(default_to='polar.org')
+    PolarView.main()
 
 
 if __name__ == '__main__':

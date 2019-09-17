@@ -28,8 +28,5 @@ class IpTodos(Interactive):
 #     assert any('sleep a lot' in c.item for c in ll.children)
 
 
-def main():
-    IpTodos.main(default_to='ip2org.org', default_state='ip2org.json')
-
 if __name__ == '__main__':
-    main()
+    IpTodos.main()

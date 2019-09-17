@@ -23,4 +23,4 @@ class YoutubeView(View):
 
 
 if __name__ == '__main__':
-    YoutubeView.main(default_to='youtube.org')
+    YoutubeView.main()
