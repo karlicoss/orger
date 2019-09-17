@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import View
-from orger.org_utils import dt_heading
 from orger.inorganic import node, link
+from orger.org_utils import dt_heading
 
 from my.hypothesis import get_pages
 

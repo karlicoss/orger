@@ -1,34 +1,34 @@
 #!/usr/bin/env python3
-from typing import NamedTuple, List, Any, Iterable, Tuple, Optional, Collection
+from orger import View
+from orger.inorganic import node, link
+from orger.org_utils import dt_heading, pick_heading
+from orger.org_view import OrgWithKey
 
 from kython.kerror import unwrap
-from kython.org_tools import link as org_link
-
-from orger.org_view import OrgViewOverwrite, OrgWithKey
-from orger.org_utils import OrgTree, as_org, pick_heading
+# TODO rename unwrap to make it more consistent with rust?
 
 from my.bookmarks import pinboard
 
-class PinboardView(OrgViewOverwrite):
+class PinboardView(View):
     file = __file__
     logger_tag  ='pinboard-view'
 
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
+    def get_items(self):
         def make_item(res: pinboard.Result) -> OrgWithKey:
             try:
                 b = unwrap(res)
             except pinboard.Error as e:
-                return f'error_{e.uid}', OrgTree(as_org(heading=str(e)))
+                return f'error_{e.uid}', node(heading=str(e))
             else:
-                return b.uid, OrgTree(as_org(
-                    created=b.created,
-                    heading=org_link(title=b.title, url=b.url),
+                return b.uid, node(
+                    heading=dt_heading(b.created, link(title=b.title, url=b.url)),
                     body=b.description,
                     tags=b.tags,
-                ))
+                )
         return [make_item(b) for b in pinboard.get_entries()]
 
+
+# TODO FIXME could make test generic perhaps? so you'd only have to specify expected content
 def test():
     tree = PinboardView().make_tree()
     ll = pick_heading(tree, 'Cartesian Closed Comic #21')
