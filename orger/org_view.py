@@ -10,7 +10,8 @@ from typing import List, Tuple, Iterable, Optional
 # TODO dekythonize
 from kython.state import JsonState
 
-from .org_utils import OrgTree, OrgNode
+from .org_utils import OrgTree
+from .inorganic import OrgNode
 from .common import PathIsh, atomic_append_check, assert_not_edited, setup_logger
 
 # TODO tests for determinism? not sure where should they be...
