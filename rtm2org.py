@@ -1,31 +1,19 @@
 #!/usr/bin/env python3
-from kython.org_tools import link as org_link
-
-from orger.org_view import OrgViewOverwrite, OrgWithKey
-from orger.org_utils import OrgTree, as_org, pick_heading
+from orger import View
+from orger.inorganic import node, link
+from orger.org_utils import dt_heading
 
 from my.rtm import get_active_tasks
 
 
-class RtmView(OrgViewOverwrite):
-    file = __file__
-    logger_tag = 'rtm-view'
-
+class RtmView(View):
     def get_items(self):
         for t in get_active_tasks():
-            yield (
-                t.uid,
-                OrgTree(as_org(
-                    heading=t.title,
-                    body='\n'.join(t.notes),
-                    created=t.time,
-                    tags=t.tags,
-                )),
+            yield t.uid, node(
+                dt_heading(t.time, t.title),
+                tags=t.tags,
+                body='\n'.join(t.notes),
             )
 
-
-def main():
-    RtmView.main(default_to='rtm.org')
-
 if __name__ == '__main__':
-    main()
+    RtmView.main()
