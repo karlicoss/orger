@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 # Automatically import stuff from my Kobo backups into org-mode for further drilling. Mainly using in for learning German words.
 # The name stands for K[oboD]rill. Also crustaceans are good for you. 🦐
-
-from typing import Collection
+from orger import Interactive
+from orger.inorganic import node, link, org_dt
+from orger.org_utils import todo, pick_heading
 
 from my.books.kobo import get_highlights, Highlight # type: ignore
-
-from orger.org_view import OrgViewAppend, OrgWithKey
-from orger.org_utils import OrgTree, as_org, pick_heading
-
 
 def is_drill(i: Highlight):
     if i.kind == 'bookmark':
@@ -29,28 +26,16 @@ def get_drill_items():
     return list(sorted(filter(is_drill, get_highlights()), key=lambda h: h.dt))
 
 
-class Krill(OrgViewAppend):
-    file = __file__
-    logger_tag = 'krill'
+class Krill(Interactive):
+    def get_items(self):
+        for i in get_drill_items():
+            yield i.eid, todo(
+                i.dt,
 
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
-        return [(
-            i.eid, # TODO shit judging by the state.json, looks like it might be flaky
-            OrgTree(as_org(
-                todo=True,
-                inline_created=False,
                 heading=i.text,
-                body=f'from {i.book.title}',
-                created=i.dt,
                 tags=['drill'],
-            ))
-        ) for i in get_drill_items()]
-
-
-def main():
-    Krill.main(default_to='krill.org', default_state='krill.json')
-
+                body=f'from {i.book.title}\n',
+            )
 
 if __name__ == '__main__':
-    main()
+    Krill.main()
