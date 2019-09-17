@@ -1,28 +1,22 @@
 #!/usr/bin/env python3
-from typing import Collection
+from orger import Interactive
+from orger.inorganic import node, link, org_dt
+from orger.org_utils import todo
 
 from my.books.kobo import get_todos, Highlight # type: ignore
 
-from orger.org_view import OrgViewAppend, OrgWithKey
-from orger.org_utils import OrgTree, as_org, pick_heading
 
-class KoboTodos(OrgViewAppend):
-    file = __file__
-    logger_tag = 'kobo-todos'
+class KoboTodos(Interactive):
+    def get_items(self):
+        for t in get_todos():
+            # TODO shit judging by the state.json, looks like eid might be flaky?
+            yield t.eid, todo(
+                t.dt,
 
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
-        return [(
-            t.eid, # TODO shit judging by the state.json, looks like it might be flaky
-            OrgTree(as_org(
-                todo=True,
-                inline_created=False,
                 heading=t.text,
-                body=f'{t.annotation}\nfrom {t.book}',
-                created=t.dt,
                 tags=['kobo2org'],
-            ))
-        ) for t in get_todos()]
+                body=f'{t.annotation}\nfrom {t.book}\n',
+            )
 
 
 # TODO test?
@@ -33,9 +27,5 @@ class KoboTodos(OrgViewAppend):
 #     assert len(ll.children) > 4
 #     assert any('Singer' in c.item for c in ll.children)
 
-
-def main():
-    KoboTodos.main(default_to='kobo2org.org', default_state='kobo2org.json')
-
 if __name__ == '__main__':
-    main()
+    KoboTodos.main()
