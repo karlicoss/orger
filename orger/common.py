@@ -77,13 +77,13 @@ def test_atomic_append_check(tmp_path):
 
 def setup_logger(logger, level=None, format=None, datefmt=None):
     import logging
-    old_root = logging.Logger.root
+    old_root = logging.root
     try:
-        logging.Logger.root = logger
+        logging.root = logger
         logging.basicConfig(
             level=level or logging.DEBUG,
             format=format or '%(asctime)s %(levelname)-8s %(filename)s:%(lineno)-4d %(message)s',
             datefmt=datefmt or '%Y-%m-%d %H:%M:%S',
         )
     finally:
-        logging.Logger.root = old_root
+        logging.root = old_root
