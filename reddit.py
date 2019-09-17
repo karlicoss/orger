@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-from multiprocessing import Pool
-from typing import NamedTuple, List, Any, Iterable, Tuple, Optional, Collection
+from orger import Interactive
+from orger.inorganic import node, link, org_dt
+from orger.org_utils import todo, dt_heading
+
+from typing import NamedTuple, List, Any, Iterable, Tuple, Optional
 import logging
 
 from my.reddit import Save, get_saves, get_logger as get_reddit_logger # type: ignore
 
-from kython.org_tools import link as org_link
 from kython.knetwork import is_alive
-from kython.klogging import setup_logzero
-
-from orger.org_view import OrgViewAppend, OrgWithKey
-from orger.org_utils import OrgTree, as_org
 
 # TODO mm, yeah, perhaps favoriting date makes a bit more sense...
 # I guess, sort of reasonable to test at rendering time
@@ -33,34 +31,21 @@ from orger.org_utils import OrgTree, as_org
 # TODO is_alive should handle DELETED comments...
 # ah, sometimes it's [removed]
 # TODO maybe, track that in reddit provider? since we have all version of saved items over time
-class RedditView(OrgViewAppend):
-    logger_tag = 'reddit-view'
-    file = __file__
-
-    # pylint: disable=unsubscriptable-object
-    def get_items(self) -> Collection[OrgWithKey]:
-        return [(
-            s.sid,
-            # need to make it lazy due to is_alive
-            # TODO I guess makes more sense to make individual properties lazy
-            OrgTree(lambda s=s: as_org( # type: ignore
-                    created=s.save_dt,
-                    heading=('' if is_alive(s.url) else '[#A] *DEAD* ') + org_link(title=s.title, url=s.url) + f' /r/{s.subreddit}',
-                    body=s.text,
-            ))
-        ) for s in get_saves(all_=True, parallel=False)]
-
-
-def main():
-    # setup_logzero(get_reddit_logger(), level=logging.DEBUG)
-
-    RedditView.main(
-        default_to='reddit.org',
-        default_state='reddit.json',
-    )
+class RedditView(Interactive):
+    def get_items(self):
+        for s in get_saves(all_=True, parallel=False):
+            yield s.sid, node(
+                # need to make heading lazy due to is_alive
+                heading=lambda s=s: dt_heading(
+                    s.save_dt,
+                    ('' if is_alive(s.url) else '[#A] *DEAD* ') + link(title=s.title, url=s.url) + f' /r/{s.subreddit}'
+                ),
+                body=s.text,
+            )
 
 if __name__ == '__main__':
-    main()
+    # setup_logzero(get_reddit_logger(), level=logging.DEBUG)
+    RedditView.main()
 
 # ok, so far:
 # adding -- tracked via json state; kinda ok.
