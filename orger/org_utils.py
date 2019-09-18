@@ -15,12 +15,15 @@ def pick_heading(root: OrgNode, text: str) -> Optional[OrgNode]:
 
 from orger.inorganic import datetime2org
 from datetime import datetime
-def dt_heading(dt: datetime, heading: str):
+def dt_heading(dt: Optional[datetime], heading: str):
     """
     Helper to inline datetime in heading
     """
     # TODO move to inorganic? not sure
-    return '[{}] '.format(datetime2org(dt)) + heading
+    if dt is None:
+        return heading
+    else:
+        return '[{}] '.format(datetime2org(dt)) + heading
 
 
 # TODO not sure if belongs here
