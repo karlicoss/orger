@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Automatically import stuff from my Kobo backups into org-mode for further drilling. Mainly using in for learning German words.
 # The name stands for K[oboD]rill. Also crustaceans are good for you. 🦐
-from orger import Interactive
+from orger import InteractiveView
 from orger.inorganic import node, link, org_dt
 from orger.org_utils import todo
 
@@ -26,7 +26,7 @@ def get_drill_items():
     return list(sorted(filter(is_drill, get_highlights()), key=lambda h: h.dt))
 
 
-class Krill(Interactive):
+class Krill(InteractiveView):
     def get_items(self):
         for i in get_drill_items():
             yield i.eid, todo(

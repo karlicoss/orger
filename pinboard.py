@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from orger import View
+from orger import StaticView
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 from orger.org_view import OrgWithKey
@@ -9,7 +9,7 @@ from kython.kerror import unwrap
 
 from my.bookmarks import pinboard
 
-class PinboardView(View):
+class PinboardView(StaticView):
     def get_items(self):
         def make_item(res: pinboard.Result) -> OrgWithKey:
             try:

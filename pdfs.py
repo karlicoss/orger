@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from orger import View
+from orger import StaticView
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 
@@ -8,7 +8,7 @@ from kython.kerror import unwrap
 
 from my.reading import pdfs
 
-class PdfView(View):
+class PdfView(StaticView):
     def get_items(self):
         from pathlib import Path
         for pdf in sorted(

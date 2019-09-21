@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import View
+from orger import StaticView
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 
 
 from my.media.movies import get_movies
 
-class Movies(View):
+class Movies(StaticView):
     def get_items(self):
         movies = get_movies()
         for m in movies:

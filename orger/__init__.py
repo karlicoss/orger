@@ -1,9 +1,4 @@
-from .org_view import OrgView, OrgViewAppend, OrgViewOverwrite, OrgWithKey
-
-Overwrite = OrgViewOverwrite
-Append = OrgViewAppend
-
-View = OrgViewOverwrite
-Interactive = OrgViewAppend
-
+from .org_view import StaticView, InteractiveView, OrgWithKey
 # TODO just rename org_view to init?
+
+

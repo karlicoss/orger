@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import Interactive
+from orger import InteractiveView
 from orger.inorganic import node, link, org_dt
 from orger.org_utils import todo
 
 from my.hypothesis import get_todos
 
 
-class HypTodos(Interactive):
+class HypTodos(InteractiveView):
     def get_items(self):
         for t in get_todos():
             yield t.eid, todo(

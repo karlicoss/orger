@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from orger import Interactive
+from orger import InteractiveView
 from orger.inorganic import node, link, org_dt
 from orger.org_utils import todo, dt_heading
 
@@ -31,7 +31,7 @@ from kython.knetwork import is_alive
 # TODO is_alive should handle DELETED comments...
 # ah, sometimes it's [removed]
 # TODO maybe, track that in reddit provider? since we have all version of saved items over time
-class RedditView(Interactive):
+class RedditView(InteractiveView):
     def get_items(self):
         for s in get_saves(all_=True, parallel=False):
             yield s.sid, node(

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import Interactive
+from orger import InteractiveView
 from orger.inorganic import node, link, org_dt
 from orger.org_utils import todo
 
 from my.instapaper import get_todos # type: ignore
 
 
-class IpTodos(Interactive):
+class IpTodos(InteractiveView):
     def get_items(self):
         for t in get_todos():
             # TODO move erorr handling to base renderer?

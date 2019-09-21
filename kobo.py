@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from orger import View
+from orger import StaticView
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 
@@ -7,7 +7,7 @@ from my.books.kobo import get_pages, Highlight # type: ignore
 # TODO rename to get_books?
 
 
-class KoboView(View):
+class KoboView(StaticView):
     def get_items(self):
         def render_highlight(h: Highlight):
             # TODO FIXME could use bookmark page??

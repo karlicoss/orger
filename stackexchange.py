@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import View
+from orger import StaticView
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 
 import my.stackexchange as se
 
 
-class Stackexchange(View):
+class Stackexchange(StaticView):
     def get_items(self):
         # TODO adapt for other stackexchange items
         se_data = se.get_data()

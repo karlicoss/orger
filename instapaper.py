@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import View
+from orger import StaticView
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 
 from my.instapaper import get_pages
 
 
-class IpView(View):
+class IpView(StaticView):
     def get_items(self):
         for page in get_pages():
             yield (page.bookmark.bid, node(

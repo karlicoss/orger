@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import View
+from orger import StaticView
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 
 from my.hypothesis import get_pages
 
 
-class HypView(View):
+class HypView(StaticView):
     def get_items(self):
         # TODO FIXME View doesn't need pairs?
         for page in get_pages():

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from orger import View
+from orger import StaticView
 from orger.inorganic import node, link, org_dt, OrgNode
 from orger.org_utils import dt_heading
 
@@ -11,7 +11,7 @@ from kython import parse_date_new
 today = parse_date_new('today') # TODO get rid of it...
 
 
-class TwitterView(View):
+class TwitterView(StaticView):
     @property
     def mode(self) -> str:
         assert self.cmdline_args is not None

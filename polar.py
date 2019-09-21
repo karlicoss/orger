@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from orger import View, OrgWithKey
+from orger import StaticView, OrgWithKey
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 
@@ -7,7 +7,7 @@ from kython.kerror import unwrap
 
 from my.reading import polar
 
-class PolarView(View):
+class PolarView(StaticView):
     def get_items(self):
         def make_item(res: polar.Result) -> OrgWithKey:
             try:
