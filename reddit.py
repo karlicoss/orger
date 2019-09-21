@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import InteractiveView
 from orger.inorganic import node, link, org_dt
-from orger.org_utils import todo, dt_heading
+from orger.common import todo, dt_heading
 
 from typing import NamedTuple, List, Any, Iterable, Tuple, Optional
 import logging

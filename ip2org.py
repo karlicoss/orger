@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import InteractiveView
 from orger.inorganic import node, link, org_dt
-from orger.org_utils import todo
+from orger.common import todo
 
 from my.instapaper import get_todos # type: ignore
 

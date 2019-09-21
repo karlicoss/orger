@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import StaticView
 from orger.inorganic import node, link
-from orger.org_utils import dt_heading
+from orger.common import dt_heading
 
 import my.coding.github as gh
 
