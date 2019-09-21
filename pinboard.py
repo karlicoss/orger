@@ -25,14 +25,10 @@ class PinboardView(StaticView):
         return [make_item(b) for b in pinboard.get_entries()]
 
 
-# TODO FIXME could make test generic perhaps? so you'd only have to specify expected content
-def test():
-    from orger.org_utils import pick_heading
-    tree = PinboardView().make_tree()
-    ll = pick_heading(tree, 'Cartesian Closed Comic #21')
-    assert ll is not None
-    assert 'doctorwho' in ll.render()
-
+test = PinboardView.make_test(
+    heading='Cartesian Closed Comic #21',
+    contains='doctorwho', # TODO predicate?
+)
 
 if __name__ == '__main__':
     PinboardView.main()

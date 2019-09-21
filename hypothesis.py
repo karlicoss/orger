@@ -8,9 +8,8 @@ from my.hypothesis import get_pages
 
 class HypView(StaticView):
     def get_items(self):
-        # TODO FIXME View doesn't need pairs?
         for page in get_pages():
-            yield (page.link, node(
+            yield node(
                 heading=dt_heading(page.dt, link(title=page.title, url=page.link)),
                 children=[node(
                     heading=dt_heading(hl.dt, link(title='context', url=hl.hyp_link)),
@@ -20,7 +19,7 @@ class HypView(StaticView):
                         heading=hl.annotation,
                     )]
                 ) for hl in page.highlights]
-            ))
+            )
 
 
 # TODO tests for determinism

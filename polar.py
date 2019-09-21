@@ -30,18 +30,11 @@ class PolarView(StaticView):
             yield make_item(b)
 
 
-def test():
-    from orger.org_utils import pick_heading
-    tree = PolarView().make_tree()
-    ll = pick_heading(tree, 'I missed the bit where he only restricted to spin')
-    assert ll is not None
-    # TODO more tests?
-
-
-def main():
-    PolarView.main()
+test = PolarView.make_test(
+    heading='I missed the bit where he only restricted to spin'
+)
 
 
 if __name__ == '__main__':
-    main()
+    PolarView.main()
 

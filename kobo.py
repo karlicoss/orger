@@ -25,13 +25,11 @@ class KoboView(StaticView):
             )
 
 
-def test():
-    from orger.org_utils import pick_heading
-    org_tree = KoboView().make_tree()
-    ll = pick_heading(org_tree, 'Unsong')
-    assert ll is not None
-    assert len(ll.children) > 4
-    assert any('Singer' in c.render() for c in ll.children)
+# TODO maybe fixture instead?
+test = KoboView.make_test(
+    heading='Unsong',
+    contains='Singer',
+)
 
 
 if __name__ == '__main__':

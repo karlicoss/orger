@@ -18,14 +18,7 @@ class KoboTodos(InteractiveView):
                 body=f'{t.annotation}\nfrom {t.book}\n',
             )
 
-
 # TODO test?
-# def test():
-#     org_tree = KoboView().make_tree()
-#     ll = pick_heading(org_tree, 'Unsong')
-#     assert ll is not None
-#     assert len(ll.children) > 4
-#     assert any('Singer' in c.item for c in ll.children)
 
 if __name__ == '__main__':
     KoboTodos.main()

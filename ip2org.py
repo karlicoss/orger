@@ -18,14 +18,7 @@ class IpTodos(InteractiveView):
                 body=f'{t.note}\nfrom {link(title="ip", url=t.instapaper_link)}   {link(title=t.title, url=t.url)}',
             )
 
-
-# TODO add some test
-# def test():
-#     org_tree = IpView().make_tree()
-#     ll = pick_heading(org_tree, 'Life Extension Methods')
-#     assert ll is not None
-#     assert len(ll.children) > 4
-#     assert any('sleep a lot' in c.item for c in ll.children)
+# TODO add some test?
 
 
 if __name__ == '__main__':

@@ -99,6 +99,17 @@ class StaticView(OrgView):
             children=items,
         )
 
+    @classmethod
+    def make_test(cls, *, heading: str, contains: Optional[str]=None):
+        def test():
+            tree = cls().make_tree() # TODO make sure it works on both static and interactive?
+            from .org_utils import pick_heading
+            ll = pick_heading(tree, heading)
+            assert ll is not None
+            if contains is not None:
+                assert contains in ll.render()
+        return test
+
 
 class InteractiveView(OrgView):
     def _run(
