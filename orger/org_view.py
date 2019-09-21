@@ -12,7 +12,8 @@ from typing import List, Tuple, Iterable, Optional
 from kython.state import JsonState
 
 from .inorganic import OrgNode
-from .atomic_append import PathIsh, atomic_append_check, assert_not_edited, setup_logger
+from .atomic_append import PathIsh, atomic_append_check, assert_not_edited
+from .common import setup_logger
 
 # TODO tests for determinism? not sure where should they be...
 # think of some generic thing to test that?
@@ -101,9 +102,19 @@ class StaticView(OrgView):
 
     @classmethod
     def make_test(cls, *, heading: str, contains: Optional[str]=None):
+        from .inorganic import from_lazy
+        def pick_heading(root: OrgNode, text: str) -> Optional[OrgNode]:
+            if text in from_lazy(root.heading):
+                return root
+            for ch in root.children:
+                chr = pick_heading(ch, text)
+                if chr is not None:
+                    return chr
+            else:
+                return None
+
         def test():
             tree = cls().make_tree() # TODO make sure it works on both static and interactive?
-            from .org_utils import pick_heading
             ll = pick_heading(tree, heading)
             assert ll is not None
             if contains is not None:
