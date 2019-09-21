@@ -28,9 +28,8 @@ def dt_heading(dt: Optional[datetime], heading: str):
 
 # TODO not sure if belongs here
 def todo(dt: datetime, **kwargs):
-    pass
     """
-    Helper to set some common todo item thing
+    Helper to simplify creating todos
     """
     return OrgNode(
         todo='TODO',
@@ -38,27 +37,3 @@ def todo(dt: datetime, **kwargs):
         properties={'CREATED': org_dt(dt, inactive=True)},
         **kwargs,
     )
-
-
-# TODO move tests to inorganic?
-def test_render():
-    xx = OrgNode(
-        'file header',
-        children=[
-            OrgNode('subitem'),
-        ],
-    )
-    assert xx.render() == """
-file header
-* subitem""".lstrip()
-
-
-def test_render_2():
-    xxx = OrgNode('TODO something')
-    assert xxx.render(level=1) == "* TODO something"
-
-
-def test_render_3():
-    # test lazy property
-    zzz = OrgNode(todo='TODO', heading=lambda: 'hi')
-    assert zzz.render(level=1).startswith('* TODO hi')
