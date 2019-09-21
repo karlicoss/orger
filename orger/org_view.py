@@ -8,10 +8,9 @@ from subprocess import check_call
 from tempfile import TemporaryDirectory
 from typing import List, Tuple, Iterable, Optional
 
-# TODO dekythonize
-from kython.state import JsonState
-
+# TODO vendorize inorganic and state thing
 from .inorganic import OrgNode
+from .state import JsonState
 from .atomic_append import PathIsh, atomic_append_check, assert_not_edited
 from .common import setup_logger
 
