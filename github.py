@@ -3,7 +3,7 @@ from orger import View
 from orger.inorganic import node, link
 from orger.org_utils import dt_heading
 
-import my.github as gh
+import my.coding.github as gh
 
 
 class Github(View):
