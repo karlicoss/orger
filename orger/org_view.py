@@ -12,7 +12,7 @@ from typing import List, Tuple, Iterable, Optional
 from kython.state import JsonState
 
 from .inorganic import OrgNode
-from .common import PathIsh, atomic_append_check, assert_not_edited, setup_logger
+from .atomic_append import PathIsh, atomic_append_check, assert_not_edited, setup_logger
 
 # TODO tests for determinism? not sure where should they be...
 # think of some generic thing to test that?
