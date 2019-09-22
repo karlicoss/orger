@@ -24,6 +24,7 @@ class IpView(StaticView):
         # TODO spacing top level items could be option of dumper as well?
         # TODO better error handling, cooperate with org_tools
 
+# TODO move tests to separate files, otherwise they would annoy other people
 test = IpView.make_test(
     heading='Life Extension Methods',
     contains='sleep a lot',
