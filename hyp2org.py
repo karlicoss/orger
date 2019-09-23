@@ -15,7 +15,7 @@ class HypTodos(InteractiveView):
                 heading=t.content,
                 tags=['hyp2org', *t.tags],
                 body=f'''
-{t.annotation}
+{t.text}
 {link(title=t.title, url=t.link)}
 {link(title="in context", url=t.context)}
 '''.lstrip(),

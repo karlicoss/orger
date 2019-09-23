@@ -15,10 +15,10 @@ class HypView(StaticView):
                     heading=dt_heading(hl.dt, link(title='context', url=hl.hyp_link)),
                     tags=hl.tags,
                     body=hl.content,
-                    children=[] if hl.annotation is None else [node(
-                        heading=hl.annotation,
+                    children=[] if hl.text is None else [node(
+                        heading=hl.text,
                     )]
-                ) for hl in page.highlights]
+                ) for hl in page.annotations]
             )
 
 
