@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from .inorganic import as_org_entry, OrgNode, org_dt, datetime2org
+from .inorganic import OrgNode, timestamp
 
 
 def dt_heading(dt: Optional[datetime], heading: str):
@@ -12,7 +12,7 @@ def dt_heading(dt: Optional[datetime], heading: str):
     if dt is None:
         return heading
     else:
-        return '[{}] '.format(datetime2org(dt)) + heading
+        return timestamp(dt, inactive=True) + ' ' + heading
 
 
 # TODO not sure if belongs here
@@ -23,7 +23,7 @@ def todo(dt: datetime, **kwargs):
     return OrgNode(
         todo='TODO',
         scheduled=dt.date(),
-        properties={'CREATED': org_dt(dt, inactive=True)},
+        properties={'CREATED': timestamp(dt, inactive=True)},
         **kwargs,
     )
 

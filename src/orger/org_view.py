@@ -66,9 +66,8 @@ class StaticView(OrgView):
     def _run(self, to: Path):
         self.main_common()
 
-        # TODO make it read only??
         org_tree = self.make_tree()
-        rtree = org_tree.render()
+        rtree = org_tree.render(level=0)
 
         assert_not_edited(to)
         # again, not properly atomic, but hopefully enough
@@ -101,9 +100,9 @@ class StaticView(OrgView):
 
     @classmethod
     def make_test(cls, *, heading: str, contains: Optional[str]=None):
-        from .inorganic import from_lazy
+        from .inorganic import _from_lazy
         def pick_heading(root: OrgNode, text: str) -> Optional[OrgNode]:
-            if text in from_lazy(root.heading):
+            if text in _from_lazy(root.heading):
                 return root
             for ch in root.children:
                 chr = pick_heading(ch, text)
