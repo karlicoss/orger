@@ -1,0 +1,11 @@
+Orger converts things into org-mode, what else did you expect?
+
+
+* TODO types of views
+Static are meant to be read only and generated from scratch every time
+Interactive are incremental. orger uses json file to keep track of items it already processed so you can modify existing entries.
+
+** TODO using Interactive
+   link to test for now?
+
+* TODO better description, but might be easier to understand what it does just by looking at specific converters
