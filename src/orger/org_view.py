@@ -266,7 +266,7 @@ def test_org_view_append(tmp_path: Path):
 
 
     rpath_time = rpath.stat().st_mtime
-    spath_time = rpath.stat().st_mtime
+    spath_time = spath.stat().st_mtime
     run_view(items)
     assert rpath.stat().st_mtime == rpath_time
     assert spath.stat().st_mtime == spath_time

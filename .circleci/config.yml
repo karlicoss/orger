@@ -9,6 +9,8 @@ jobs:
       - checkout
       - run: python3 -m pip install --user tox
       # ugh, hug is involved as subprocess and doesn't see virtualenv I gues??
+
+      - run: sudo apt install vim # used in one of tests
       - run: python3 -m tox
 
 
