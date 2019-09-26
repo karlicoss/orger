@@ -211,8 +211,6 @@ def test_org_view_overwrite(tmp_path: Path):
 * alala""".lstrip()
 
 
-# TODO major bit of this test really belongs to json state..
-# TODO try with error, make sure it's executed before action
 def test_org_view_append(tmp_path: Path):
     import json
     class TestView(InteractiveView):
