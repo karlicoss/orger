@@ -2,7 +2,7 @@
 # Automatically import stuff from my Kobo backups into org-mode for further drilling. Mainly using in for learning German words.
 # The name stands for K[oboD]rill. Also crustaceans are good for you. 🦐
 from orger import InteractiveView
-from orger.inorganic import node, link, org_dt
+from orger.inorganic import node, link
 from orger.common import todo
 
 from my.books.kobo import get_highlights, Highlight # type: ignore

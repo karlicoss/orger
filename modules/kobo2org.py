@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from orger import InteractiveView
-from orger.inorganic import node, link, org_dt
+from orger.inorganic import node, link
 from orger.common import todo
 
 from my.books.kobo import get_todos, Highlight # type: ignore

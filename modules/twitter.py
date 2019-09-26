@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from orger import StaticView
-from orger.inorganic import node, link, org_dt, OrgNode
+from orger.inorganic import node, link, timestamp, OrgNode
 from orger.common import dt_heading
 
 from typing import List
@@ -37,7 +37,7 @@ class TwitterView(StaticView):
             dd = dtime.replace(year=today.year)
             text = '  ' + text if text.startswith('@') else text # pad replies a bit
             return node(
-                heading=org_dt(dd.date(), active=True) + ' ' + f"{link(title='TW', url=url)} at {org_dt(dtime, inactive=True)} {text}",
+                heading=timestamp(dd.date(), active=True) + ' ' + f"{link(title='TW', url=url)} at {timestamp(dtime, inactive=True)} {text}",
                 tags=['ttweet'],
             )
 
