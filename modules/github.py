@@ -11,8 +11,12 @@ class Github(StaticView):
         for e in gh.get_events():
             # TODO filter only events that have body? e.g. not sure if much point emitting pull requests here
             yield node(
-                dt_heading(e.dt, e.summary), # TODO link?
-                # TODO body
+                dt_heading(
+                    e.dt,
+                    link(url=e.link, title=e.summary) if e.link is not None else e.summary
+                ),
+                # TODO would be nice to convert from markdown to org here
+                body=e.body,
             )
 
 
