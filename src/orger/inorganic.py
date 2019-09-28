@@ -2,6 +2,7 @@ from datetime import datetime, date
 import logging
 from pathlib import Path
 import re
+import os
 from collections import OrderedDict
 from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, TypeVar, Callable, Union, List
 
@@ -204,8 +205,11 @@ def _sanitize_body(text: str) -> str:
     r"""
     >>> _sanitize_body('this is not a heading!:\n* hi')
     ' this is not a heading!:\n * hi'
+    >>> _sanitize_body('Some thoughts:\r\n\r\n* convenience')
+    ' Some thoughts:\n \n * convenience'
     """
     # TODO hmm. maybe just tabulating with 1 space is enough?...
+    text = text.replace('\r\n', os.linesep)
     return ''.join(' ' + l for l in text.splitlines(keepends=True))
 
 
