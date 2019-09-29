@@ -41,6 +41,7 @@ That ten line program results in a file =Github.org=:
   ....
 #+END_SRC
 
+I run it automatically through Cron every night.
 
 ** types of views
  - =StaticView= are meant to be read only and generated from scratch every time.
