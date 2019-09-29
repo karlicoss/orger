@@ -10,7 +10,8 @@ if __name__ == '__main__':
         author='Dima Gerasimov',
         author_email='karlicoss@gmail.com',
         description='Converts data into org-mode',
-        packages=find_packages(),
+        package_dir={name: 'src/orger'},
+        packages=[name],
         install_requires=['atomicwrites'],
         extras_require={
             'testing': ['pytest'],
