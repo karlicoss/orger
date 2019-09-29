@@ -128,6 +128,9 @@ class InteractiveView(OrgView):
             init: bool=False,
             dry_run: bool=False,
     ) -> None:
+        if not to.exists() and not init:
+            raise RuntimeError(f"target {to} doesn't exist! Try running with --init")
+
         state = JsonState(
             path=state_path,
             logger=self.logger,
@@ -141,11 +144,8 @@ class InteractiveView(OrgView):
             raise RuntimeError(f'Duplicate items {dups}')
 
         if not to.exists():
-            if init:
-                self.logger.warning("target %s didn't exist, initializing!", to)
-                atomic_append_check(to, self.file_header + '\n')
-            else:
-                raise RuntimeError(f"target {to} doesn't exist! Try running with --init")
+            self.logger.warning("target %s didn't exist, initializing!", to)
+            atomic_append_check(to, self.file_header + '\n')
 
         for key, item in items:
             def action(item=item):
