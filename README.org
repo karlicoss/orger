@@ -65,4 +65,5 @@ I run it automatically through Cron every night.
      ./orger_module.py --to /path/to/output.org --state /path/to/state.json
    #+END_SRC
 
-   
+* Similar projects
+- [[https://github.com/novoid/Memacs][Memacs by novoid]]
