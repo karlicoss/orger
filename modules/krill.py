@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-Automatically import stuff from my Kobo backups into org-mode for further drilling. Mainly using in for learning German words.
+Automatically import stuff from my Kobo backups into org-mode for further spaced repetition (via org-drill in my case).
+Mainly learning vocabulary with it.
+
+It uses [[https://github.com/karlicoss/kobuddy][kobuddy]] to extract data from Kobo exports.
 
 The name stands for K[oboD]rill.
 """
