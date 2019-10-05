@@ -49,6 +49,9 @@ class OrgView:
 
 # TODO wonder if I could reuse append bits here?
 class StaticView(OrgView):
+    """
+    =StaticView= are meant to be read only and are generated from scratch every time.
+    """
     @classmethod
     def main(cls, setup_parser=None) -> None:
         p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -121,6 +124,11 @@ class StaticView(OrgView):
 
 
 class InteractiveView(OrgView):
+    """
+    =InteractiveView= are incremental, so only new items from the data source are appended to the output org-mode file.
+
+    To keep track of old/new items, it's using a separate JSON state file.
+    """
     def _run(
             self,
             to: Path,

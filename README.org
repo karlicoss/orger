@@ -1,3 +1,5 @@
+# -*- org-confirm-babel-evaluate: nil; -*-
+
 [[https://circleci.com/gh/karlicoss/orger/tree/master][https://circleci.com/gh/karlicoss/orger/tree/master.svg?style=svg]]
 
 Orger converts your data into Org-mode.
@@ -43,23 +45,38 @@ That ten line program results in a file =Github.org=:
 
 I run it automatically through Cron every night.
 
-** types of views
- - =StaticView= are meant to be read only and generated from scratch every time.
+# TODO Use :session t???
 
+
+** types of views
+ - 
+    #+BEGIN_SRC python :exports results :results raw
+      import sys
+      sys.path.insert(0, 'src')
+      import orger
+      return orger.org_view.StaticView.__doc__
+    #+END_SRC
+   
    You can run static module as:
   
    #+BEGIN_SRC bash
      ./orger_module.py --to /path/to/output.org
    #+END_SRC
    
- - =InteractiveView= are incremental, so only new items from the data source are appended to the output org-mode file.
 
+ - 
+    #+BEGIN_SRC python :exports results :results raw
+      import sys
+      sys.path.insert(0, 'src')
+      import orger
+      return orger.org_view.InteractiveView.__doc__
+    #+END_SRC
    Typically you'd want to use these as a source of tasks for your todo list. See [[./modules/ip2org.py][ip2org]] as an example.
 
    You can run interactive module as:
 
    #+BEGIN_SRC bash
-     # initialise the state file first to avoid surprises
+     # initialise the state file first to avoid surprises (you only need to do it once)
      ./orger_module.py --to /path/to/output.org --state /path/to/state.json --init
      # after that you can just run it:
      ./orger_module.py --to /path/to/output.org --state /path/to/state.json
