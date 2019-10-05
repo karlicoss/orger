@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-# Automatically import stuff from my Kobo backups into org-mode for further drilling. Mainly using in for learning German words.
-# The name stands for K[oboD]rill. Also crustaceans are good for you. 🦐
+"""
+Automatically import stuff from my Kobo backups into org-mode for further drilling. Mainly using in for learning German words.
+
+The name stands for K[oboD]rill.
+"""
 from orger import InteractiveView
 from orger.inorganic import node, link
 from orger.common import todo
@@ -9,15 +12,15 @@ from my.books.kobo import get_highlights, Highlight # type: ignore
 
 def is_drill(i: Highlight):
     if i.kind == 'bookmark':
-        return
-    ann = i.annotation
-    if ann is None:
-        ann = ''
+        return False
+    ann = i.annotation or ''
     if ann.strip().lower() == 'drill':
         return True
+
+    # single highlighted word almost always means I want to memorise it
+    # might result in a false positive but not too much of a problem
     words = (i.text or '').strip().split()
     if len(words) <= 1:
-        # might result in a false positive but can just not drill it and remove
         return True
     return False
 
