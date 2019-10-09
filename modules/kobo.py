@@ -3,8 +3,7 @@ from orger import StaticView
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
-from my.books.kobo import get_pages, Highlight # type: ignore
-# TODO rename to get_books?
+from my.books.kobo import get_books_with_highlights, Highlight
 
 
 class KoboView(StaticView):
@@ -18,7 +17,7 @@ class KoboView(StaticView):
                 body=body,
             )
 
-        for page in get_pages():
+        for page in get_books_with_highlights():
             yield str(page.book), node(
                 heading=dt_heading(page.dt, str(page.book)),
                 children=[render_highlight(h) for h in page.highlights],
