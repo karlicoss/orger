@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
 from orger import InteractiveView
 from orger.inorganic import node, link
-from orger.common import todo, dt_heading
-
-import logging
+from orger.common import dt_heading
 
 from my.reddit import get_saves
-
-# TODO get rid of this?
-from kython.knetwork import is_alive
-
 
 class RedditView(InteractiveView):
     def get_items(self):
@@ -18,18 +12,33 @@ class RedditView(InteractiveView):
                 # need to make heading lazy due to is_alive
                 heading=lambda s=s: dt_heading(
                     s.created,
-                    ('' if is_alive(s.url) else '[#A] *DEAD* ') + link(title=s.title, url=s.url) + f' /r/{s.subreddit}'
+                    ('[#A] *DEAD*' if self.is_dead_url(s.url) else '') + link(title=s.title, url=s.url) + f' /r/{s.subreddit}'
                 ),
                 body=s.text,
             )
 
+    def is_dead_url(self, url: str) -> bool:
+        assert self.cmdline_args is not None
+        if not self.cmdline_args.mark_dead:
+            return False
+        from kython.knetwork import is_alive
+        return is_alive(url)
+        # TODO should somehow track handle DELETED comments...
+        # sometimes it's also [removed]
+        # TODO maybe, track that in reddit provider? since we have all version of saved items over time
+
+
+def setup_parser(p):
+    p.add_argument(
+        '--mark-dead',
+        action='store_true',
+        help="Mark deleted/unavailable content so you could process it ASAP. Mostly useful on first run",
+    )
+
 if __name__ == '__main__':
-    RedditView.main()
+    RedditView.main(setup_parser=setup_parser)
 
 
-# TODO is_alive should handle DELETED comments...
-# ah, sometimes it's [removed]
-# TODO maybe, track that in reddit provider? since we have all version of saved items over time
 
 # TODO actually might be useful to store forever a read only version...
 # eh, turned out easier to make it lazy..

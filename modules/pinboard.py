@@ -3,9 +3,6 @@ from orger import StaticView
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
-# from kython.kerror import unwrap
-# TODO rename unwrap to make it more consistent with rust?
-
 import my.pinboard as pinboard
 
 class PinboardView(StaticView):

@@ -174,12 +174,15 @@ class InteractiveView(OrgView):
         raise NotImplementedError
 
     @classmethod
-    def main(cls) -> None:
+    def main(cls, setup_parser=None) -> None:
         p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are appended')
         p.add_argument('--state', type=Path, default=Path(cls.name() + '.state.json'), help='state file for keeping track of handled items')
         p.add_argument('--init', action='store_true')
         p.add_argument('--dry-run', action='store_true')
+        if setup_parser is not None:
+            setup_parser(p)
+
         args = p.parse_args()
 
         inst = cls(cmdline_args=args)
