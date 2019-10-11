@@ -20,11 +20,11 @@ Here's a quick minimalistic demo.
   from orger.inorganic import node, link
   from orger.common import dt_heading
 
-  import my.github_data
+  import my.coding.github as github_data
 
   class Github(StaticView):
     def get_items(self):
-      for event in my.github_data.get_events():
+      for event in github_data.get_events():
         yield node(dt_heading(event.dt, event.summary))
       
   Github.main()
@@ -44,6 +44,10 @@ That ten line program results in a file =Github.org=:
 #+END_SRC
 
 I run it automatically through Cron every night.
+
+The trick to accessing data is in ~import my.config.github~.
+You can learn about setting it up and using [[https://github.com/karlicoss/my][here]].
+
 
 # TODO Use :session t???
 
