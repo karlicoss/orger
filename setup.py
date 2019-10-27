@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from os.path import join, dirname
 
 name = 'orger'
 
@@ -10,7 +11,7 @@ if __name__ == '__main__':
         author='Dima Gerasimov',
         author_email='karlicoss@gmail.com',
         description='Converts data into org-mode',
-        package_dir={name: 'src/orger'},
+        package_dir={name: join(dirname(__file__), 'src', 'orger')},
         packages=[name],
         install_requires=['atomicwrites'],
         extras_require={
