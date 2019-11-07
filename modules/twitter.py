@@ -27,7 +27,7 @@ class TwitterView(StaticView):
     def _render(self, t: my.tweets.Tweet) -> OrgNode:
         dtime = t.dt
         text = t.text
-        url = t.url
+        url = t.permalink
         if self.mode == 'all':
             return node(
                 heading=dt_heading(dtime, link(title=text, url=url)),
