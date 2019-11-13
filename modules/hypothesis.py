@@ -14,11 +14,11 @@ class HypView(StaticView):
                 children=[node(
                     heading=dt_heading(hl.dt, link(title='context', url=hl.hyp_link)),
                     tags=hl.tags,
-                    body=hl.content,
-                    children=[] if hl.text is None else [node(
-                        heading=hl.text,
+                    body=hl.highlight,
+                    children=[] if hl.annotation is None else [node(
+                        heading=hl.annotation,
                     )]
-                ) for hl in page.annotations]
+                ) for hl in page.highlights]
             )
 
 
