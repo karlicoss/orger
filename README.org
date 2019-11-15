@@ -2,9 +2,9 @@
 
 [[https://circleci.com/gh/karlicoss/orger/tree/master][https://circleci.com/gh/karlicoss/orger/tree/master.svg?style=svg]]
 
-Orger converts your data into Org-mode.
+Orger converts your data into Org-mode to allow for quick access and search.
 
-I write in detail about it [[https://beepb00p.xyz/orger.html][here]].
+I write in detail about usecases and motivation for it [[https://beepb00p.xyz/orger.html][here]], this readme is setup manual for the most part!
 
 * Installing
 
@@ -45,7 +45,7 @@ That ten line program results in a file =Github.org=:
 
 I run it automatically through Cron every night.
 
-The trick to accessing data is in ~import my.config.github~.
+The trick to accessing data is in ~import my.coding.github~.
 You can learn about setting it up and using [[https://github.com/karlicoss/my][here]].
 
 
