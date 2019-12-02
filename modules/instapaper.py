@@ -17,6 +17,9 @@ class IpView(StaticView):
                 children=[node(
                     heading=dt_heading(hl.dt, link(title="ip", url=page.bookmark.instapaper_link)),
                     body=hl.text,
+                    children=[] if hl.note is None else [
+                        node(heading=hl.note),
+                    ],
                 ) for hl in page.highlights]
             )
         # TODO autostrip could be an option for formatter
