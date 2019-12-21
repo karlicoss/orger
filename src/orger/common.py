@@ -16,8 +16,10 @@ def dt_heading(dt: Optional[datetime], heading: str):
 
 
 def error(e: Exception) -> OrgNode:
+    import traceback
     return OrgNode(
-        heading=f"ERROR! {type(e)} {e}"
+        heading=f"ERROR!",
+        body='\n'.join(traceback.format_exception(Exception, e, None)),
     )
 
 
