@@ -15,6 +15,12 @@ def dt_heading(dt: Optional[datetime], heading: str):
         return timestamp(dt, inactive=True) + ' ' + heading
 
 
+def error(e: Exception) -> OrgNode:
+    return OrgNode(
+        heading=f"ERROR! {type(e)} {e}"
+    )
+
+
 # TODO not sure if belongs here
 def todo(dt: datetime, **kwargs):
     """
