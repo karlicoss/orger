@@ -11,8 +11,8 @@ class IpView(StaticView):
         for page in get_pages():
             yield node(
                 heading=dt_heading(
-                    page.bookmark.dt,
-                    f'{link(title="ip", url=page.bookmark.instapaper_link)}   {link(title=page.bookmark.title, url=page.bookmark.url)}',
+                    page.dt,
+                    f'{link(title="ip", url=page.bookmark.instapaper_link)}   {link(title=page.title, url=page.url)}',
                 ),
                 children=[node(
                     heading=dt_heading(hl.dt, link(title="ip", url=page.bookmark.instapaper_link)),
