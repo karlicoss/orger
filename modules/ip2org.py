@@ -10,12 +10,14 @@ class IpTodos(InteractiveView):
     def get_items(self):
         for t in get_todos():
             # TODO move erorr handling to base renderer?
-            yield t.uid, todo(
-                dt=t.dt,
+            hl = t.highlight
+            bm = t.bookmark
+            yield hl.hid, todo(
+                dt=hl.dt,
 
-                heading=t.text,
+                heading=hl.text,
                 tags=['ip2org'],
-                body=f'{t.note}\nfrom {link(title="ip", url=t.instapaper_link)}   {link(title=t.title, url=t.url)}',
+                body=f'{hl.note}\nfrom {link(title="ip", url=hl.instapaper_link)}   {link(title=bm.title, url=bm.url)}',
             )
 
 # TODO add some test?
