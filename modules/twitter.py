@@ -3,12 +3,12 @@ from orger import StaticView
 from orger.inorganic import node, link, timestamp, OrgNode
 from orger.common import dt_heading
 
+import datetime
 from typing import List
 
-import my.tweets
+import my.twitter as twi
 
-from kython import parse_date_new
-today = parse_date_new('today') # TODO get rid of it...
+today = datetime.datetime.now()
 
 
 class TwitterView(StaticView):
@@ -17,14 +17,14 @@ class TwitterView(StaticView):
         assert self.cmdline_args is not None
         return self.cmdline_args.mode
 
-    def _get_tweets(self) -> List[my.tweets.Tweet]:
+    def _get_tweets(self) -> List[twi.Tweet]:
         if self.mode == 'all':
-            return my.tweets.tweets_all()
+            return twi.tweets_all()
         else:
-            tw = my.tweets.predicate_date(lambda d: d.day == today.day and d.month == today.month) # not gonna work on 29 feb!!
+            tw = twi.predicate_date(lambda d: d.day == today.day and d.month == today.month) # not gonna work on 29 feb!!
             return tw
 
-    def _render(self, t: my.tweets.Tweet) -> OrgNode:
+    def _render(self, t: twi.Tweet) -> OrgNode:
         dtime = t.dt
         text = t.text
         url = t.permalink
