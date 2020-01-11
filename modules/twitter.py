@@ -19,7 +19,7 @@ class TwitterView(StaticView):
 
     def _get_tweets(self) -> List[twi.Tweet]:
         if self.mode == 'all':
-            return twi.tweets_all()
+            return twi.tweets()
         else:
             tw = twi.predicate_date(lambda d: d.day == today.day and d.month == today.month) # not gonna work on 29 feb!!
             return tw
@@ -44,7 +44,7 @@ class TwitterView(StaticView):
 
     def get_items(self):
         for tweet in self._get_tweets():
-            yield tweet.tid, self._render(tweet)
+            yield self._render(tweet)
 
 
 def setup_parser(p):
