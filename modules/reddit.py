@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
+"""
+Better interface for reading saved reddit posts/comments
+"""
 from orger import InteractiveView
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
-from my.reddit import get_saves
+from my.reddit import saved
 
 class RedditView(InteractiveView):
     def get_items(self):
-        for s in get_saves():
+        for s in saved():
             yield s.sid, node(
                 # need to make heading lazy due to is_alive
-                heading=lambda s=s: dt_heading(
+                heading=lambda s=s: dt_heading( # type: ignore[misc]
                     s.created,
                     ('[#A] *DEAD*' if self.is_dead_url(s.url) else '') + link(title=s.title, url=s.url) + f' /r/{s.subreddit}'
                 ),

@@ -13,7 +13,7 @@ class PinboardView(StaticView):
                 body=b.description,
                 tags=b.tags,
             )
-        return [make_item(b) for b in pinboard.get_bookmarks()]
+        return [make_item(b) for b in pinboard.bookmarks()]
 
 
 test = PinboardView.make_test(
