@@ -28,15 +28,20 @@ def is_todo(e: Highlight) -> bool:
 
 class HypTodos(InteractiveView):
     def get_items(self):
-        for t in filter(is_todo, get_highlights()):
-            yield t.id, todo(
-                dt=t.dt,
+        for t in get_highlights():
+            if isinstance(t, Exception):
+                # I guess there isn't much we can do here? will be spotted by other tools
+                continue
+            if not is_todo(t):
+                continue
+            yield t.hid, todo(
+                dt=t.created,
 
                 heading=t.highlight,
                 tags=['hyp2org', *t.tags],
                 body=f'''
 {t.annotation}
-{link(title=t.page_title, url=t.page_link)}
+{link(title=t.title, url=t.url)}
 {link(title="in context", url=t.hyp_link)}
 '''.lstrip(),
             )

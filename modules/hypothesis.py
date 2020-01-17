@@ -14,9 +14,9 @@ class HypView(StaticView):
                 yield error(page)
                 continue
             yield node(
-                heading=dt_heading(page.dt, link(title=page.title, url=page.link)),
+                heading=dt_heading(page.created, link(title=page.title, url=page.url)),
                 children=[node(
-                    heading=dt_heading(hl.dt, link(title='context', url=hl.hyp_link)),
+                    heading=dt_heading(hl.created, link(title='context', url=hl.hyp_link)),
                     tags=hl.tags,
                     body=hl.highlight,
                     children=[] if hl.annotation is None else [node(
