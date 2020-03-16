@@ -3,12 +3,12 @@ from orger import StaticView
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
-from my.rtm import get_active_tasks
+from my.rtm import active_tasks
 
 
 class RtmView(StaticView):
     def get_items(self):
-        for t in get_active_tasks():
+        for t in active_tasks():
             yield t.uid, node(
                 dt_heading(t.time, t.title),
                 tags=t.tags,
