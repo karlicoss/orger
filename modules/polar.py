@@ -25,6 +25,7 @@ class PolarView(StaticView):
     def get_items(self):
         def make_item(res: polar.Result):
             if isinstance(res, polar.Error):
+                # TODO could create error heading from exception automatically? take first line as heading and rest + traceback as the body
                 return node(heading='ERROR ' + str(res)) # TODO priority A?
             else:
                 b = res

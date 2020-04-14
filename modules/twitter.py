@@ -4,12 +4,14 @@ from orger.inorganic import node, link, timestamp, OrgNode
 from orger.common import dt_heading
 
 import datetime
-from typing import List
+from typing import List, Any
 
-import my.twitter as twi
+import my.twitter.all as twi
 
 today = datetime.datetime.now()
 
+# TODO FIXME expose Tweet type in twitter.common module?
+Tweet = Any
 
 class TwitterView(StaticView):
     @property
@@ -17,15 +19,15 @@ class TwitterView(StaticView):
         assert self.cmdline_args is not None
         return self.cmdline_args.mode
 
-    def _get_tweets(self) -> List[twi.Tweet]:
+    def _get_tweets(self) -> List[Tweet]:
         if self.mode == 'all':
             return twi.tweets()
         else:
             tw = twi.predicate_date(lambda d: d.day == today.day and d.month == today.month) # not gonna work on 29 feb!!
             return tw
 
-    def _render(self, t: twi.Tweet) -> OrgNode:
-        dtime = t.dt
+    def _render(self, t: Tweet) -> OrgNode:
+        dtime = t.created_at
         text = t.text
         url = t.permalink
         if self.mode == 'all':
@@ -43,7 +45,7 @@ class TwitterView(StaticView):
 
 
     def get_items(self):
-        for tweet in self._get_tweets():
+        for tweet in sorted(self._get_tweets(), key=lambda t: t.created_at):
             yield self._render(tweet)
 
 
