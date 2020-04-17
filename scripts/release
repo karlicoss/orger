@@ -1,0 +1,17 @@
+#!/bin/bash
+set -eu
+
+cd "$(dirname "$0")"
+cd ..
+
+# pip3 install --user hatch
+# you might need to run hatch config --restore first to generate config
+hatch build   --verbose --clean
+
+
+# TODO not sure if it's ideal..
+export TWINE_USERNAME=$(python3 -c 'import pip_secrets as p; print(p.username, end="")')
+export TWINE_PASSWORD=$(python3 -c 'import pip_secrets as p; print(p.token   , end="")')
+
+
+# hatch release --strict "$@"
