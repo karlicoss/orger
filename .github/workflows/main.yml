@@ -14,8 +14,9 @@ jobs:
       with:
         submodules: recursive
 
-    # - uses: mxschmitt/action-tmate@v2
+    - uses: mxschmitt/action-tmate@v2
 
+    # TODO extract in a script
     - run: |
         pip3 install tox
         # I fucking hate CI services. I can't use --user install because .local/bin isn't in PATH
