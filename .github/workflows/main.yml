@@ -1,0 +1,26 @@
+name: CI
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    # - uses: mxschmitt/action-tmate@v2
+
+    - run: |
+        pip3 install tox
+        # I fucking hate CI services. I can't use --user install because .local/bin isn't in PATH
+
+        # vim is used in one of the tests
+        sudo apt install vim
+
+        tox
