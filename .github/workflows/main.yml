@@ -16,9 +16,8 @@ jobs:
 
     - shell: bash
       env:
-        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD_TEST }}
       run: |
-        pip3 install hatch
         scripts/release --test
 
     # - uses: mxschmitt/action-tmate@v2
