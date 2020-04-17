@@ -14,7 +14,14 @@ jobs:
       with:
         submodules: recursive
 
-    - uses: mxschmitt/action-tmate@v2
+    - shell: bash
+      env:
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+      run: |
+        pip3 install hatch
+        scripts/release --test
+
+    # - uses: mxschmitt/action-tmate@v2
 
     # TODO extract in a script
     - run: |
