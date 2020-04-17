@@ -14,8 +14,16 @@ jobs:
       with:
         submodules: recursive
 
+    - shell: bash
+      env:
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+      run: |
+        pip3 install hatch
+        scripts/release --test
+
     # - uses: mxschmitt/action-tmate@v2
 
+    # TODO extract in a script
     - run: |
         pip3 install tox
         # I fucking hate CI services. I can't use --user install because .local/bin isn't in PATH

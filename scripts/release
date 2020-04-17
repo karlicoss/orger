@@ -8,10 +8,7 @@ cd ..
 # you might need to run hatch config --restore first to generate config
 hatch build   --verbose --clean
 
+export TWINE_USERNAME='__token__'
+export TWINE_PASSWORD=${TWINE_PASSWORD:-$(python3 -c 'import pip_secrets as p; print(p.token   , end="")')}
 
-# TODO not sure if it's ideal..
-export TWINE_USERNAME=$(python3 -c 'import pip_secrets as p; print(p.username, end="")')
-export TWINE_PASSWORD=$(python3 -c 'import pip_secrets as p; print(p.token   , end="")')
-
-
-# hatch release --strict "$@"
+hatch release --strict "$@"
