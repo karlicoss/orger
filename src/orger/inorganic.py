@@ -8,14 +8,17 @@ from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, Ty
 
 Dateish = Union[datetime, date]
 
-def link(*, url: str, title: str) -> str:
+def link(*, url: str, title: Optional[str]) -> str:
     """
     >>> link(url='http://reddit.com', title='[R]eddit!')
     '[[http://reddit.com][Reddit!]]'
     """
-    title = _sanitize_heading(title)
     url = _sanitize_heading(url)
-    return f'[[{url}][{title}]]'
+    if title is not None:
+        title = _sanitize_heading(title)
+        return f'[[{url}][{title}]]'
+    else:
+        return f'[[{url}]]'
 
 
 def timestamp(t: Dateish, inactive: bool=False, active: bool=False) -> str:
