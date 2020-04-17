@@ -1,0 +1,43 @@
+name: CI
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    # - uses: mxschmitt/action-tmate@v2
+
+    # TODO extract in a script
+    - run: |
+        pip3 install tox
+        # I fucking hate CI services. I can't use --user install because .local/bin isn't in PATH
+
+        # vim is used in one of the tests
+        sudo apt install vim
+
+        tox
+
+    # always deploy merged master to test pypi
+    - if: github.event.ref == 'refs/heads/master'
+      env:
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD_TEST }}
+      run: |
+        pip3 install wheel twine
+        scripts/release --test
+
+    # always deploy tags to release pypi
+    - if: startsWith(github.event.ref, 'refs/tags')
+      env:
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+      run: |
+        pip3 install wheel twine
+        scripts/release
