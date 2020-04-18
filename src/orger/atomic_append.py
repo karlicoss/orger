@@ -67,8 +67,14 @@ def test_atomic_append_check(tmp_path):
     assert of.read_text() == 'data1data2'
 
     with tmp_popen(['vi', '-c', 'startinsert', str(of)], stdin=PIPE, stdout=PIPE, stderr=PIPE) as p: # enter insert mode
-        sleep(3) # ugh, needs long pause for some reason
-        assert len(list(tmp_path.glob('.*.swp'))) > 0 # precondition
+        for attempt in range(10):
+            # ugh, needs long pause for some reason
+            sleep(1)
+            swapfiles = list(tmp_path.glob('.*.swp'))
+            if len(swapfiles) > 0:
+                break
+        else:
+            raise AssertionError(f'Expected swapfiles in {tmp_path}')
 
         with pytest.raises(Exception):
             # Expected to raise due to being edited by vim
