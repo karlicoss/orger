@@ -91,6 +91,9 @@ class RoamView(StaticView):
         with ThreadPoolExecutor() as pool:
             items = list(chain.from_iterable(pool.map(roam_note_to_org, rr.nodes)))
 
+        # move the ones with no children to the bottom
+        items = list(sorted(items, key=lambda n: len(n.children), reverse=True))
+
         yield from items
 
 
