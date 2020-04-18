@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from itertools import chain
+from typing import Iterable
 
 from orger import StaticView
 from orger.inorganic import node, link, OrgNode
@@ -34,10 +36,17 @@ def roam_text_to_org(text: str) -> str:
     return org
 
 
-def roam_note_to_org(node: roamresearch.Node, top=False) -> OrgNode:
+def roam_note_to_org(node: roamresearch.Node, top=False) -> Iterable[OrgNode]:
     """
     Converts Roam node into Org-mode representation
     """
+    children = node.children
+    empty = len(node.title or '') == 0 and len(node.body or '') == 0 and len(children) == 0
+    if empty:
+        # sometimes nodes are empty. Maybe accidentally pressed Enter?
+        # just don't do anything in this case
+        return
+
     title = node.title
     # org-mode target allows jumping straight into
     # conveniently, links in Roam are already represented as [[link]] !
@@ -63,15 +72,14 @@ def roam_note_to_org(node: roamresearch.Node, top=False) -> OrgNode:
             if len(body) == 0:
                 body = None
 
-    children = list(map(roam_note_to_org, node.children))
-
     if top:
         heading = dt_heading(node.created, heading)
-    return OrgNode(
+
+    yield OrgNode(
         todo=todo,
         heading=heading,
         body=body,
-        children=children,
+        children=list(chain.from_iterable(map(roam_note_to_org, children))),
     )
 
 
@@ -81,7 +89,7 @@ class RoamView(StaticView):
         from concurrent.futures import ThreadPoolExecutor
         # todo might be an overkill, only using because of pandoc..
         with ThreadPoolExecutor() as pool:
-            items = list(pool.map(roam_note_to_org, rr.nodes))
+            items = list(chain.from_iterable(pool.map(roam_note_to_org, rr.nodes)))
 
         yield from items
 
