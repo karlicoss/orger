@@ -26,9 +26,7 @@ def roam_text_to_org(text: str) -> str:
     Cleans up Roam artifacts and adapts for better Org rendering
     """
     for f, t in [
-            ('{{[[slider]]}}', ''    ),
-            ('{{[[TODO]]}}'  , 'TODO'),
-            ('{{[[DONE]]}}'  , 'DONE'),
+            ('{{[[slider]]}}', ''),
     ]:
         text = text.replace(f, t)
     org = md2org(text)
@@ -46,8 +44,15 @@ def roam_note_to_org(node: roamresearch.Node) -> OrgNode:
     target = '' if title is None else f'<<{title}>> '
     heading = target + link(title='x', url=node.permalink)
 
+    todo = None
     body = node.body
     if body is not None:
+        for t in ('TODO', 'DONE'):
+            ts = '{{[[' + t + ']]}}'
+            if body.startswith(ts):
+                todo = t
+                body = body[len(ts):]
+
         body = roam_text_to_org(body)
 
         lines = body.splitlines(keepends=True)
@@ -64,6 +69,7 @@ def roam_note_to_org(node: roamresearch.Node) -> OrgNode:
         children = list(pool.map(roam_note_to_org, node.children))
 
     return OrgNode(
+        todo=todo,
         heading=heading,
         body=body,
         children=children,
