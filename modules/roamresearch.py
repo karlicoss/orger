@@ -34,7 +34,7 @@ def roam_text_to_org(text: str) -> str:
     return org
 
 
-def roam_note_to_org(node: roamresearch.Node) -> OrgNode:
+def roam_note_to_org(node: roamresearch.Node, top=False) -> OrgNode:
     """
     Converts Roam node into Org-mode representation
     """
@@ -68,6 +68,8 @@ def roam_note_to_org(node: roamresearch.Node) -> OrgNode:
     with ThreadPoolExecutor() as pool:
         children = list(pool.map(roam_note_to_org, node.children))
 
+    if top:
+        heading = dt_heading(node.created, heading)
     return OrgNode(
         todo=todo,
         heading=heading,
@@ -79,7 +81,7 @@ def roam_note_to_org(node: roamresearch.Node) -> OrgNode:
 class RoamView(StaticView):
     def get_items(self):
         rr = roamresearch.roam()
-        yield from map(roam_note_to_org, rr.nodes)
+        yield from map(lambda n: roam_note_to_org(n, top=True), rr.nodes)
 
 
 if __name__ == '__main__':
