@@ -63,10 +63,7 @@ def roam_note_to_org(node: roamresearch.Node, top=False) -> OrgNode:
             if len(body) == 0:
                 body = None
 
-    from concurrent.futures import ThreadPoolExecutor
-    # todo might be an overkill, only using because of pandoc..
-    with ThreadPoolExecutor() as pool:
-        children = list(pool.map(roam_note_to_org, node.children))
+    children = list(map(roam_note_to_org, node.children))
 
     if top:
         heading = dt_heading(node.created, heading)
@@ -81,7 +78,12 @@ def roam_note_to_org(node: roamresearch.Node, top=False) -> OrgNode:
 class RoamView(StaticView):
     def get_items(self):
         rr = roamresearch.roam()
-        yield from map(lambda n: roam_note_to_org(n, top=True), rr.nodes)
+        from concurrent.futures import ThreadPoolExecutor
+        # todo might be an overkill, only using because of pandoc..
+        with ThreadPoolExecutor() as pool:
+            items = list(pool.map(roam_note_to_org, rr.nodes))
+
+        yield from items
 
 
 if __name__ == '__main__':
