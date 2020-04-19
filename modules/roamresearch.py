@@ -40,11 +40,15 @@ def roam_note_to_org(node: roamresearch.Node, top=False) -> Iterable[OrgNode]:
     """
     Converts Roam node into Org-mode representation
     """
-    children = node.children
-    empty = len(node.title or '') == 0 and len(node.body or '') == 0 and len(children) == 0
+    children = list(chain.from_iterable(map(roam_note_to_org, node.children)))
+
+    empty = len(node.body or '') == 0 and len(children) == 0
     if empty:
-        # sometimes nodes are empty. Maybe accidentally pressed Enter?
+        # sometimes nodes are empty. two cases:
+        # - no heading -- child notes, like accidental enter presses I guess
+        # - heading    -- notes that haven't been created yet
         # just don't do anything in this case
+        # todo make this logic conditional?
         return
 
     title = node.title
@@ -79,7 +83,7 @@ def roam_note_to_org(node: roamresearch.Node, top=False) -> Iterable[OrgNode]:
         todo=todo,
         heading=heading,
         body=body,
-        children=list(chain.from_iterable(map(roam_note_to_org, children))),
+        children=children,
     )
 
 
@@ -89,7 +93,7 @@ class RoamView(StaticView):
         from concurrent.futures import ThreadPoolExecutor
         # todo might be an overkill, only using because of pandoc..
         with ThreadPoolExecutor() as pool:
-            items = list(chain.from_iterable(pool.map(roam_note_to_org, rr.nodes)))
+            items = list(chain.from_iterable(pool.map(roam_note_to_org, rr.notes)))
 
         # move the ones with no children to the bottom
         items = list(sorted(items, key=lambda n: len(n.children), reverse=True))
