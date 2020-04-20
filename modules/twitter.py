@@ -4,7 +4,7 @@ from orger.inorganic import node, link, timestamp, OrgNode
 from orger.common import dt_heading
 
 import datetime
-from typing import List, Any
+from typing import Iterable, Any
 
 import my.twitter.all as twi
 
@@ -19,12 +19,13 @@ class TwitterView(StaticView):
         assert self.cmdline_args is not None
         return self.cmdline_args.mode
 
-    def _get_tweets(self) -> List[Tweet]:
+    def _get_tweets(self) -> Iterable[Tweet]:
         if self.mode == 'all':
             return twi.tweets()
         else:
-            tw = twi.predicate_date(lambda d: d.day == today.day and d.month == today.month) # not gonna work on 29 feb!!
-            return tw
+            # not gonna work on 29 feb!!
+            same_day = lambda d: d.day == today.day and d.month == today.month
+            return (t for t in twi.tweets() if same_day(t.created_at))
 
     def _render(self, t: Tweet) -> OrgNode:
         dtime = t.created_at
