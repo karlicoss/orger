@@ -59,9 +59,8 @@ class PocketView(StaticView):
             yield node(
                 heading=dt_heading(
                     a.added,
-                    link(title=a.title, url=a.url)
+                    link(title='pocket', url=a.pocket_link)  + ' · ' + link(title=a.title, url=a.url)
                 ),
-                body=link(title='Pocket link', url=a.pocket_link),
                 children=[node(
                     heading=dt_heading(hl.created, hl.text)
                 ) for hl in a.highlights]
