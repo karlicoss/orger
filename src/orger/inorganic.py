@@ -14,6 +14,10 @@ def link(*, url: str, title: Optional[str]) -> str:
     '[[http://reddit.com][Reddit!]]'
     """
     url = _sanitize_heading(url)
+    if title == '':
+        # org mode doesn't like empty titles..
+        # TODO sanitize_title?
+        title = None
     if title is not None:
         title = _sanitize_heading(title)
         return f'[[{url}][{title}]]'
