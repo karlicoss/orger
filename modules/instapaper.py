@@ -3,19 +3,19 @@ from orger import StaticView
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
-from my.instapaper import get_pages
+from my.instapaper import pages
 
 
 class IpView(StaticView):
     def get_items(self):
-        for page in get_pages():
+        for page in pages():
             yield node(
                 heading=dt_heading(
                     page.dt,
-                    f'{link(title="ip", url=page.bookmark.instapaper_link)}   {link(title=page.title, url=page.url)}',
+                    f'{link(title="x", url=page.bookmark.instapaper_link)}   {link(title=page.title, url=page.url)}',
                 ),
                 children=[node(
-                    heading=dt_heading(hl.dt, link(title="ip", url=page.bookmark.instapaper_link)),
+                    heading=dt_heading(hl.dt, link(title="x", url=page.bookmark.instapaper_link)),
                     body=hl.text,
                     children=[] if hl.note is None else [
                         node(heading=hl.note),
