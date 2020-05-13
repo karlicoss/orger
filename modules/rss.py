@@ -3,12 +3,12 @@ from orger import StaticView
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
-import my.rss as mr
+import my.rss.all as rss
 
 
 class RssSubscriptions(StaticView):
     def get_items(self):
-        for s in mr.get_all_subscriptions():
+        for s in rss.subscriptions():
             yield node(
                 link(url=s.url, title=s.title) + ('' if s.subscribed else ' UNSUBSCRIBED'),
             )
