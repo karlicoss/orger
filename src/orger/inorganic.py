@@ -55,6 +55,7 @@ def asorgoutline(
         properties: Optional[Mapping[str, str]]=None,
         body: Optional[str] = None,
         level: int=1,
+        escaped: bool=False,
 ) -> str:
     r"""
     Renders Org mode outline (apart from children)
@@ -84,10 +85,12 @@ def asorgoutline(
     """
     if heading is None:
         heading = ''
-    heading = re.sub(r'\s', ' ', heading)
+    # TODO reuse sanitizing?
+    if not escaped:
+        heading = re.sub(r'\s', ' ', heading)
 
     # TODO not great that we always pad body I guess. maybe needs some sort of raw_body argument?
-    if body is not None:
+    if body is not None and not escaped:
         body = _sanitize_body(body)
 
     parts = []
@@ -149,6 +152,9 @@ class OrgNode(NamedTuple):
     body: Optional[str] = None
     children: Sequence[Any] = () # mypy wouldn't allow recursive type here...
 
+    # NOTE: this is a 'private' attribute
+    escaped: bool=False
+
     def _render_self(self) -> str:
         return asorgoutline(
             heading=_from_lazy(self.heading),
@@ -158,6 +164,7 @@ class OrgNode(NamedTuple):
             scheduled=self.scheduled,
             body=self.body,
             level=0,
+            escaped=self.escaped,
         )
 
     def _render_hier(self) -> List[Tuple[int, str]]:
