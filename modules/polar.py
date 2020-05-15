@@ -16,13 +16,12 @@ Example output:
 
 
 from orger import StaticView
-from orger.inorganic import node
+from orger.inorganic import node, link
 from orger.common import dt_heading
-
-from my.reading import polar
 
 class PolarView(StaticView):
     def get_items(self):
+        from my.reading import polar
         def make_item(res: polar.Result):
             if isinstance(res, polar.Error):
                 # TODO could create error heading from exception automatically? take first line as heading and rest + traceback as the body
@@ -30,7 +29,11 @@ class PolarView(StaticView):
             else:
                 b = res
                 return node(
-                    heading=dt_heading(b.created, f'{b.title} {b.filename}'),
+                    heading=dt_heading(
+                        b.created,
+                        # TODO apparently file: is not necessary if the path is absolute?
+                        link(url=str(b.path), title=b.title),
+                    ),
                     # tags=b.tags, # TODO?
                     children=[node(
                         heading=dt_heading(hl.created, hl.selection),
