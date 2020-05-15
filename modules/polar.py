@@ -37,6 +37,7 @@ class PolarView(StaticView):
                     tags=book.tags,
                     children=[node(
                         heading=dt_heading(hl.created, hl.selection),
+                        tags=hl.tags,
                         children=[node(
                             heading=dt_heading(c.created, c.text)
                         ) for c in hl.comments]
