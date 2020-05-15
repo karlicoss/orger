@@ -8,7 +8,7 @@ from subprocess import check_call
 from tempfile import TemporaryDirectory
 from typing import List, Tuple, Iterable, Optional
 
-from .inorganic import OrgNode
+from .inorganic import OrgNode, TimestampStyle
 from .state import JsonState
 from .atomic_append import PathIsh, atomic_append_check, assert_not_edited
 from .common import setup_logger
@@ -20,21 +20,32 @@ Key = str
 OrgWithKey = Tuple[Key, OrgNode]
 
 
+_style_map = {
+    k.lower(): v
+    for k, v in TimestampStyle._member_map_.items() # type: ignore[attr-defined]
+}
+
 class OrgView:
     logger_tag: Optional[str] = None
     DEFAULT_HEADER: str = '# should be overridden'
 
+    # TODO cmdline args shouldn't be none?
     def __init__(
             self,
             cmdline_args: Optional[Namespace]=None,
             file_header: Optional[str]=None,
     ) -> None:
-        self.cmdline_args = cmdline_args
+        self.cmdline_args: Namespace = cmdline_args if cmdline_args is not None else Namespace()
         tag = self.name() if self.logger_tag is None else self.logger_tag
         self.logger = logging.getLogger(tag)
 
         tool = Path(inspect.getfile(self.__class__)).absolute()
         self.file_header = file_header if file_header is not None else self.DEFAULT_HEADER.format(tool=tool)
+
+    @property
+    def args(self) -> Namespace:
+        # TODO deprecate cmdline_args?
+        return self.cmdline_args
 
     @classmethod
     def name(cls):
@@ -44,7 +55,24 @@ class OrgView:
         raise NotImplementedError
 
     def main_common(self) -> None:
+        timestamp_style = self.args.timestamps
+        from .common import settings
+        # hacky, but does the trick for now...
+        settings.DEFAULT_TIMESTAMP_STYLE = _style_map[timestamp_style]
         setup_logger(self.logger, level=logging.DEBUG)
+
+    @classmethod
+    def parser(cls) -> ArgumentParser:
+        p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+        p.add_argument(
+            '--timestamps',
+            type=str,
+            choices=list(_style_map.keys()),
+            default='inactive',
+            help="timestamp style, default '%(default)s'",
+        )
+        return p
 
 
 # TODO wonder if I could reuse append bits here?
@@ -62,21 +90,20 @@ class StaticView(OrgView):
 
     @classmethod
     def main(cls, setup_parser=None) -> None:
-        p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        p = cls.parser()
         p.add_argument('--to', type=Path, default=Path(cls.name() + '.org'))
         if setup_parser is not None:
             setup_parser(p)
 
         args = p.parse_args()
         inst = cls(cmdline_args=args)
+        inst.main_common()
         inst._run(to=args.to)
 
     def get_items(self) -> Iterable:
         raise NotImplementedError
 
     def _run(self, to: Path):
-        self.main_common()
-
         org_tree = self.make_tree()
         rtree = org_tree.render(level=0)
 
@@ -188,7 +215,7 @@ class InteractiveView(OrgView):
 
     @classmethod
     def main(cls, setup_parser=None) -> None:
-        p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        p = cls.parser()
         p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are appended')
         p.add_argument('--state', type=Path, default=Path(cls.name() + '.state.json'), help='state file for keeping track of handled items')
         p.add_argument('--init', action='store_true')
@@ -197,7 +224,6 @@ class InteractiveView(OrgView):
             setup_parser(p)
 
         args = p.parse_args()
-
         inst = cls(cmdline_args=args)
         inst.main_common()
         inst._run(

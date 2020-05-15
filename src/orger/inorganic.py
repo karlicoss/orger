@@ -5,6 +5,18 @@ import re
 import os
 from collections import OrderedDict
 from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, TypeVar, Callable, Union, List
+import warnings
+
+# TODO settings object? not ideal...
+
+# todo use mypy literals later?
+from enum import Enum
+class TimestampStyle(Enum):
+    INACTIVE = ('[', ']')
+    ACTIVE   = ('<', '>')
+    PLAIN    = ('' , '')
+    NONE     = ()
+
 
 Dateish = Union[datetime, date]
 
@@ -27,20 +39,40 @@ def link(*, url: PathIsh, title: Optional[str]) -> str:
         return f'[[{U}]]'
 
 
-def timestamp(t: Dateish, inactive: bool=False, active: bool=False) -> str:
+
+def timestamp(dt: Dateish, inactive: bool=False, active: bool=False) -> str:
     """
+    default is active
     >>> dt = datetime.strptime('19920110 04:45', '%Y%m%d %H:%M')
     >>> timestamp(dt)
-    '1992-01-10 Fri 04:45'
+    '<1992-01-10 Fri 04:45>'
     """
-    beg, end = '', ''
-    if inactive:
-        beg, end = '[]'
-    if active:
-        beg, end = '<>'
-    r = asorgdate(t)
-    if isinstance(t, datetime):
-        r += " " + asorgtime(t)
+    style: TimestampStyle
+    if inactive ^ active:
+        warnings.warn(f"Please specify one of 'inactive' or 'active' for {dt}")
+        # arbitrary choice: we let active win. So the uses sees the offending entry on agenda
+        style = TimestampStyle.ACTIVE
+    elif inactive:
+        style = TimestampStyle.INACTIVE
+    else: # active
+        style = TimestampStyle.ACTIVE
+    return timestamp_with_style(dt=dt, style=style)
+
+
+def timestamp_with_style(dt: Dateish, style: TimestampStyle) -> str:
+    """
+    >>> dt = datetime.max
+    >>> timestamp_with_style(dt, TimestampStyle.NONE)
+    ''
+    >>> timestamp_with_style(dt, TimestampStyle.PLAIN)
+    '9999-12-31 Fri 23:59'
+    """
+    if style is TimestampStyle.NONE:
+        return ''
+    beg, end = style.value
+    r = asorgdate(dt)
+    if isinstance(dt, datetime):
+        r += " " + asorgtime(dt)
     return beg + r + end
 
 
