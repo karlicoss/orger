@@ -38,7 +38,7 @@ class PolarView(StaticView):
                     children=[node(
                         heading=dt_heading(hl.created, hl.selection),
                         tags=hl.tags,
-                        properties=None if hl.color is None else {'POLAR_COLOR': hl.color},
+                        properties=None if hl.color is None else {'POLAR_COLOR': hex2name(hl.color)},
                         children=[node(
                             heading=dt_heading(c.created, c.text.splitlines()[0]),
                             body=html2org(c.text, logger=self.logger),
@@ -48,8 +48,13 @@ class PolarView(StaticView):
         for res in polar.get_entries():
             yield make_item(res)
 
-# TODO convert html markup to org-mode
-
+# not sure about this.. r.g. if the users define their own colors in the future
+def hex2name(hexc: str) -> str:
+    m = {
+        '#ff6900': 'orange',
+        '#9900ef': 'violet',
+    }
+    return m.get(hexc.lower(), hexc)
 
 test = PolarView.make_test(
     heading='I missed the bit where he only restricted to spin'
