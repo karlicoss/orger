@@ -8,21 +8,23 @@ from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, Ty
 
 Dateish = Union[datetime, date]
 
-def link(*, url: str, title: Optional[str]) -> str:
+PathIsh = Union[str, Path]
+
+def link(*, url: PathIsh, title: Optional[str]) -> str:
     """
     >>> link(url='http://reddit.com', title='[R]eddit!')
     '[[http://reddit.com][Reddit!]]'
     """
-    url = _sanitize_heading(url)
+    U = _sanitize_url(str(url))
     if title == '':
         # org mode doesn't like empty titles..
         # TODO sanitize_title?
         title = None
     if title is not None:
         title = _sanitize_heading(title)
-        return f'[[{url}][{title}]]'
+        return f'[[{U}][{title}]]'
     else:
-        return f'[[{url}]]'
+        return f'[[{U}]]'
 
 
 def timestamp(t: Dateish, inactive: bool=False, active: bool=False) -> str:
@@ -200,6 +202,25 @@ def _from_lazy(x: Lazy[T]) -> T:
         return x()
     else:
         return x
+
+
+from typing import Mapping
+def maketrans(d: Dict[str, str]) -> Dict[int, str]:
+    # make mypy happy... https://github.com/python/mypy/issues/4374
+    return str.maketrans(d)
+
+
+def _sanitize_url(x: str) -> str:
+    r'''
+    Sanitize url to put into [] safely
+    >>> _sanitize_url("/path/to/[Baez] Lectures on Classical Mechanics.pdf")
+    '/path/to/\\[Baez\\] Lectures on Classical Mechanics.pdf'
+    '''
+    # might be incomplete..
+    return x.translate(maketrans({
+        '[': r'\[',
+        ']': r'\]',
+    }))
 
 
 def _sanitize_heading(x: str) -> str:
