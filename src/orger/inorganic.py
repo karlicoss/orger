@@ -5,40 +5,74 @@ import re
 import os
 from collections import OrderedDict
 from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, TypeVar, Callable, Union, List
+import warnings
+
+# TODO settings object? not ideal...
+
+# todo use mypy literals later?
+from enum import Enum
+class TimestampStyle(Enum):
+    INACTIVE = ('[', ']')
+    ACTIVE   = ('<', '>')
+    PLAIN    = ('' , '')
+    NONE     = ()
+
 
 Dateish = Union[datetime, date]
 
-def link(*, url: str, title: Optional[str]) -> str:
+PathIsh = Union[str, Path]
+
+def link(*, url: PathIsh, title: Optional[str]) -> str:
     """
     >>> link(url='http://reddit.com', title='[R]eddit!')
     '[[http://reddit.com][Reddit!]]'
     """
-    url = _sanitize_heading(url)
+    U = _sanitize_url(str(url))
     if title == '':
         # org mode doesn't like empty titles..
         # TODO sanitize_title?
         title = None
     if title is not None:
         title = _sanitize_heading(title)
-        return f'[[{url}][{title}]]'
+        return f'[[{U}][{title}]]'
     else:
-        return f'[[{url}]]'
+        return f'[[{U}]]'
 
 
-def timestamp(t: Dateish, inactive: bool=False, active: bool=False) -> str:
+
+def timestamp(dt: Dateish, inactive: bool=False, active: bool=False) -> str:
     """
+    default is active
     >>> dt = datetime.strptime('19920110 04:45', '%Y%m%d %H:%M')
     >>> timestamp(dt)
-    '1992-01-10 Fri 04:45'
+    '<1992-01-10 Fri 04:45>'
     """
-    beg, end = '', ''
-    if inactive:
-        beg, end = '[]'
-    if active:
-        beg, end = '<>'
-    r = asorgdate(t)
-    if isinstance(t, datetime):
-        r += " " + asorgtime(t)
+    style: TimestampStyle
+    if inactive ^ active:
+        warnings.warn(f"Please specify one of 'inactive' or 'active' for {dt}")
+        # arbitrary choice: we let active win. So the uses sees the offending entry on agenda
+        style = TimestampStyle.ACTIVE
+    elif inactive:
+        style = TimestampStyle.INACTIVE
+    else: # active
+        style = TimestampStyle.ACTIVE
+    return timestamp_with_style(dt=dt, style=style)
+
+
+def timestamp_with_style(dt: Dateish, style: TimestampStyle) -> str:
+    """
+    >>> dt = datetime.max
+    >>> timestamp_with_style(dt, TimestampStyle.NONE)
+    ''
+    >>> timestamp_with_style(dt, TimestampStyle.PLAIN)
+    '9999-12-31 Fri 23:59'
+    """
+    if style is TimestampStyle.NONE:
+        return ''
+    beg, end = style.value
+    r = asorgdate(dt)
+    if isinstance(dt, datetime):
+        r += " " + asorgtime(dt)
     return beg + r + end
 
 
@@ -53,6 +87,7 @@ def asorgoutline(
         properties: Optional[Mapping[str, str]]=None,
         body: Optional[str] = None,
         level: int=1,
+        escaped: bool=False,
 ) -> str:
     r"""
     Renders Org mode outline (apart from children)
@@ -82,10 +117,12 @@ def asorgoutline(
     """
     if heading is None:
         heading = ''
-    heading = re.sub(r'\s', ' ', heading)
+    # TODO reuse sanitizing?
+    if not escaped:
+        heading = re.sub(r'\s', ' ', heading)
 
     # TODO not great that we always pad body I guess. maybe needs some sort of raw_body argument?
-    if body is not None:
+    if body is not None and not escaped:
         body = _sanitize_body(body)
 
     parts = []
@@ -147,6 +184,9 @@ class OrgNode(NamedTuple):
     body: Optional[str] = None
     children: Sequence[Any] = () # mypy wouldn't allow recursive type here...
 
+    # NOTE: this is a 'private' attribute
+    escaped: bool=False
+
     def _render_self(self) -> str:
         return asorgoutline(
             heading=_from_lazy(self.heading),
@@ -156,6 +196,7 @@ class OrgNode(NamedTuple):
             scheduled=self.scheduled,
             body=self.body,
             level=0,
+            escaped=self.escaped,
         )
 
     def _render_hier(self) -> List[Tuple[int, str]]:
@@ -200,6 +241,25 @@ def _from_lazy(x: Lazy[T]) -> T:
         return x()
     else:
         return x
+
+
+from typing import Mapping
+def maketrans(d: Dict[str, str]) -> Dict[int, str]:
+    # make mypy happy... https://github.com/python/mypy/issues/4374
+    return str.maketrans(d)
+
+
+def _sanitize_url(x: str) -> str:
+    r'''
+    Sanitize url to put into [] safely
+    >>> _sanitize_url("/path/to/[Baez] Lectures on Classical Mechanics.pdf")
+    '/path/to/\\[Baez\\] Lectures on Classical Mechanics.pdf'
+    '''
+    # might be incomplete..
+    return x.translate(maketrans({
+        '[': r'\[',
+        ']': r'\]',
+    }))
 
 
 def _sanitize_heading(x: str) -> str:

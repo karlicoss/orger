@@ -1,7 +1,11 @@
 from datetime import datetime
 from typing import Optional
 
-from .inorganic import OrgNode, timestamp
+from .inorganic import OrgNode, timestamp, timestamp_with_style, TimestampStyle
+
+
+class settings:
+    DEFAULT_TIMESTAMP_STYLE = TimestampStyle.INACTIVE
 
 
 def dt_heading(dt: Optional[datetime], heading: str):
@@ -12,7 +16,7 @@ def dt_heading(dt: Optional[datetime], heading: str):
     if dt is None:
         return heading
     else:
-        return timestamp(dt, inactive=True) + ' ' + heading
+        return timestamp_with_style(dt=dt, style=settings.DEFAULT_TIMESTAMP_STYLE) + ' ' + heading
 
 
 def error(e: Exception) -> OrgNode:
@@ -36,4 +40,5 @@ def todo(dt: datetime, **kwargs):
     )
 
 
+# todo use klogging2?
 from .klogging import LazyLogger, setup_logger

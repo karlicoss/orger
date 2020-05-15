@@ -17,8 +17,13 @@ def main():
 
         zip_safe=False,
 
-        packages=[pkg],
-        package_dir={'': 'src'},
+        packages=[pkg, 'orger.modules'],
+        # TODO ugh, it's weird. If it's editable install, python3 -m 'orger.modules.module' doesn't work. But it does if installed without editable??
+        # for not solved with a symlink...
+        package_dir={
+            '': 'src',
+            'orger.modules': 'modules',
+        },
         package_data={pkg: ['py.typed']},
 
         ## ^^^ this should be mostly automatic and not requiring any changes
@@ -31,7 +36,7 @@ def main():
         install_requires=['atomicwrites'],
         extras_require={
             'testing': ['pytest'],
-            'linting': ['pytest', 'mypy', 'pylint'],
+            'linting': ['pytest', 'mypy'],
         },
     )
 

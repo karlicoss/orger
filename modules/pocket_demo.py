@@ -74,15 +74,15 @@ def get_articles(json_path: Path) -> Sequence[Article]:
 """
 Ok, now we can get to implementing the adapter.
 """
-from orger import StaticView
+from orger import Mirror
 """
-StaticView means it's meant to be read-only view onto data (as opposed to InteractiveView).
+Mirror means it's meant to be read-only view onto data (as opposed to Queue).
 """
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
 
-class PocketView(StaticView):
+class Pocket(Mirror):
     def get_items(self):
         """
         get_items returns a sequence/iterator of nodes
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     """
     Usage example: ./pocket.py --file /backups/pocket/last-backup.json --to /data/orger/pocket.org
     """
-    PocketView.main(setup_parser=setup_parser)
+    Pocket.main(setup_parser=setup_parser)
 
 """
 Example pocket.org output:

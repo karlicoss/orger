@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import StaticView
+from orger import Mirror
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
 from my.instapaper import pages
 
 
-class IpView(StaticView):
+class Instapaper(Mirror):
     def get_items(self):
         for page in pages():
             yield node(
@@ -28,11 +28,11 @@ class IpView(StaticView):
         # TODO better error handling, cooperate with org_tools
 
 # TODO move tests to separate files, otherwise they would annoy other people
-test = IpView.make_test(
+test = Instapaper.make_test(
     heading='Life Extension Methods',
     contains='sleep a lot',
 )
 
 
 if __name__ == '__main__':
-    IpView.main()
+    Instapaper.main()
