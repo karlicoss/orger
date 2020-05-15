@@ -38,6 +38,7 @@ class PolarView(StaticView):
                     children=[node(
                         heading=dt_heading(hl.created, hl.selection),
                         tags=hl.tags,
+                        properties=None if hl.color is None else {'POLAR_COLOR': hl.color},
                         children=[node(
                             heading=dt_heading(c.created, c.text)
                         ) for c in hl.comments]
