@@ -27,23 +27,23 @@ class PolarView(StaticView):
                 # TODO could create error heading from exception automatically? take first line as heading and rest + traceback as the body
                 return node(heading='ERROR ' + str(res)) # TODO priority A?
             else:
-                b = res
+                book = res
                 return node(
                     heading=dt_heading(
-                        b.created,
+                        book.created,
                         # TODO apparently file: is not necessary if the path is absolute?
-                        link(url=str(b.path), title=b.title),
+                        link(url=str(book.path), title=book.title),
                     ),
-                    # tags=b.tags, # TODO?
+                    tags=book.tags,
                     children=[node(
                         heading=dt_heading(hl.created, hl.selection),
                         children=[node(
                             heading=dt_heading(c.created, c.text)
                         ) for c in hl.comments]
-                    ) for hl in b.items]
+                    ) for hl in book.items]
                 )
-        for b in polar.get_entries():
-            yield make_item(b)
+        for res in polar.get_entries():
+            yield make_item(res)
 
 # TODO convert html markup to org-mode
 
