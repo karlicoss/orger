@@ -4,13 +4,13 @@ Module for Materialistic app for Hackernews
 https://play.google.com/store/apps/details?id=io.github.hidroh.materialistic
 """
 
-from orger import InteractiveView
+from orger import Queue
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
 from my.materialistic import saves
 
-class MaterialisticView(InteractiveView):
+class Materialistic(Queue):
     def get_items(self):
         for s in saves():
             yield s.uid, node(
@@ -23,4 +23,4 @@ class MaterialisticView(InteractiveView):
 
 
 if __name__ == '__main__':
-    MaterialisticView.main()
+    Materialistic.main()

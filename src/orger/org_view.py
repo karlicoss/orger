@@ -76,9 +76,9 @@ class OrgView:
 
 
 # TODO wonder if I could reuse append bits here?
-class StaticView(OrgView):
+class Mirror(OrgView):
     """
-    =StaticView= are meant to be read only and are generated from scratch every time.
+    *Mirror* (old name =StaticView=): mirrors *all data* from a source, and generated from scratch every time, hence *read only*.
     """
 
     DEFAULT_HEADER = '''
@@ -156,13 +156,17 @@ class StaticView(OrgView):
             if contains is not None:
                 assert contains in ll.render()
         return test
+StaticView = Mirror
 
 
-class InteractiveView(OrgView):
+class Queue(OrgView):
     """
-    =InteractiveView= are incremental, so only new items from the data source are appended to the output org-mode file.
+    *Queue* (old name =InteractiveView=): works as a queue, *only previously unseen items* from the data source are appended to the output org-mode file.
 
-    To keep track of old/new items, it's using a separate JSON state file.
+    To keep track of old/new items, it's using a separate JSON =state= file.
+
+    A typical usecase is a todo list, or a content processing queue.
+    You can use such a module as you use any other org-mode file: schedule/refile/comment/set priorities, etc.
     """
 
     DEFAULT_HEADER = '''
@@ -232,6 +236,7 @@ class InteractiveView(OrgView):
             init=args.init,
             dry_run=args.dry_run,
         )
+InteractiveView = Queue
 
 
 def test_org_view_overwrite(tmp_path: Path):
