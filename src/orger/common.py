@@ -32,10 +32,12 @@ def todo(dt: datetime, **kwargs):
     """
     Helper to simplify creating todos
     """
+    props = kwargs.get('properties', {})
+    props.update({'CREATED': timestamp(dt, inactive=True)})
+    kwargs['properties'] = props
     return OrgNode(
         todo='TODO',
         scheduled=dt.date(),
-        properties={'CREATED': timestamp(dt, inactive=True)},
         **kwargs,
     )
 

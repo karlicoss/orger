@@ -16,38 +16,87 @@ Example output:
 
 
 from orger import StaticView
-from orger.inorganic import node
+from orger.inorganic import node, link
 from orger.common import dt_heading
-
-from my.reading import polar
 
 class PolarView(StaticView):
     def get_items(self):
+        from my.reading import polar
         def make_item(res: polar.Result):
             if isinstance(res, polar.Error):
                 # TODO could create error heading from exception automatically? take first line as heading and rest + traceback as the body
                 return node(heading='ERROR ' + str(res)) # TODO priority A?
             else:
-                b = res
+                book = res
                 return node(
-                    heading=dt_heading(b.created, f'{b.title} {b.filename}'),
-                    # tags=b.tags, # TODO?
+                    heading=dt_heading(
+                        book.created,
+                        # TODO apparently file: is not necessary if the path is absolute?
+                        link(url=str(book.path), title=book.title),
+                    ),
+                    tags=book.tags,
                     children=[node(
                         heading=dt_heading(hl.created, hl.selection),
+                        tags=hl.tags,
+                        properties=None if hl.color is None else {'POLAR_COLOR': hex2name(hl.color)},
                         children=[node(
-                            heading=dt_heading(c.created, c.text)
+                            heading=dt_heading(c.created, c.text.splitlines()[0]),
+                            body=html2org(c.text, logger=self.logger),
                         ) for c in hl.comments]
-                    ) for hl in b.items]
+                    ) for hl in book.items]
                 )
-        for b in polar.get_entries():
-            yield make_item(b)
+        for res in polar.get_entries():
+            yield make_item(res)
 
-# TODO convert html markup to org-mode
-
+# not sure about this.. r.g. if the users define their own colors in the future
+def hex2name(hexc: str) -> str:
+    m = {
+        '#ff6900': 'orange',
+        '#9900ef': 'violet',
+    }
+    return m.get(hexc.lower(), hexc)
 
 test = PolarView.make_test(
     heading='I missed the bit where he only restricted to spin'
 )
+
+
+# TODO move to base?
+def html2org(html: str, logger) -> str:
+    # meh. for some reason they are converted to \\ otherwise
+    html = html.replace('<br>', '')
+
+
+    from subprocess import run, PIPE
+    try:
+        r = run(
+            ['pandoc', '-f', 'html', '-t', 'org', '--wrap=none'],
+            check=True,
+            input=html.encode('utf8'),
+            stdout=PIPE,
+        )
+    except FileNotFoundError as fe:
+        import warnings
+        warnings.warn("Please install 'pandoc' to convert HTML to org-mode. See https://pandoc.org/installing.html")
+    except Exception as e:
+        logger.exception(e)
+    else:
+        return r.stdout.decode('utf8')
+    return html # fallback
+
+
+# TODO decode text incoming from polar?
+
+def test_html2org():
+    import logging
+    # html = "<p>and a <i>comment</i> too&nbsp;</p><p><br></p><p><b>multiline</b>!</p>"
+    # TODO ok, it's annoying... not sure what to do with nonpritable crap
+    html = "<p>and a <i>comment</i> too</p><p><br></p><p><b>multiline</b>!</p>"
+    assert html2org(html, logger=logging) == r'''
+and a /comment/ too
+
+*multiline*!
+'''.lstrip()
 
 
 if __name__ == '__main__':
