@@ -46,9 +46,11 @@ def timestamp(dt: Dateish, inactive: bool=False, active: bool=False) -> str:
     >>> dt = datetime.strptime('19920110 04:45', '%Y%m%d %H:%M')
     >>> timestamp(dt)
     '<1992-01-10 Fri 04:45>'
+    >>> timestamp(dt, inactive=True)
+    '[1992-01-10 Fri 04:45]'
     """
     style: TimestampStyle
-    if inactive ^ active:
+    if inactive and active:
         warnings.warn(f"Please specify one of 'inactive' or 'active' for {dt}")
         # arbitrary choice: we let active win. So the uses sees the offending entry on agenda
         style = TimestampStyle.ACTIVE
