@@ -36,7 +36,10 @@ def main():
         install_requires=['atomicwrites'],
         extras_require={
             'testing': ['pytest'],
-            'linting': ['pytest', 'mypy'],
+            'linting': [
+                'pytest',
+                'mypy', 'lxml', # lxml for cov report
+            ],
         },
     )
 
