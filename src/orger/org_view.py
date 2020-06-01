@@ -6,7 +6,7 @@ import inspect
 from pathlib import Path
 from subprocess import check_call
 from tempfile import TemporaryDirectory
-from typing import List, Tuple, Iterable, Optional
+from typing import List, Tuple, Iterable, Optional, Union
 
 from .inorganic import OrgNode, TimestampStyle
 from .state import JsonState
@@ -87,6 +87,8 @@ class Mirror(OrgView):
 # If you want to edit it anyway, you can use chmod +w in your terminal, or M-x toggle-read-only in Emacs.
 '''.lstrip()
 
+    # allowed to be either for Mirror
+    Results = Iterable[Union[OrgNode, OrgWithKey]]
 
     @classmethod
     def main(cls, setup_parser=None) -> None:

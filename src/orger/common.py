@@ -8,7 +8,7 @@ class settings:
     DEFAULT_TIMESTAMP_STYLE = TimestampStyle.INACTIVE
 
 
-def dt_heading(dt: Optional[datetime], heading: str):
+def dt_heading(dt: Optional[datetime], heading: str) -> str:
     """
     Helper to inline datetime in heading
     """

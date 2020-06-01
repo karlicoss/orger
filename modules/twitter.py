@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from orger import StaticView
+from orger import Mirror
 from orger.inorganic import node, link, timestamp, OrgNode
 from orger.common import dt_heading
 
@@ -13,7 +13,7 @@ today = datetime.datetime.now()
 # TODO FIXME expose Tweet type in twitter.common module?
 Tweet = Any
 
-class TwitterView(StaticView):
+class TwitterView(Mirror):
     @property
     def mode(self) -> str:
         assert self.cmdline_args is not None
@@ -45,7 +45,7 @@ class TwitterView(StaticView):
             )
 
 
-    def get_items(self):
+    def get_items(self) -> Mirror.Results:
         for tweet in sorted(self._get_tweets(), key=lambda t: t.created_at):
             yield self._render(tweet)
 
