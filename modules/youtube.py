@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from orger import StaticView
+from orger import Mirror
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
@@ -7,8 +7,9 @@ from my.media.youtube import get_watched
 
 from itertools import groupby
 
-class YoutubeView(StaticView):
-    def get_items(self):
+
+class YoutubeView(Mirror):
+    def get_items(self) -> Mirror.Results:
         watched = get_watched()
         by_url  = lambda w: w.url
         by_when = lambda w: w.when

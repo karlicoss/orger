@@ -7,7 +7,7 @@ from my.instapaper import pages
 
 
 class Instapaper(Mirror):
-    def get_items(self):
+    def get_items(self) -> Mirror.Results:
         for page in pages():
             yield node(
                 heading=dt_heading(

@@ -2,8 +2,7 @@
 """
 Read-only reddit mirror of comments, submissions and upvoted posts; everything except saved
 """
-
-from orger import StaticView
+from orger import Mirror
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
@@ -12,8 +11,8 @@ from my.reddit import upvoted, submissions, comments
 
 
 # TODO convert bodies from markdown to org-mode
-class RedditAllView(StaticView):
-    def get_items(self):
+class RedditAllView(Mirror):
+    def get_items(self) -> Mirror.Results:
         yield node(
             'Submissions',
             children=[node( # TODO can also be iterable?

@@ -87,6 +87,8 @@ class Mirror(OrgView):
 # If you want to edit it anyway, you can use chmod +w in your terminal, or M-x toggle-read-only in Emacs.
 '''.lstrip()
 
+    # allowed to be either for Mirror
+    Results = Iterable[Union[OrgNode, OrgWithKey]]
 
     @classmethod
     def main(cls, setup_parser=None) -> None:
