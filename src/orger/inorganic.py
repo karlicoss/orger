@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 import os
 from collections import OrderedDict
-from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, TypeVar, Callable, Union, List
+from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, TypeVar, Callable, Union, List, TYPE_CHECKING
 import warnings
 
 # TODO settings object? not ideal...
@@ -173,7 +173,19 @@ T = TypeVar('T')
 Lazy = Union[T, Callable[[], T]]
 
 
-class OrgNode(NamedTuple):
+# jeez...
+# otherwise it struggles to resolve recursive type
+# could as well make it dataclass... just dunno if should introduce dependency for py36
+if TYPE_CHECKING:
+    from dataclasses import dataclass as mypy_dataclass
+    Base = object
+else:
+    mypy_dataclass = lambda x: x
+    Base = NamedTuple
+
+
+@mypy_dataclass
+class OrgNode(Base):
     """
     Meant to be somewhat compatible with https://orgparse.readthedocs.io/en/latest/#orgparse.node.OrgNode
     """
@@ -184,7 +196,7 @@ class OrgNode(NamedTuple):
     properties: Optional[Mapping[str, str]] = None
     # TODO make body lazy as well?
     body: Optional[str] = None
-    children: Sequence[Any] = () # mypy wouldn't allow recursive type here...
+    children: Sequence['OrgNode'] = ()
 
     # NOTE: this is a 'private' attribute
     escaped: bool=False
