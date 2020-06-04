@@ -7,15 +7,19 @@ from subprocess import run, PIPE
 from typing import Optional
 
 
-has_pandoc = shutil.which('pandoc') is not None
+from .common import settings
 
-if not has_pandoc:
-    import warnings
-    warnings.warn("Please install 'pandoc' to convert HTML to org-mode. See https://pandoc.org/installing.html")
+if settings.USE_PANDOC:
+    has_pandoc = shutil.which('pandoc') is not None
 
-
-def to_org(*, data: str, from_: str, logger=logging) -> str:
     if not has_pandoc:
+        import warnings
+        warnings.warn("Please install 'pandoc' to convert HTML to org-mode. See https://pandoc.org/installing.html")
+        settings.USE_PANDOC = False
+
+
+def to_org(data: str, *, from_: str, logger=logging) -> str:
+    if not settings.USE_PANDOC:
         return data
     # TODO batch??
 

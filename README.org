@@ -21,6 +21,10 @@ I write in detail about usecases and motivation for it [[https://beepb00p.xyz/or
   - =pip3 install --user .=
   - after that you can use =python3 -m orger.modules.modulename=, same way as the previous section, or run =modules/modulename.py= directly
 
+- [optional]: install [[https://pandoc.org/installing.html][pandoc]], it might give you better org-mode outputs for some modules
+
+  If you do have pandoc installed, but don't want the module to use it, pass =--disable-pandoc= flag to it.
+
 * Usage and examples
 I usually run Orger modules overnight via cron.
 

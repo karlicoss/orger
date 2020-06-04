@@ -61,10 +61,20 @@ class OrgView:
         settings.DEFAULT_TIMESTAMP_STYLE = _style_map[timestamp_style]
         setup_logger(self.logger, level=logging.DEBUG)
 
+        pandoc = self.args.pandoc
+        settings.USE_PANDOC = pandoc
+
     @classmethod
     def parser(cls) -> ArgumentParser:
-        p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        F = lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=120)
+        p = argparse.ArgumentParser(formatter_class=F) # type: ignore
 
+        p.add_argument(
+            '--disable-pandoc',
+            action='store_false',
+            dest='pandoc',
+            help='Pass to disable pandoc conversions to org-mode (it might be slow in some cases)',
+        )
         p.add_argument(
             '--timestamps',
             type=str,
@@ -93,7 +103,7 @@ class Mirror(OrgView):
     @classmethod
     def main(cls, setup_parser=None) -> None:
         p = cls.parser()
-        p.add_argument('--to', type=Path, default=Path(cls.name() + '.org'))
+        p.add_argument('--to', type=Path, default=Path(cls.name() + '.org'), help='Filename to output')
         if setup_parser is not None:
             setup_parser(p)
 

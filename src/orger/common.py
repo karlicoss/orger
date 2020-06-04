@@ -6,6 +6,7 @@ from .inorganic import OrgNode, timestamp, timestamp_with_style, TimestampStyle
 
 class settings:
     DEFAULT_TIMESTAMP_STYLE = TimestampStyle.INACTIVE
+    USE_PANDOC: bool = True
 
 
 def dt_heading(dt: Optional[datetime], heading: str) -> str:

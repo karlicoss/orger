@@ -2,24 +2,12 @@
 from itertools import chain
 from typing import Iterable
 
-from orger import StaticView
+from orger import Mirror
 from orger.inorganic import node, link, OrgNode
 from orger.common import dt_heading
+from orger import pandoc
 
 import my.roamresearch as roamresearch
-
-
-from subprocess import run, PIPE
-
-def md2org(text: str) -> str:
-    # TODO use batch?? or talk to a process
-    r = run(
-        ['pandoc', '-f', 'markdown', '-t', 'org', '--wrap=none'],
-        check=True,
-        input=text.encode('utf8'),
-        stdout=PIPE,
-    )
-    return r.stdout.decode('utf8')
 
 
 # todo ^^ ^^ things are highlight?
@@ -31,7 +19,7 @@ def roam_text_to_org(text: str) -> str:
             ('{{[[slider]]}}', ''),
     ]:
         text = text.replace(f, t)
-    org = md2org(text)
+    org = pandoc.to_org(text, from_='markdown')
     org = org.replace(r'\_', '_') # unescape, it's a bit aggressive..
     return org
 
@@ -87,7 +75,7 @@ def roam_note_to_org(node: roamresearch.Node, top=False) -> Iterable[OrgNode]:
     )
 
 
-class RoamView(StaticView):
+class RoamView(Mirror):
     def get_items(self):
         rr = roamresearch.roam()
         from concurrent.futures import ThreadPoolExecutor
