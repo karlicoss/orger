@@ -2,8 +2,11 @@
 from orger import Mirror
 from orger.inorganic import node, link
 from orger.common import dt_heading, error
+from orger import pandoc
 
 import my.coding.github as gh
+# todo use later: import my.github.ghexport as gh. also careful about using events() -- need to sort?
+# I guess makes sense to generally expose get_ methods?
 
 
 class Github(Mirror):
@@ -13,14 +16,22 @@ class Github(Mirror):
                 yield error(e)
                 continue
             # TODO filter only events that have body? e.g. not sure if much point emitting pull requests here
+            summary = e.summary
+            body = e.body
+            if body is None:
+                lines = summary.splitlines(keepends=True)
+                if len(lines) > 1:
+                    summary = lines[0].strip()
+                body = ''.join(lines[1:]) # todo meh. hacky, better to extract bodies in the provider properly
+            if body.strip() == '':
+                body = None
+
             yield node(
                 dt_heading(
                     e.dt,
-                    link(url=e.link, title=e.summary) if e.link is not None else e.summary
+                    link(url=e.link, title=summary) if e.link is not None else summary
                 ),
-                # TODO would be nice to convert from markdown to org here
-                # TODO use pandoc thingie? make it configurable too
-                body=e.body,
+                body=None if body is None else pandoc.to_org(body, from_='gfm'), # github flavored markdown
             )
 
 
