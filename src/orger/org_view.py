@@ -11,7 +11,7 @@ from typing import List, Tuple, Iterable, Optional, Union
 from .inorganic import OrgNode, TimestampStyle
 from .state import JsonState
 from .atomic_append import PathIsh, atomic_append_check, assert_not_edited
-from .common import setup_logger
+from .common import setup_logger, orger_user_dir
 
 # TODO tests for determinism? not sure where should they be...
 # think of some generic thing to test that?
@@ -202,6 +202,7 @@ class Queue(OrgView):
             else:
                 raise err
 
+        state_path.parent.mkdir(parents=True, exist_ok=True) # not sure...
         state = JsonState(
             path=state_path,
             logger=self.logger,
@@ -238,9 +239,10 @@ class Queue(OrgView):
 
     @classmethod
     def main(cls, setup_parser=None) -> None:
+        default_state = orger_user_dir() / 'states' / (cls.name() + '.state.json')
         p = cls.parser()
         p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are added')
-        p.add_argument('--state', type=Path, default=Path(cls.name() + '.state.json'), help='state file for keeping track of handled items')
+        p.add_argument('--state', type=Path, default=default_state, help='state file for keeping track of handled items')
         p.add_argument('--init', action='store_true') # todo not sure if I really need it?
         p.add_argument('--dry-run', action='store_true', help='Run without modifying the state file')
         if setup_parser is not None:

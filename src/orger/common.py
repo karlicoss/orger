@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from pathlib import Path
 
 from .inorganic import OrgNode, timestamp, timestamp_with_style, TimestampStyle
 
@@ -45,3 +46,8 @@ def todo(dt: datetime, **kwargs):
 
 # todo use klogging2?
 from .klogging import LazyLogger, setup_logger
+
+
+def orger_user_dir() -> Path:
+    import appdirs # type: ignore[import]
+    return Path(appdirs.user_config_dir('orger'))

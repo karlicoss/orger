@@ -106,7 +106,13 @@ print(orger.Queue.__doc__)
 
    You can run such a module as:
 
-   :  ./orger_module.py --to /path/to/output.org --state /path/to/state.json
+   : ./orger_module.py --to /path/to/output.org
+
+   This will keep the state file in your user config dir (e.g. =~/.config/orger/=).
+
+   Alternatively, you can pass the state file explicitly:
+
+   : ./orger_module.py --to /path/to/output.org --state /path/to/state.json
 
 * FAQ
 - Why are the files output by some modules read only?
