@@ -2,13 +2,14 @@
 """
 Better interface for reading saved reddit posts/comments
 """
-from orger import InteractiveView
+from orger import Mirror
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
 from my.reddit import saved
 
-class RedditView(InteractiveView):
+
+class RedditView(Mirror):
     def get_items(self):
         for s in saved():
             yield s.sid, node(
@@ -21,6 +22,7 @@ class RedditView(InteractiveView):
                 body=s.text,
             )
 
+    # todo this could be generic, i.e. checking all urls?
     def is_dead_url(self, url: str) -> bool:
         assert self.cmdline_args is not None
         if not self.cmdline_args.mark_dead:
