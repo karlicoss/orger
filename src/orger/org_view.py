@@ -173,9 +173,9 @@ StaticView = Mirror
 
 class Queue(OrgView):
     """
-    *Queue* (old name =InteractiveView=): works as a queue, *only previously unseen items* from the data source are appended to the output org-mode file.
+    *Queue* (old name =InteractiveView=): works as a queue, *only previously unseen items* from the data source are added to the output org-mode file.
 
-    To keep track of old/new items, it's using a separate JSON =state= file.
+    To keep track of previously seen iteems, it's using a separate JSON =state= file.
 
     A typical usecase is a todo list, or a content processing queue.
     You can use such a module as you use any other org-mode file: schedule/refile/comment/set priorities, etc.
@@ -193,7 +193,14 @@ class Queue(OrgView):
             dry_run: bool=False,
     ) -> None:
         if not to.exists() and not init:
-            raise RuntimeError(f"target {to} doesn't exist! Try running with --init")
+            err = RuntimeError(f"{to} doesn't exist! Try running with --init")
+            import sys
+            if sys.stdin.isatty():
+                resp = input(f"{to} doesn't exist. Create empty file? y/n ").strip().lower()
+                if resp != 'y':
+                    raise err
+            else:
+                raise err
 
         state = JsonState(
             path=state_path,
@@ -232,10 +239,10 @@ class Queue(OrgView):
     @classmethod
     def main(cls, setup_parser=None) -> None:
         p = cls.parser()
-        p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are appended')
+        p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are added')
         p.add_argument('--state', type=Path, default=Path(cls.name() + '.state.json'), help='state file for keeping track of handled items')
-        p.add_argument('--init', action='store_true')
-        p.add_argument('--dry-run', action='store_true')
+        p.add_argument('--init', action='store_true') # todo not sure if I really need it?
+        p.add_argument('--dry-run', action='store_true', help='Run without modifying the state file')
         if setup_parser is not None:
             setup_parser(p)
 

@@ -93,9 +93,9 @@ print(orger.Queue.__doc__)
   #+RESULTS:
   :results:
 
-      *Queue* (old name =InteractiveView=): works as a queue, *only previously unseen items* from the data source are appended to the output org-mode file.
+      *Queue* (old name =InteractiveView=): works as a queue, *only previously unseen items* from the data source are added to the output org-mode file.
 
-      To keep track of old/new items, it's using a separate JSON =state= file.
+      To keep track of previously seen iteems, it's using a separate JSON =state= file.
 
       A typical usecase is a todo list, or a content processing queue.
       You can use such a module as you use any other org-mode file: schedule/refile/comment/set priorities, etc.
@@ -106,9 +106,6 @@ print(orger.Queue.__doc__)
 
    You can run such a module as:
 
-   :  # initialize the state file first to avoid surprises (you only need to do it once)
-   :  ./orger_module.py --to /path/to/output.org --state /path/to/state.json --init
-   :  # after that you can just run it:
    :  ./orger_module.py --to /path/to/output.org --state /path/to/state.json
 
 * FAQ
