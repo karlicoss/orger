@@ -33,7 +33,10 @@ def main():
         author_email='karlicoss@gmail.com',
         description='Converts data into org-mode',
 
-        install_requires=['atomicwrites'],
+        install_requires=[
+            'appdirs'     , # to keep state files
+            'atomicwrites', # to safely append data to a file
+        ],
         extras_require={
             'testing': ['pytest'],
             'linting': [

@@ -11,7 +11,7 @@ from typing import List, Tuple, Iterable, Optional, Union
 from .inorganic import OrgNode, TimestampStyle
 from .state import JsonState
 from .atomic_append import PathIsh, atomic_append_check, assert_not_edited
-from .common import setup_logger
+from .common import setup_logger, orger_user_dir
 
 # TODO tests for determinism? not sure where should they be...
 # think of some generic thing to test that?
@@ -61,10 +61,20 @@ class OrgView:
         settings.DEFAULT_TIMESTAMP_STYLE = _style_map[timestamp_style]
         setup_logger(self.logger, level=logging.DEBUG)
 
+        pandoc = self.args.pandoc
+        settings.USE_PANDOC = pandoc
+
     @classmethod
     def parser(cls) -> ArgumentParser:
-        p = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        F = lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=120)
+        p = argparse.ArgumentParser(formatter_class=F) # type: ignore
 
+        p.add_argument(
+            '--disable-pandoc',
+            action='store_false',
+            dest='pandoc',
+            help='Pass to disable pandoc conversions to org-mode (it might be slow in some cases)',
+        )
         p.add_argument(
             '--timestamps',
             type=str,
@@ -93,7 +103,7 @@ class Mirror(OrgView):
     @classmethod
     def main(cls, setup_parser=None) -> None:
         p = cls.parser()
-        p.add_argument('--to', type=Path, default=Path(cls.name() + '.org'))
+        p.add_argument('--to', type=Path, default=Path(cls.name() + '.org'), help='Filename to output')
         if setup_parser is not None:
             setup_parser(p)
 
@@ -163,9 +173,9 @@ StaticView = Mirror
 
 class Queue(OrgView):
     """
-    *Queue* (old name =InteractiveView=): works as a queue, *only previously unseen items* from the data source are appended to the output org-mode file.
+    *Queue* (old name =InteractiveView=): works as a queue, *only previously unseen items* from the data source are added to the output org-mode file.
 
-    To keep track of old/new items, it's using a separate JSON =state= file.
+    To keep track of previously seen iteems, it's using a separate JSON =state= file.
 
     A typical usecase is a todo list, or a content processing queue.
     You can use such a module as you use any other org-mode file: schedule/refile/comment/set priorities, etc.
@@ -183,8 +193,16 @@ class Queue(OrgView):
             dry_run: bool=False,
     ) -> None:
         if not to.exists() and not init:
-            raise RuntimeError(f"target {to} doesn't exist! Try running with --init")
+            err = RuntimeError(f"{to} doesn't exist! Try running with --init")
+            import sys
+            if sys.stdin.isatty():
+                resp = input(f"{to} doesn't exist. Create empty file? y/n ").strip().lower()
+                if resp != 'y':
+                    raise err
+            else:
+                raise err
 
+        state_path.parent.mkdir(parents=True, exist_ok=True) # not sure...
         state = JsonState(
             path=state_path,
             logger=self.logger,
@@ -221,11 +239,12 @@ class Queue(OrgView):
 
     @classmethod
     def main(cls, setup_parser=None) -> None:
+        default_state = orger_user_dir() / 'states' / (cls.name() + '.state.json')
         p = cls.parser()
-        p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are appended')
-        p.add_argument('--state', type=Path, default=Path(cls.name() + '.state.json'), help='state file for keeping track of handled items')
-        p.add_argument('--init', action='store_true')
-        p.add_argument('--dry-run', action='store_true')
+        p.add_argument('--to'   , type=Path, default=Path(cls.name() + '.org')       , help='file where new items are added')
+        p.add_argument('--state', type=Path, default=default_state, help='state file for keeping track of handled items')
+        p.add_argument('--init', action='store_true') # todo not sure if I really need it?
+        p.add_argument('--dry-run', action='store_true', help='Run without modifying the state file')
         if setup_parser is not None:
             setup_parser(p)
 

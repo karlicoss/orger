@@ -21,7 +21,8 @@ if ! [ -z "$CI" ]; then
 fi
 
 # vim is used in one of the tests
-command -v vim || sudo apt install vim
+command -v vim    || sudo apt install vim
+command -v pandoc || sudo apt install pandoc
 
 pip3 install --user tox
 tox
