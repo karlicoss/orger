@@ -7,7 +7,7 @@ It uses [[https://github.com/karlicoss/kobuddy][kobuddy]] to extract data from K
 
 The name stands for K[oboD]rill.
 """
-from orger import InteractiveView
+from orger import Queue
 from orger.inorganic import node, link
 from orger.common import todo
 
@@ -32,7 +32,7 @@ def get_drill_items():
     return list(sorted(filter(is_drill, get_highlights()), key=lambda h: h.dt))
 
 
-class Krill(InteractiveView):
+class Krill(Queue):
     def get_items(self):
         for i in get_drill_items():
             yield i.eid, todo(

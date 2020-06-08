@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import InteractiveView
+from orger import Queue
 from orger.inorganic import node, link
 from orger.common import todo
 
 from my.books.kobo import get_todos, Highlight # type: ignore
 
 
-class KoboTodos(InteractiveView):
+class KoboTodos(Queue):
     def get_items(self):
         for t in get_todos():
             # TODO shit judging by the state.json, looks like eid might be flaky?

@@ -12,11 +12,11 @@ Items get scheduled and appear on my org-mode agenda,
 so I can un/reschedule them if they don't require immediate attention.
 """
 
-from orger import InteractiveView
+from orger import Queue
 from orger.inorganic import node, link
 from orger.common import todo
 
-from my.hypothesis import get_highlights, Highlight
+from my.hypothesis import highlights, Highlight
 
 
 def is_todo(e: Highlight) -> bool:
@@ -26,24 +26,22 @@ def is_todo(e: Highlight) -> bool:
     return text.lstrip().lower().startswith('todo')
 
 
-class HypTodos(InteractiveView):
+class HypTodos(Queue):
     def get_items(self):
-        for t in get_highlights():
+        for t in highlights():
             if isinstance(t, Exception):
                 # I guess there isn't much we can do here? will be spotted by other tools
                 continue
             if not is_todo(t):
                 continue
+            ann = t.annotation
+            anns = '' if ann is None else ann + '\n'
             yield t.hid, todo(
                 dt=t.created,
 
-                heading=t.highlight,
+                heading=link(title="X", url=t.hyp_link) + ' ' + t.highlight,
+                body=f'{anns}from {link(title=t.title, url=t.url)}',
                 tags=['hyp2org', *t.tags],
-                body=f'''
-{t.annotation}
-{link(title=t.title, url=t.url)}
-{link(title="in context", url=t.hyp_link)}
-'''.lstrip(),
             )
 
 

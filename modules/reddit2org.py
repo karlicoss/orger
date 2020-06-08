@@ -2,14 +2,14 @@
 """
 Better interface for reading saved reddit posts/comments
 """
-from orger import Mirror
+from orger import Queue
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
 from my.reddit import saved
 
 
-class RedditView(Mirror):
+class RedditView(Queue):
     def get_items(self):
         for s in saved():
             yield s.sid, node(

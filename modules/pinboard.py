@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-from orger import StaticView
+from orger import Mirror
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
 import my.pinboard as pinboard
 
-class PinboardView(StaticView):
+
+class PinboardView(Mirror):
     def get_items(self):
         def make_item(b: pinboard.Bookmark):
             return node(
