@@ -4,7 +4,7 @@ from orger.inorganic import node, link
 from orger.common import dt_heading
 import traceback
 
-from my.vk import favorites, Favorite
+from my.vk.favorites import favorites, Favorite
 
 class VkFavs(StaticView):
     def get_items(self):
