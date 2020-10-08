@@ -1,6 +1,7 @@
 """
 Helper for converting stuff to pandoc
 """
+from functools import lru_cache
 import logging
 import shutil
 from subprocess import run, PIPE
@@ -9,17 +10,21 @@ from typing import Optional
 
 from .common import settings
 
-if settings.USE_PANDOC:
-    has_pandoc = shutil.which('pandoc') is not None
+@lru_cache(1)
+def should_use_pandoc() -> bool:
+    if not settings.USE_PANDOC:
+        return False
 
-    if not has_pandoc:
-        import warnings
-        warnings.warn("Please install 'pandoc' to convert HTML to org-mode. See https://pandoc.org/installing.html")
-        settings.USE_PANDOC = False
+    has_pandoc = shutil.which('pandoc') is not None
+    if has_pandoc:
+        return True
+
+    import warnings
+    warnings.warn("Install 'pandoc' to convert HTML to org-mode. See https://pandoc.org/installing.html")
 
 
 def to_org(data: str, *, from_: str, logger=logging) -> str:
-    if not settings.USE_PANDOC:
+    if not should_use_pandoc():
         return data
     # TODO batch??
 
