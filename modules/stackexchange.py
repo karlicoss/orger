@@ -3,13 +3,13 @@ from orger import StaticView
 from orger.inorganic import node, link
 from orger.common import dt_heading
 
-import my.stackexchange as se
+import my.stackexchange.stexport as se
 
 
 class Stackexchange(StaticView):
     def get_items(self):
         # TODO adapt for other stackexchange items
-        se_data = se.get_data()
+        se_data = se.site('stackoverflow')
         for q in se_data.questions:
             # TODO could emit items along with level, then it would look a bit more natural
             yield node(

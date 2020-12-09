@@ -4,14 +4,15 @@ from orger.inorganic import node, link
 from orger.common import dt_heading, error
 from orger import pandoc
 
-import my.coding.github as gh
+import my.github.all as github
 # todo use later: import my.github.ghexport as gh. also careful about using events() -- need to sort?
 # I guess makes sense to generally expose get_ methods?
 
 
 class Github(Mirror):
     def get_items(self) -> Mirror.Results:
-        for e in gh.get_events():
+        # TODO just use events? but need to sort first..
+        for e in github.get_events():
             if isinstance(e, Exception):
                 yield error(e)
                 continue
