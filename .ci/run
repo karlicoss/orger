@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
 cd "$(dirname "$0")"
-cd ../..
+cd ..
 
 if ! command -v sudo; then
     # CI or Docker sometimes doesn't have it, so useful to have a dummy
