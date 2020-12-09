@@ -3,7 +3,7 @@ from orger import Mirror
 from orger.inorganic import node, link, OrgNode
 from orger.common import dt_heading
 
-from my.books.kobo import get_books_with_highlights, Highlight
+from my.kobo import get_books_with_highlights, Highlight
 
 
 class KoboView(Mirror):
