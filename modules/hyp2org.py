@@ -30,17 +30,22 @@ class HypTodos(Queue):
     def get_items(self):
         for t in highlights():
             if isinstance(t, Exception):
+                # todo make error helper work with Queue
+                # probably hash of the body would be enough? dunno
                 # I guess there isn't much we can do here? will be spotted by other tools
                 continue
             if not is_todo(t):
                 continue
             ann = t.annotation
             anns = '' if ann is None else ann + '\n'
+            hl = t.highlight or ''
             yield t.hid, todo(
                 dt=t.created,
 
-                heading=link(title="X", url=t.hyp_link) + ' ' + t.highlight,
+                heading=link(title="X", url=t.hyp_link) + ' ' + hl,
                 body=f'{anns}from {link(title=t.title, url=t.url)}',
+                # todo maybe get rid of hyp2org?
+                # or make tagging an option?
                 tags=['hyp2org', *t.tags],
             )
 

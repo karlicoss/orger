@@ -5,6 +5,7 @@ from pathlib import Path
 from .inorganic import OrgNode, timestamp, timestamp_with_style, TimestampStyle
 
 
+# todo add error policy here?
 class settings:
     DEFAULT_TIMESTAMP_STYLE = TimestampStyle.INACTIVE
     USE_PANDOC: bool = True

@@ -78,6 +78,20 @@ def timestamp_with_style(dt: Dateish, style: TimestampStyle) -> str:
     return beg + r + end
 
 
+class Quoted(NamedTuple):
+    '''
+    Special object to markup 'literal' paragraphs
+    https://orgmode.org/manual/Literal-Examples.html
+    '''
+    body: str
+
+    def quoted(self) -> str:
+        return ''.join(': ' + x for x in self.body.splitlines(keepends=True))
+
+
+Body = Union[str, Quoted]
+
+
 # TODO priority
 # TODO for sanitizing, have two strategies: error and replace?
 def asorgoutline(
@@ -87,7 +101,7 @@ def asorgoutline(
         scheduled: Optional[Dateish] = None,
         # TODO perhaps allow list of tuples? properties might be repeating
         properties: Optional[Mapping[str, str]]=None,
-        body: Optional[str] = None,
+        body: Optional[Body] = None,
         level: int=1,
         escaped: bool=False,
 ) -> str:
@@ -116,6 +130,8 @@ def asorgoutline(
     ''
     >>> asorgoutline(heading='task', body='hello', scheduled=datetime.utcfromtimestamp(0))
     '* task\nSCHEDULED: <1970-01-01 Thu 00:00>\n hello'
+    >>> asorgoutline(heading='', body=Quoted('this should\n* not be org-mode'))
+    '* \n: this should\n: * not be org-mode'
     """
     if heading is None:
         heading = ''
@@ -124,8 +140,15 @@ def asorgoutline(
         heading = re.sub(r'\s', ' ', heading)
 
     # TODO not great that we always pad body I guess. maybe needs some sort of raw_body argument?
-    if body is not None and not escaped:
-        body = _sanitize_body(body)
+    safe_body: Optional[str] = None
+    if body is not None:
+        # todo https://github.com/karlicoss/orger/issues/16
+        # maybe need a policy for body behaviour... I guess policy could be Union[Literate]; controlled by env variables?
+        if isinstance(body, Quoted):
+            safe_body = body.quoted()
+        else: # str
+            safe_body = body if escaped else _sanitize_body(body)
+    del body # just so it's not used by accident
 
     parts = []
 
@@ -139,7 +162,6 @@ def asorgoutline(
         parts.append(heading)
 
     if len(tags) > 0:
-        # tags_s = ('' if heading.endswith(' ') else ' ') +
         tags_s = ':' + ':'.join(map(_sanitize_tag, tags)) + ':'
         parts.append(tags_s)
 
@@ -154,7 +176,7 @@ def asorgoutline(
         props_lines.extend(f':{prop}: {value}' for prop, value in props.items())
         props_lines.append(':END:')
 
-    body_lines = [] if body is None else [body]
+    body_lines = [] if safe_body is None else [safe_body]
 
     if level > 0 and len(parts) == 1:
         # means it's only got level stars, so we need to make sure space is present (otherwise it's not an outline)
@@ -195,7 +217,7 @@ class OrgNode(Base):
     scheduled: Optional[Dateish] = None
     properties: Optional[Mapping[str, str]] = None
     # TODO make body lazy as well?
-    body: Optional[str] = None
+    body: Optional[Body] = None
     children: Sequence['OrgNode'] = ()
 
     # NOTE: this is a 'private' attribute
