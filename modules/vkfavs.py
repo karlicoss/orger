@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-from orger import StaticView
-from orger.inorganic import node, link
-from orger.common import dt_heading
-import traceback
+from orger import Mirror
+from orger.inorganic import node, link, Quoted
+from orger.common import dt_heading, error
 
 from my.vk.favorites import favorites, Favorite
 
-class VkFavs(StaticView):
-    def get_items(self):
+class VkFavs(Mirror):
+    def get_items(self) -> Mirror.Results:
         for f in favorites():
             if isinstance(f, Favorite):
                 yield node(
@@ -15,13 +14,10 @@ class VkFavs(StaticView):
                         f.dt,
                         f.title if f.url is None else link(url=f.url, title=f.title),
                     ),
-                    body=f.text,
+                    body=Quoted(f.text),
                 )
-            else: # error
-                yield node(
-                    heading=f'ERROR!',
-                    body='\n'.join(traceback.format_exception(Exception, f, None)),
-                )
+            else: # Exception
+                yield error(f)
 
 
 if __name__ == '__main__':

@@ -192,6 +192,8 @@ class Queue(OrgView):
             init: bool=False,
             dry_run: bool=False,
     ) -> None:
+        self.logger.info('Using state file %s', state_path)
+
         if not to.exists() and not init:
             err = RuntimeError(f"{to} doesn't exist! Try running with --init")
             import sys

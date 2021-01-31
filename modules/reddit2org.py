@@ -3,7 +3,7 @@
 Better interface for reading saved reddit posts/comments
 """
 from orger import Queue
-from orger.inorganic import node, link
+from orger.inorganic import node, link, Quoted
 from orger.common import dt_heading
 
 from my.reddit import saved
@@ -19,17 +19,18 @@ class RedditView(Queue):
                     s.created,
                     ('[#A] *DEAD*' if self.is_dead_url(s.url) else '') + link(title=s.title, url=s.url) + f' /r/{s.subreddit}'
                 ),
-                body=s.text,
+                body=Quoted(s.text),
             )
 
     # todo this could be generic, i.e. checking all urls?
     def is_dead_url(self, url: str) -> bool:
         assert self.cmdline_args is not None
+        # TODO this is probably easier to control via env variables, more malleable
         if not self.cmdline_args.mark_dead:
             return False
         from kython.knetwork import is_alive
         return is_alive(url)
-        # TODO should somehow track handle DELETED comments...
+        # todo should somehow track handle DELETED comments...
         # sometimes it's also [removed]
         # TODO maybe, track that in reddit provider? since we have all version of saved items over time
 
