@@ -1,12 +1,13 @@
 import json
 from pathlib import Path
-from typing import List, Union, Dict
+from typing import List, Union, Dict, Any, Optional, Callable
 import logging
 import os
 import sys
 import warnings
 
 PathIsh = Union[str, Path]
+State = Dict[str, Any]
 
 from atomicwrites import atomic_write
 
@@ -16,9 +17,9 @@ class JsonState:
     def __init__(
             self,
             path: PathIsh,
-            dry_run=False,
-            default=None,
-            logger=logging.getLogger('json-state'),
+            dry_run: bool=False,
+            default: Optional[State]=None,
+            logger: logging.Logger=logging.getLogger('orger'),
     ) -> None:
         self.path = Path(path)
         self.dry_run = dry_run
@@ -27,14 +28,14 @@ class JsonState:
             default = {}
         self.default = default
 
-        self.state = None
+        self.state: Optional[State] = None
         self.logger = logger
         # TODO for simplicity, write empty if file doesn't exist??
 
     def __contains__(self, key: str) -> bool:
         return key in self.get()
 
-    def __setitem__(self, key: str, value) -> None:
+    def __setitem__(self, key: str, value: Any) -> None:
         current = self.get()
         assert key not in current # just in case
         current[key] = value
@@ -46,7 +47,7 @@ class JsonState:
         with atomic_write(str(self.path), overwrite=True) as fo:
             json.dump(current, fo, indent=1, sort_keys=True)
 
-    def get(self):
+    def get(self) -> State:
         if self.state is None:
             if not self.path.exists():
                 self.state = self.default
@@ -55,7 +56,7 @@ class JsonState:
                     self.state = json.load(fo)
         return self.state
 
-    def feed(self, key, value, action) -> None:
+    def feed(self, key: str, value: Any, action: Callable[[], None]) -> None:
         if key in self:
             self.logger.debug(f'already handled: %s: %s', key, value)
             return
@@ -66,12 +67,12 @@ class JsonState:
         self[key] = repr(value)
 
 
-def test_state(tmp_path):
+def test_state(tmp_path: Path) -> None:
     import pytest # type: ignore
     path = tmp_path / 'state.json'
     state = JsonState(path)
 
-    def mtime():
+    def mtime() -> float:
         return path.stat().st_mtime
 
     assert not path.exists()
@@ -79,7 +80,7 @@ def test_state(tmp_path):
     res = []
 
     def feed(k, v):
-        def action():
+        def action() -> None:
             res.append(v)
         state.feed(k, v, action=action)
 

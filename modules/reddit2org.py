@@ -10,7 +10,7 @@ from my.reddit import saved
 
 
 class RedditView(Queue):
-    def get_items(self):
+    def get_items(self) -> Queue.Results:
         for s in saved():
             yield s.sid, node(
                 # need to make heading lazy due to is_alive
@@ -28,14 +28,14 @@ class RedditView(Queue):
         # TODO this is probably easier to control via env variables, more malleable
         if not self.cmdline_args.mark_dead:
             return False
-        from kython.knetwork import is_alive
+        from kython.knetwork import is_alive # type: ignore
         return is_alive(url)
         # todo should somehow track handle DELETED comments...
         # sometimes it's also [removed]
         # TODO maybe, track that in reddit provider? since we have all version of saved items over time
 
 
-def setup_parser(p):
+def setup_parser(p) -> None:
     p.add_argument(
         '--mark-dead',
         action='store_true',

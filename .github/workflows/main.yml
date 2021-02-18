@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest] # macos-latest, windows-latest??
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     runs-on: ${{ matrix.platform }}
 
@@ -36,15 +36,19 @@ jobs:
         submodules: recursive
 
     # uncomment for SSH debugging
-    # - uses: mxschmitt/action-tmate@v2
+    # - uses: mxschmitt/action-tmate@v3
 
     - run: .ci/run
 
     - uses: actions/upload-artifact@v2
       with:
-        name: .coverage.mypy_${{ matrix.platform }}_${{ matrix.python-version }}
-        path: .coverage.mypy/
+        name: .coverage.mypy-core_${{ matrix.platform }}_${{ matrix.python-version }}
+        path: .coverage.mypy-core/
 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: .coverage.mypy-misc_${{ matrix.platform }}_${{ matrix.python-version }}
+        path: .coverage.mypy-misc/
 
   pypi:
     runs-on: ubuntu-latest

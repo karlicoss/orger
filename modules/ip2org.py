@@ -7,7 +7,7 @@ from my.instapaper import pages, is_todo
 
 
 class IpTodos(Queue):
-    def get_items(self):
+    def get_items(self) -> Queue.Results:
         for page in pages():
             bm = page.bookmark
             for hl in page.highlights:

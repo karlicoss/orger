@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import logging
-from typing import Union, Optional
+from typing import Union, Optional, cast
 
 Level = int
 LevelIsh = Optional[Union[Level, str]]
@@ -39,9 +39,7 @@ def setup_logger(logger: logging.Logger, level: Level) -> None:
 
 
 class LazyLogger(logging.Logger):
-    # TODO perhaps should use __new__?
-
-    def __new__(cls, name, level: LevelIsh = 'DEBUG'):
+    def __new__(cls, name: str, level: LevelIsh = 'DEBUG') -> 'LazyLogger':
         logger = logging.getLogger(name)
         lvl = mklevel(level)
 
@@ -54,10 +52,10 @@ class LazyLogger(logging.Logger):
             return orig(*args, **kwargs)
 
         logger.isEnabledFor = isEnabledFor_lazyinit  # type: ignore[assignment]
-        return logger
+        return cast(LazyLogger, logger)
 
 
-def test():
+def test() -> None:
     ll = LazyLogger('test')
     ll.debug('THIS IS DEBUG')
     ll.warning('THIS IS WARNING')
