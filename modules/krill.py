@@ -11,9 +11,10 @@ from orger import Queue
 from orger.inorganic import node, link
 from orger.common import todo
 
-from my.books.kobo import get_highlights, Highlight # type: ignore
+from my.books.kobo import get_highlights, Highlight
 
-def is_drill(i: Highlight):
+
+def is_drill(i: Highlight) -> bool:
     if i.kind == 'bookmark':
         return False
     ann = i.annotation or ''
@@ -33,7 +34,7 @@ def get_drill_items():
 
 
 class Krill(Queue):
-    def get_items(self):
+    def get_items(self) -> Queue.Results:
         for i in get_drill_items():
             yield i.eid, todo(
                 i.dt,

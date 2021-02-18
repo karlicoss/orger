@@ -8,7 +8,7 @@ PathIsh = Union[str, Path]
 def atomic_append_raw(
         path: PathIsh,
         data: str,
-):
+) -> None:
     path = Path(path)
     # https://stackoverflow.com/a/13232181
     enc = data.encode('utf8')
@@ -20,7 +20,7 @@ def atomic_append_raw(
 
 
 # TODO might be useful in other projects?
-def assert_not_edited(path: Path):
+def assert_not_edited(path: Path) -> None:
     vim = '.' + path.name + '.swp'
     emacs = '.#' + path.name
     for x in [vim, emacs]:
@@ -32,7 +32,7 @@ def assert_not_edited(path: Path):
 def atomic_append_check(
         path: PathIsh,
         data: str,
-):
+) -> None:
     """
     This is editor (emacs/vim)-aware and checks for existence of swap file first.
     Not fully atomic, but hopefully atomic enough for all practical purposes
@@ -44,7 +44,7 @@ def atomic_append_check(
     atomic_append_raw(path, data)
 
 
-def test_atomic_append_check(tmp_path):
+def test_atomic_append_check(tmp_path: Path) -> None:
     of = tmp_path / 'test.org'
     of.touch()
 

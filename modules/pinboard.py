@@ -7,8 +7,9 @@ import my.pinboard as pinboard
 
 
 class PinboardView(Mirror):
-    def get_items(self):
-        def make_item(b: pinboard.Bookmark):
+    def get_items(self) -> Mirror.Results:
+        from orger.inorganic import OrgNode
+        def make_item(b: pinboard.Bookmark) -> OrgNode:
             return node(
                 heading=dt_heading(b.created, link(title=b.title, url=b.url)),
                 body=b.description,
@@ -19,9 +20,11 @@ class PinboardView(Mirror):
 
 test = PinboardView.make_test(
     heading='Cartesian Closed Comic #21',
-    contains='doctorwho', # TODO predicate?
+    contains='doctorwho', # todo predicate?
 )
 
 if __name__ == '__main__':
     PinboardView.main()
 
+
+# todo need to use hpi module install my.pinbpoar

@@ -27,7 +27,7 @@ def is_todo(e: Highlight) -> bool:
 
 
 class HypTodos(Queue):
-    def get_items(self):
+    def get_items(self) -> Queue.Results:
         for t in highlights():
             if isinstance(t, Exception):
                 # todo make error helper work with Queue

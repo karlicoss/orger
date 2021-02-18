@@ -50,7 +50,7 @@ class TwitterView(Mirror):
             yield self._render(tweet)
 
 
-def setup_parser(p):
+def setup_parser(p) -> None:
     p.add_argument('--mode', choices=['thatday', 'all'], required=True)
 
 
