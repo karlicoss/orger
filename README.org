@@ -25,6 +25,11 @@ I write in detail about usecases and motivation for it [[https://beepb00p.xyz/or
 
   If you do have pandoc installed, but don't want the module to use it, pass =--disable-pandoc= flag to it.
 
+  - *NOTE*: most Orger modules are relying on [[https://github.com/karlicoss/HPI#readme][HPI]] module for input data
+
+    Please refer to the HPI install guide/documentation and make sure the corresponding data providers work (e.g. via =hpi doctor= command).
+
+
 * Usage and examples
 I usually run Orger modules overnight via cron.
 
