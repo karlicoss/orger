@@ -7,7 +7,6 @@ from collections import OrderedDict
 from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, TypeVar, Callable, Union, List, TYPE_CHECKING
 import warnings
 
-# TODO settings object? not ideal...
 
 # todo use mypy literals later?
 from enum import Enum
@@ -38,6 +37,18 @@ def link(*, url: PathIsh, title: Optional[str]) -> str:
     else:
         return f'[[{U}]]'
 
+
+def docview_link(*, path: PathIsh, title: Optional[str], page1: Optional[int]=None) -> str:
+    """
+    Generates a docview link to open pdfs.
+    page1: 1-indexed (!) pdf page number.
+    NOTE: you need (require 'ol-docview) somewhere in your Emacs config for that to work
+    """
+    url = f'docview:{path}'
+    if page1 is not None:
+        assert page1 != 0, 'docview page numbers are 1-indexed!'
+        url += '::' + str(page1)
+    return link(url=url, title=title)
 
 
 def timestamp(dt: Dateish, inactive: bool=False, active: bool=False) -> str:
@@ -76,6 +87,15 @@ def timestamp_with_style(dt: Dateish, style: TimestampStyle) -> str:
     if isinstance(dt, datetime):
         r += " " + asorgtime(dt)
     return beg + r + end
+
+
+import textwrap
+def literal(text: str) -> str:
+    """
+    Quick way of 'quoting' the text
+    https://orgmode.org/manual/Literal-Examples.html
+    """
+    return textwrap.indent(text, ': ', lambda line: True)
 
 
 class Quoted(NamedTuple):
