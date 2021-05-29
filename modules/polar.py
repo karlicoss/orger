@@ -16,14 +16,14 @@ Example output:
 
 
 from orger import Mirror
-from orger.inorganic import node, link, OrgNode
-from orger.common import dt_heading
+from orger.inorganic import node, link, docview_link, OrgNode, literal
+from orger.common import dt_heading, error
 from orger import pandoc
 
 
 class PolarView(Mirror):
-    def get_items(self):
-        from my.reading import polar
+    def get_items(self) -> Mirror.Results:
+        from my import polar
 
         def make_comment(c: polar.Comment) -> OrgNode:
             text = pandoc.to_org(data=c.text, from_='html', logger=self.logger)
@@ -32,25 +32,34 @@ class PolarView(Mirror):
                 body=text,
             )
 
-        def make_item(res: polar.Result):
-            if isinstance(res, polar.Error):
-                # TODO could create error heading from exception automatically? take first line as heading and rest + traceback as the body
-                return node(heading='ERROR ' + str(res)) # TODO priority A?
+        def make_highlight(book: polar.Book, hl: polar.Highlight) -> OrgNode:
+            page1 = hl.page
+            selection = hl.selection
+            # ugh, not sure why are they so fucked in Polar..
+            selection = selection.replace('\n', ' ')
+            return node(
+                heading=dt_heading(
+                    hl.created,
+                    docview_link(path=book.path, title=f'page {page1}', page1=page1),
+                ),
+                body=literal(selection),
+                tags=hl.tags,
+                properties=None if hl.color is None else {'POLAR_COLOR': hex2name(hl.color)},
+                children=[make_comment(c) for c in hl.comments],
+            )
+
+        def make_item(res: polar.Result) -> OrgNode:
+            if isinstance(res, Exception):
+                return error(res)
             else:
                 book = res
                 return node(
                     heading=dt_heading(
                         book.created,
-                        # TODO apparently file: is not necessary if the path is absolute?
-                        link(url=str(book.path), title=book.title),
+                        docview_link(path=book.path, title=book.title),
                     ),
                     tags=book.tags,
-                    children=[node(
-                        heading=dt_heading(hl.created, hl.selection),
-                        tags=hl.tags,
-                        properties=None if hl.color is None else {'POLAR_COLOR': hex2name(hl.color)},
-                        children=[make_comment(c) for c in hl.comments],
-                    ) for hl in book.items]
+                    children=[make_highlight(book=book, hl=hl) for hl in book.items],
                 )
         for res in polar.get_entries():
             yield make_item(res)
