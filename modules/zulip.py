@@ -26,7 +26,7 @@ class Zulip(Mirror):
             def chit():
                 for m in group:
                     yield node(
-                        heading=dt_heading(m.sent, m.sender),
+                        heading=dt_heading(m.sent, link(title=m.sender.full_name, url=m.permalink)),
                         body=pandoc.to_org(m.content, from_='markdown'),
                     )
 
