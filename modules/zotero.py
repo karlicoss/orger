@@ -98,7 +98,8 @@ class Zotero(Mirror):
                         body=body,
                     )
             body = ''
-            if url := item.url:
+            url = item.url
+            if url is not None:
                 body = url
             yield node(
                 heading=docview_link(path=item.file, title=item.title),

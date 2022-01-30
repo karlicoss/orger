@@ -6,7 +6,7 @@ import inspect
 from pathlib import Path
 from subprocess import check_call
 from tempfile import TemporaryDirectory
-from typing import List, Tuple, Iterable, Optional, Union, Callable
+from typing import List, Tuple, Iterable, Optional, Union, Callable, Dict
 
 from .inorganic import OrgNode, TimestampStyle
 from .state import JsonState
@@ -20,8 +20,8 @@ Key = str
 OrgWithKey = Tuple[Key, OrgNode]
 
 
-_style_map = {
-    k.lower(): v
+_style_map: Dict[str, TimestampStyle] = {
+    k.lower(): v  # type: ignore[misc]
     for k, v in TimestampStyle._member_map_.items() # type: ignore[attr-defined]
 }
 

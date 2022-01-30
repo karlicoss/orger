@@ -10,19 +10,17 @@ if ! command -v sudo; then
     }
 fi
 
-if ! [ -z "$CI" ]; then
+if [ -n "${CI-}" ]; then
     # install OS specific stuff here
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macos
         :
     else
-        :
+        # vim is used in one of the tests
+        command -v vim    || sudo apt install vim
+        command -v pandoc || sudo apt install pandoc
     fi
 fi
-
-# vim is used in one of the tests
-command -v vim    || sudo apt install vim
-command -v pandoc || sudo apt install pandoc
 
 pip3 install --user tox
 tox
