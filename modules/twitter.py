@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 from orger import Mirror
 from orger.inorganic import node, link, timestamp, OrgNode
-from orger.common import dt_heading
+from orger.common import dt_heading, error
 
 import datetime
 from typing import Iterable, Any
 
+
+from my.core import Res
 import my.twitter.all as twi
 
 today = datetime.datetime.now()
 
-# TODO FIXME expose Tweet type in twitter.common module?
-Tweet = Any
+Tweet = twi.Tweet
 
 class TwitterView(Mirror):
     @property
@@ -19,13 +20,13 @@ class TwitterView(Mirror):
         assert self.cmdline_args is not None
         return self.cmdline_args.mode
 
-    def _get_tweets(self) -> Iterable[Tweet]:
+    def _get_tweets(self) -> Iterable[Res[Tweet]]:
         if self.mode == 'all':
             return twi.tweets()
         else:
             # not gonna work on 29 feb!!
             same_day = lambda d: d.day == today.day and d.month == today.month
-            return (t for t in twi.tweets() if same_day(t.created_at))
+            return (t for t in twi.tweets() if isinstance(t, Exception) or same_day(t.created_at))
 
     def _render(self, t: Tweet) -> OrgNode:
         dtime = t.created_at
@@ -46,7 +47,14 @@ class TwitterView(Mirror):
 
 
     def get_items(self) -> Mirror.Results:
-        for tweet in sorted(self._get_tweets(), key=lambda t: t.created_at):
+        good = []
+        for t in self._get_tweets():
+            if isinstance(t, Exception):
+                yield error(t)
+            else:
+                good.append(t)
+
+        for tweet in sorted(good, key=lambda t: t.created_at):
             yield self._render(tweet)
 
 
