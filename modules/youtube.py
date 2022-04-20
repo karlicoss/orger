@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from orger import Mirror
 from orger.inorganic import node, link
-from orger.common import dt_heading
+from orger.common import dt_heading, error
 
 from my.media.youtube import watched
 
@@ -10,11 +10,18 @@ from itertools import groupby
 
 class YoutubeView(Mirror):
     def get_items(self) -> Mirror.Results:
+        good = []
+        for i in watched():
+            if isinstance(i, Exception):
+                yield error(i)
+            else:
+                good.append(i)
+
         by_url  = lambda w: w.url
         by_when = lambda w: w.when
         items = [
             max(group, key=by_when)
-            for _, group in groupby(sorted(watched(), key=by_url), key=by_url)
+            for _, group in groupby(sorted(good, key=by_url), key=by_url)
         ]
         items = sorted(items, key=by_when)
         # TODO for each url only take latest?
