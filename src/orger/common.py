@@ -11,6 +11,7 @@ class settings:
     USE_PANDOC: bool = True
 
 
+_timezones = set()  # type: ignore
 def dt_heading(dt: Optional[datetime], heading: str) -> str:
     """
     Helper to inline datetime in heading
@@ -18,8 +19,15 @@ def dt_heading(dt: Optional[datetime], heading: str) -> str:
     # TODO move to inorganic? not sure
     if dt is None:
         return heading
-    else:
-        return timestamp_with_style(dt=dt, style=settings.DEFAULT_TIMESTAMP_STYLE) + ' ' + heading
+
+    tz = dt.tzinfo
+    # todo come up with a better way of reporting this..
+    if tz not in _timezones and len(_timezones) > 0:
+        import warnings
+        warnings.warn(f"Seems that a mixture of timezones is used. Org-mode doesn't support timezones, so this might end up confusing: {_timezones} {tz} {heading}")
+    _timezones.add(tz)
+
+    return timestamp_with_style(dt=dt, style=settings.DEFAULT_TIMESTAMP_STYLE) + ' ' + heading
 
 
 def error(e: Exception) -> OrgNode:
