@@ -3,7 +3,7 @@ from orger import Mirror
 from orger.inorganic import node, link, Quoted
 from orger.common import dt_heading, error
 
-from typing import Optional, List
+from typing import Optional, List, Iterator, Any
 from datetime import datetime
 
 from more_itertools import bucket
@@ -11,7 +11,7 @@ from more_itertools import bucket
 from my.core.common import asdict
 from pprint import pformat
 def pp_item(i, **kwargs) -> str:
-    # annoying, ppring doesn't have dataclass support till 3.10 https://bugs.python.org/issue43080
+    # annoying, pprint doesn't have dataclass support till 3.10 https://bugs.python.org/issue43080
     return pformat(asdict(i), **kwargs)
 
 
@@ -21,20 +21,24 @@ class Auto(Mirror):
         # TODO move this functionality to base module? might be useful for all modules
         self.extra_warnings: List[str] = []
 
+        # these will be set below
+        self.group_by_attr: Optional[str] = None
+        self.body_attr    : Optional[str] = None
+        self.title_attr   : Optional[str] = None
+
 
     def get_items(self) -> Mirror.Results:
         args = self.cmdline_args; assert args is not None
-        return self.auto(
-            it=args.name,
-            group_by=args.group_by,
-        )
+        self.group_by_attr = args.group_by
+        self.body_attr     = args.body
+        self.title_attr    = args.title
+        return self.auto(it=args.name)
 
 
     # TODO hmm maybe reuse HPI core.query.select?
     # could abuse that for grouping by, sorting, raising errors, filtering fields, etc
-    def auto(self, it, *, group_by: Optional[str]=None) -> Mirror.Results:
-
-
+    def auto(self, it) -> Mirror.Results:
+        group_by = self.group_by_attr
         if isinstance(it, str):
             # treat as HPI query target
             from my.core.__main__ import _locate_functions_or_prompt
@@ -45,7 +49,7 @@ class Auto(Mirror):
                 if isinstance(i, Exception):
                     yield error(i)
                 else:
-                    yield self.render_one(i)
+                    yield from self.render_one(i)
         else:
             good = []
             for i in it():
@@ -61,7 +65,7 @@ class Auto(Mirror):
 
                 def chit():
                     for i in group:
-                        yield self.render_one(i)
+                        yield from self.render_one(i)
                 children = list(chit())
 
                 yield node(
@@ -77,10 +81,12 @@ class Auto(Mirror):
             self.extra_warnings.append(w)
 
 
-    def render_one(self, i) -> node:
+    def render_one(self, i) -> Iterator[node]:
         self._warn('WARNING: Default renderer is used! Implement render_one if you want nicer rendering')
 
         d = asdict(i)
+        cls = i.__class__
+        del i # delete from scope to avoid using by accident
 
         datetimes = [(k, v) for k, v in d.items() if isinstance(v, datetime)]
         dt: Optional[datetime] = None
@@ -88,14 +94,53 @@ class Auto(Mirror):
             [(k, dt)] = datetimes
             # todo maybe warn that datetime is guessed
             del d[k] # probs no need to press twice?
-            self._warn(f"NOTE: {i.__class__} is using '{k}' as the timestamp")
+            self._warn(f"NOTE: {cls} is using '{k}' as the timestamp")
         else:
-            self._warn(f"WARNING: {i.__class__} couldn't guess timestamp: expected single datetime field, got {datetimes}")
+            self._warn(f"WARNING: {cls} couldn't guess timestamp: expected single datetime field, got {datetimes}")
 
-        return node(
-            # todo could extract ids here?
-            heading=dt_heading(dt, str(i.__class__)),
-            body=Quoted(pp_item(d, width=120)),
+        # todo could pass fmt string for group as well?
+        if self.group_by_attr is not None:
+            try:
+                d.pop(self.group_by_attr)
+            except KeyError as e:
+                yield error(e)
+
+        def fmt_attr(attr: Optional[str]) -> Optional[str]:
+            if attr is None:
+                return None
+
+            import string
+            fake_self: Any = object()  # fine to call it as class method here..
+            fields = [
+                f
+                for (_, f, _, _) in string.Formatter.parse(fake_self, attr)
+                if f is not None # might be none for the last bit (before the static bit)
+            ]
+            fstr: str
+            if len(fields) == 0:
+                # must be field name without formatting string?
+                fields = [attr]
+                fstr = '{' + attr + '}'
+            else:
+                fstr = attr
+            res = fstr.format(**d)
+            for f in fields:
+                # should succeed after format call?
+                d.pop(f)
+            return res
+
+
+        title = fmt_attr(self.title_attr)
+        body  = fmt_attr(self.body_attr)
+
+        node_title = cls.__name__ if title is None else title
+        node_body = Quoted(pp_item(d, width=120)).quoted()
+        if body is not None:
+            node_body += '\n' + body
+
+        yield node(
+            heading=dt_heading(dt, node_title),
+            body=node_body,
         )
 
 
@@ -106,12 +151,11 @@ def setup_parser(p) -> None:
         required=True,
         help="HPI function name (see 'hpi query --help')",
     )
-    p.add_argument(
-        '--group-by',
-        type=str,
-        default=None,
-        help='key to group items by',
-    )
+    p.add_argument('--group-by', type=str, default=None, help='field to group items by')
+    p.add_argument('--body'    , type=str, default=None, help='field to use as item body')
+    p.add_argument('--title'   , type=str, default=None, help='field to use as item title')
+    # will support later
+    # p.add_argument('--id'      , type=str, default=None, help='field to use as item ID')
 
 
 if __name__ == '__main__':
