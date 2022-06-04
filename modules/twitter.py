@@ -6,9 +6,11 @@ from orger.common import dt_heading, error
 import datetime
 from typing import Iterable, Any
 
+# shit... this is annoying, need to 'nudge' the config so it picks up all.py override?
+import my.config
+import my.twitter.all as twi
 
 from my.core import Res
-import my.twitter.all as twi
 
 today = datetime.datetime.now()
 
