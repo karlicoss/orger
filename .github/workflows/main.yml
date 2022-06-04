@@ -12,16 +12,15 @@ on:
   workflow_dispatch: # needed to trigger workflows manually
   # todo cron?
 
-env:
-  # useful for scripts & sometimes tests to know
-  CI: true
 
 jobs:
   build:
     strategy:
       matrix:
-        platform: [ubuntu-latest] # , macos-latest] # TODO windows-latest??
-        python-version: ['3.7', '3.8', '3.9']
+        platform: [ubuntu-latest, macos-latest] # todo enable windows later -- need to fix a couple of tests first, windows-latest]
+        python-version: ['3.7', '3.8', '3.9', '3.10']
+        # vvv just an example of excluding stuff from matrix
+        # exclude: [{platform: macos-latest, python-version: '3.6'}]
 
     runs-on: ${{ matrix.platform }}
 
@@ -29,28 +28,26 @@ jobs:
     # ugh https://github.com/actions/toolkit/blob/main/docs/commands.md#path-manipulation
     - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
 
     # uncomment for SSH debugging
     # - uses: mxschmitt/action-tmate@v3
 
-    - run: .ci/run
+    # explicit bash command is necessary for Windows CI runner, otherwise it thinks it's cmd...
+    - run: bash .ci/run
 
-    - uses: actions/upload-artifact@v2
+    - if: matrix.platform == 'ubuntu-latest'  # no need to compute coverage for other platforms
+      uses: actions/upload-artifact@v2
       with:
-        name: .coverage.mypy-core_${{ matrix.platform }}_${{ matrix.python-version }}
-        path: .coverage.mypy-core/
+        name: .coverage.mypy_${{ matrix.platform }}_${{ matrix.python-version }}
+        path: .coverage.mypy/
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: .coverage.mypy-misc_${{ matrix.platform }}_${{ matrix.python-version }}
-        path: .coverage.mypy-misc/
 
   pypi:
     runs-on: ubuntu-latest
@@ -60,11 +57,11 @@ jobs:
     # ugh https://github.com/actions/toolkit/blob/main/docs/commands.md#path-manipulation
     - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v3
       with:
-        python-version: '3.7'
+        python-version: '3.8'
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
 

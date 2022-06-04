@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages # type: ignore
 
 
-def main():
+def main() -> None:
     pkgs = find_packages('src')
     [pkg] = pkgs
     setup(

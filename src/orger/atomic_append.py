@@ -45,10 +45,14 @@ def atomic_append_check(
 
 
 def test_atomic_append_check(tmp_path: Path) -> None:
+    import pytest # type: ignore
+    import platform
+
+    if platform.system() == 'Windows':
+        pytest.skip("this test doesn't work on windows for now")
+
     of = tmp_path / 'test.org'
     of.touch()
-
-    import pytest # type: ignore
 
     from subprocess import Popen, PIPE, check_call
     from time import sleep
