@@ -332,6 +332,7 @@ def _sanitize_body(text: str) -> str:
     ' Some thoughts:\n \n * convenience'
     """
     # TODO hmm. maybe just tabulating with 1 space is enough?...
+    # todo don't really remember why we replace \r\n specifically here?
     text = text.replace('\r\n', os.linesep)
     return ''.join(' ' + l for l in text.splitlines(keepends=True))
 
