@@ -3,6 +3,7 @@ from orger import Mirror
 from orger.inorganic import node, link
 from orger.common import dt_heading, error
 
+import my.config
 import my.twitter.all as twi
 
 
