@@ -57,6 +57,9 @@ class JsonState:
         return self.state
 
     def feed(self, key: str, value: Any, action: Callable[[], None]) -> None:
+        # just to be safe so we don't dump int by accident
+        assert isinstance(key, str), f"key/id has to be a str! key: {repr(key)}, value: {repr(value)}"
+
         if key in self:
             self.logger.debug(f'already handled: %s: %s', key, value)
             return
