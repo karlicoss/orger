@@ -14,16 +14,17 @@ fi
 if [ -n "${CI-}" ]; then
     # install OS specific stuff here
     case "$OSTYPE" in
-    cygwin* | msys* | win*)
-        # windows
-        :
-        ;;
     darwin*) 
         # macos
         command -v vim    || brew install vim
         command -v pandoc || brew install pandoc
         ;;
+    cygwin* | msys* | win*)
+        # windows
+        :
+        ;;
     *)
+        # must be linux?
         # vim is used in one of the tests
         # we only run it on linux for simplicity
         command -v vim    || sudo apt install vim
@@ -40,4 +41,4 @@ if ! command -v python3 &> /dev/null; then
 fi
 
 "$PY_BIN" -m pip install --user tox
-"$PY_BIN" -m tox
+"$PY_BIN" -m tox --parallel --parallel-live "$@"

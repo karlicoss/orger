@@ -9,7 +9,7 @@ import warnings
 PathIsh = Union[str, Path]
 State = Dict[str, Any]
 
-from atomicwrites import atomic_write
+from atomicwrites import atomic_write  # type: ignore[import]
 
 # TODO hmm. state should be ordered ideally? so it's easy to add/remove items?
 # would require storing as list of lists? or use that https://stackoverflow.com/a/6921760/706389
@@ -61,9 +61,9 @@ class JsonState:
         assert isinstance(key, str), f"key/id has to be a str! key: {repr(key)}, value: {repr(value)}"
 
         if key in self:
-            self.logger.debug(f'already handled: %s: %s', key, value)
+            self.logger.debug('already handled: %s: %s', key, value)
             return
-        self.logger.info(f'adding %s: %s', key, value)
+        self.logger.info('adding %s: %s', key, value)
         # TODO not sure about print...
         print(f'adding new item {key}: {value}')
         action()
@@ -71,7 +71,7 @@ class JsonState:
 
 
 def test_state(tmp_path: Path) -> None:
-    import pytest # type: ignore
+    import pytest
     path = tmp_path / 'state.json'
     state = JsonState(path)
 

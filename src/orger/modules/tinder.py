@@ -6,7 +6,7 @@ from orger.common import dt_heading, error
 
 import my.config
 # todo later, use .all?
-import my.tinder.android as tinder  # type: ignore[import] # uncomment once we release newer hpi
+import my.tinder.android as tinder
 
 class TinderView(Mirror):
     def get_items(self) -> Mirror.Results:

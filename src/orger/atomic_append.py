@@ -45,7 +45,7 @@ def atomic_append_check(
 
 
 def test_atomic_append_check(tmp_path: Path) -> None:
-    import pytest # type: ignore
+    import pytest
     import platform
 
     if platform.system() == 'Windows':

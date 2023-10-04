@@ -33,7 +33,7 @@ def dt_heading(dt: Optional[datetime], heading: str) -> str:
 def error(e: Exception) -> OrgNode:
     import traceback
     return OrgNode(
-        heading=f"ERROR!",
+        heading="ERROR!",
         body='\n'.join(traceback.format_exception(Exception, e, None)),
     )
 
@@ -58,5 +58,5 @@ from .klogging import LazyLogger, setup_logger
 
 
 def orger_user_dir() -> Path:
-    import appdirs # type: ignore[import]
+    import appdirs
     return Path(appdirs.user_config_dir('orger'))

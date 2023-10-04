@@ -22,7 +22,7 @@ OrgWithKey = Tuple[Key, OrgNode]
 
 _style_map: Dict[str, TimestampStyle] = {
     k.lower(): v  # type: ignore[misc]
-    for k, v in TimestampStyle._member_map_.items() # type: ignore[attr-defined]
+    for k, v in TimestampStyle._member_map_.items()
 }
 
 class OrgView:
@@ -67,7 +67,7 @@ class OrgView:
     @classmethod
     def parser(cls) -> ArgumentParser:
         F = lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=120)
-        p = argparse.ArgumentParser(formatter_class=F) # type: ignore
+        p = argparse.ArgumentParser(formatter_class=F)
 
         p.add_argument(
             '--disable-pandoc',
