@@ -10,15 +10,22 @@ on:
   pull_request: # needed to trigger on others' PRs
   # Note that people who fork it need to go to "Actions" tab on their fork and click "I understand my workflows, go ahead and enable them".
   workflow_dispatch: # needed to trigger workflows manually
-  # todo cron?
+    # todo cron?
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
 
 
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest] # todo enable windows later -- need to fix a couple of tests first, windows-latest]
-        python-version: ['3.7', '3.8', '3.9', '3.10']
+        platform: [ubuntu-latest, macos-latest]  # todo enable windows-latest later -- need to fix a couple of tests first
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
         # vvv just an example of excluding stuff from matrix
         # exclude: [{platform: macos-latest, python-version: '3.6'}]
 
@@ -28,22 +35,23 @@ jobs:
     # ugh https://github.com/actions/toolkit/blob/main/docs/commands.md#path-manipulation
     - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - uses: actions/setup-python@v3
+    - uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
     - uses: actions/checkout@v3
       with:
         submodules: recursive
+        fetch-depth: 0  # nicer to have all git history when debugging/for tests
 
-    # uncomment for SSH debugging
-    # - uses: mxschmitt/action-tmate@v3
+    - uses: mxschmitt/action-tmate@v3
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
     # explicit bash command is necessary for Windows CI runner, otherwise it thinks it's cmd...
     - run: bash .ci/run
 
     - if: matrix.platform == 'ubuntu-latest'  # no need to compute coverage for other platforms
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: .coverage.mypy_${{ matrix.platform }}_${{ matrix.python-version }}
         path: .coverage.mypy/
@@ -57,7 +65,7 @@ jobs:
     # ugh https://github.com/actions/toolkit/blob/main/docs/commands.md#path-manipulation
     - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - uses: actions/setup-python@v3
+    - uses: actions/setup-python@v4
       with:
         python-version: '3.8'
 
@@ -70,7 +78,7 @@ jobs:
       if: github.event_name != 'pull_request' && github.event.ref == 'refs/heads/master'
       env:
         TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD_TEST }}
-      run: pip3 install --user wheel twine && .ci/release --test
+      run: pip3 install --user --upgrade build twine && .ci/release --test
 
     - name: 'release to pypi'
       # always deploy tags to release pypi
@@ -78,4 +86,4 @@ jobs:
       if: github.event_name != 'pull_request' && startsWith(github.event.ref, 'refs/tags')
       env:
         TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-      run: pip3 install --user wheel twine && .ci/release
+      run: pip3 install --user --upgrade build twine && .ci/release
