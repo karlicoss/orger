@@ -53,10 +53,9 @@ def todo(dt: datetime, **kwargs):
     )
 
 
-# todo use klogging2?
-from .klogging import LazyLogger, setup_logger
-
-
 def orger_user_dir() -> Path:
     import appdirs
     return Path(appdirs.user_config_dir('orger'))
+
+
+from .logging_helper import LazyLogger, setup_logger  # legacy imports for bwd compatibility

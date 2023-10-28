@@ -23,6 +23,9 @@ Homepage = "https://github.com/karlicoss/orger"
 ##
 
 [project.optional-dependencies]
+optional = [
+    "colorlog",
+]
 testing = [
     "pytest",
     "ruff",
