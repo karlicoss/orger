@@ -9,7 +9,7 @@ import warnings
 PathIsh = Union[str, Path]
 State = Dict[str, Any]
 
-from atomicwrites import atomic_write  # type: ignore[import]
+from atomicwrites import atomic_write  # type: ignore[import-untyped]
 
 # TODO hmm. state should be ordered ideally? so it's easy to add/remove items?
 # would require storing as list of lists? or use that https://stackoverflow.com/a/6921760/706389
@@ -44,6 +44,7 @@ class JsonState:
             self.logger.debug('dry run! ignoring %s: %s', key, value)
             return
 
+        self.path.parent.mkdir(parents=True, exist_ok=True)
         with atomic_write(str(self.path), overwrite=True) as fo:
             json.dump(current, fo, indent=1, sort_keys=True)
 
@@ -63,9 +64,7 @@ class JsonState:
         if key in self:
             self.logger.debug('already handled: %s: %s', key, value)
             return
-        self.logger.info('adding %s: %s', key, value)
-        # TODO not sure about print...
-        print(f'adding new item {key}: {value}')
+        self.logger.info('adding new item %s: %s', key, value)
         action()
         self[key] = repr(value)
 
