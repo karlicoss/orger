@@ -134,7 +134,7 @@ class Mirror(OrgView):
         to.touch()
         check_call(['chmod', '+w', to])
         to.write_text(rtree)
-        check_call(['chmod', '-w', to])
+        check_call(['chmod', 'a-w', to])
 
 
     def make_tree(self) -> OrgNode:
