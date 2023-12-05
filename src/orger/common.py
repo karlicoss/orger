@@ -54,7 +54,7 @@ def todo(dt: datetime, **kwargs):
 
 
 def orger_user_dir() -> Path:
-    import appdirs
+    import appdirs  # type: ignore[import-untyped]
     return Path(appdirs.user_config_dir('orger'))
 
 
