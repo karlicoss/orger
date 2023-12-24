@@ -3,13 +3,16 @@ from orger import Mirror
 from orger.inorganic import node, link, Quoted
 from orger.common import dt_heading, error
 
-from typing import Optional, List, Iterator, Any
 from datetime import datetime
+from typing import Optional, List, Iterator, Any
+from pprint import pformat
+import string
 
 from more_itertools import bucket
 
 from my.core.common import asdict
-from pprint import pformat
+
+
 def pp_item(i, **kwargs) -> str:
     # annoying, pprint doesn't have dataclass support till 3.10 https://bugs.python.org/issue43080
     return pformat(asdict(i), **kwargs)
@@ -81,19 +84,18 @@ class Auto(Mirror):
             self.extra_warnings.append(w)
 
 
-    def render_one(self, i) -> Iterator[node]:
+    def render_one(self, thing) -> Iterator[node]:
         self._warn('WARNING: Default renderer is used! Implement render_one if you want nicer rendering')
 
-        d = asdict(i)
-        cls = i.__class__
-        del i # delete from scope to avoid using by accident
+        thing_dict = asdict(thing)
+        cls = thing.__class__
 
-        datetimes = [(k, v) for k, v in d.items() if isinstance(v, datetime)]
+        datetimes = [(k, v) for k, v in thing_dict.items() if isinstance(v, datetime)]
         dt: Optional[datetime] = None
         if len(datetimes) == 1:
             [(k, dt)] = datetimes
             # todo maybe warn that datetime is guessed
-            del d[k] # probs no need to press twice?
+            del thing_dict[k]  # probs no need to press twice?
             self._warn(f"NOTE: {cls} is using '{k}' as the timestamp")
         else:
             self._warn(f"WARNING: {cls} couldn't guess timestamp: expected single datetime field, got {datetimes}")
@@ -101,7 +103,7 @@ class Auto(Mirror):
         # todo could pass fmt string for group as well?
         if self.group_by_attr is not None:
             try:
-                d.pop(self.group_by_attr)
+                thing_dict.pop(self.group_by_attr)
             except KeyError as e:
                 yield error(e)
 
@@ -109,24 +111,26 @@ class Auto(Mirror):
             if attr is None:
                 return None
 
-            import string
             fake_self: Any = object()  # fine to call it as class method here..
             fields = [
                 f
                 for (_, f, _, _) in string.Formatter.parse(fake_self, attr)
-                if f is not None # might be none for the last bit (before the static bit)
+                if f is not None  # might be none for the last bit (before the static bit)
             ]
             fstr: str
             if len(fields) == 0:
                 # must be field name without formatting string?
+                # TODO maybe deprecate this.. it's not a huge deal to pass extra curlies
                 fields = [attr]
                 fstr = '{' + attr + '}'
             else:
                 fstr = attr
-            res = fstr.format(**d)
+
+            # here we can't use the thing_dict since formatter string might refer to properties
+            # TODO maybe use freezer instead?... or dump to dict with properties
+            res = fstr.format(**{f: getattr(thing, f) for f in fields})
             for f in fields:
-                # should succeed after format call?
-                d.pop(f)
+                thing_dict.pop(f, None)  # might not exist if it was a @property
             return res
 
 
@@ -134,7 +138,7 @@ class Auto(Mirror):
         body  = fmt_attr(self.body_attr)
 
         node_title = cls.__name__ if title is None else title
-        node_body = Quoted(pp_item(d, width=120)).quoted()
+        node_body = Quoted(pp_item(thing_dict, width=120)).quoted()
         if body is not None:
             node_body += '\n' + body
 
