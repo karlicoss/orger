@@ -10,7 +10,7 @@ import string
 
 from more_itertools import bucket
 
-from my.core.common import asdict
+from my.core.types import asdict
 
 
 def pp_item(i, **kwargs) -> str:
