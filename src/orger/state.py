@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import json
 import logging
 import os
 import sys
 import warnings
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Union
 
 from atomicwrites import atomic_write  # type: ignore[import-untyped]
 
@@ -20,7 +22,7 @@ class JsonState:
         path: PathIsh,
         *,
         dry_run: bool = False,
-        default: Optional[State] = None,
+        default: State | None = None,
         logger: logging.Logger=logging.getLogger('orger'),  # noqa: B008
     ) -> None:
         self.path = Path(path)
@@ -30,7 +32,7 @@ class JsonState:
             default = {}
         self.default = default
 
-        self.state: Optional[State] = None
+        self.state: State | None = None
         self.logger = logger
         # TODO for simplicity, write empty if file doesn't exist??
 

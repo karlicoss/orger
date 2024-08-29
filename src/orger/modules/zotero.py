@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
 from orger import Mirror
 from orger.inorganic import node, link, docview_link, literal
 from orger.common import dt_heading, error
 
-from typing import Optional
 from textwrap import indent, wrap
 
 from more_itertools import bucket
@@ -77,7 +77,7 @@ class Zotero(Mirror):
                         properties['ZOTERO_TAGS'] = ', '.join(a.tags)  # not sure what's the best separator...
 
                     # todo not sure about it...
-                    mtodo: Optional[str] = None
+                    mtodo: str | None = None
                     if 'todo' in {t.lower() for t in tags}:
                         mtodo = 'TODO'
 
