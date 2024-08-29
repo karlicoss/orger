@@ -30,7 +30,7 @@ If some colors look too bright for you, you can just manually map them instead, 
 
 
 class Zotero(Mirror):
-    DEFAULT_HEADER = Mirror.DEFAULT_HEADER + indent(colors_doc, '# ', lambda line: True)
+    DEFAULT_HEADER = Mirror.DEFAULT_HEADER + indent(colors_doc, '# ', lambda _line: True)
 
     def get_items(self) -> Mirror.Results:
         from my import zotero

@@ -30,7 +30,7 @@ def is_drill(i: Highlight) -> bool:
 
 
 def get_drill_items():
-    return list(sorted(filter(is_drill, get_highlights()), key=lambda h: h.dt))
+    return sorted(filter(is_drill, get_highlights()), key=lambda h: h.dt)
 
 
 class Krill(Queue):

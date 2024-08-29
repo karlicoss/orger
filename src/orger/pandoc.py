@@ -1,14 +1,14 @@
 """
 Helper for converting stuff to pandoc
 """
-from functools import lru_cache
 import logging
 import shutil
-from subprocess import run, PIPE
+from functools import lru_cache
+from subprocess import PIPE, run
 from typing import Optional
 
-
 from .common import settings
+
 
 @lru_cache(1)
 def should_use_pandoc() -> bool:
@@ -32,7 +32,7 @@ def to_org(data: str, *, from_: str, logger=logging) -> str:
     # meh. for some reason they are converted to \\ otherwise
     if from_ == 'html':
         data = data.replace('<br>', '')
-   
+
     try:
         r = run(
             ['pandoc', '-f', from_, '-t', 'org', '--wrap=none'],

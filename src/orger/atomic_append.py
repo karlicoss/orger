@@ -1,6 +1,6 @@
-from pathlib import Path
-from os.path import lexists
 import logging
+from os.path import lexists
+from pathlib import Path
 from typing import Union
 
 PathIsh = Union[str, Path]
@@ -26,7 +26,7 @@ def assert_not_edited(path: Path) -> None:
     for x in [vim, emacs]:
         lf = path.parent / x
         if lexists(lf): # lexist is necessary because emacs uses symlink for lock file
-            raise RuntimeError('File is being edited: {}'.format(lf))
+            raise RuntimeError(f'File is being edited: {lf}')
 
 
 def atomic_append_check(
@@ -45,8 +45,9 @@ def atomic_append_check(
 
 
 def test_atomic_append_check(tmp_path: Path) -> None:
-    import pytest
     import platform
+
+    import pytest
 
     if platform.system() == 'Windows':
         pytest.skip("this test doesn't work on windows for now")
@@ -54,10 +55,9 @@ def test_atomic_append_check(tmp_path: Path) -> None:
     of = tmp_path / 'test.org'
     of.touch()
 
-    from subprocess import Popen, PIPE, check_call
-    from time import sleep
-
     from contextlib import contextmanager
+    from subprocess import PIPE, Popen, check_call
+    from time import sleep
     @contextmanager
     def tmp_popen(*args, **kwargs):
         with Popen(*args, **kwargs) as p:
@@ -71,7 +71,7 @@ def test_atomic_append_check(tmp_path: Path) -> None:
     assert of.read_text() == 'data1data2'
 
     with tmp_popen(['vi', '-c', 'startinsert', str(of)], stdin=PIPE, stdout=PIPE, stderr=PIPE) as p: # enter insert mode
-        for attempt in range(10):
+        for _attempt in range(10):
             # ugh, needs long pause for some reason
             sleep(1)
             swapfiles = list(tmp_path.glob('.*.swp'))

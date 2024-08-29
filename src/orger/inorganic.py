@@ -1,15 +1,29 @@
-from datetime import datetime, date
 import logging
-from pathlib import Path
-import re
 import os
-from collections import OrderedDict
-from typing import NamedTuple, Optional, Sequence, Dict, Mapping, Any, Tuple, TypeVar, Callable, Union, List, TYPE_CHECKING
+import re
+import textwrap
 import warnings
+from collections import OrderedDict
+from dataclasses import dataclass
+from datetime import date, datetime
+from enum import Enum
+from pathlib import Path
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    List,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 
 # todo use mypy literals later?
-from enum import Enum
 class TimestampStyle(Enum):
     INACTIVE = ('[', ']')
     ACTIVE   = ('<', '>')
@@ -20,6 +34,7 @@ class TimestampStyle(Enum):
 Dateish = Union[datetime, date]
 
 PathIsh = Union[str, Path]
+
 
 def link(*, url: PathIsh, title: Optional[str]) -> str:
     """
@@ -51,7 +66,7 @@ def docview_link(*, path: PathIsh, title: Optional[str], page1: Optional[int]=No
     return link(url=url, title=title)
 
 
-def timestamp(dt: Dateish, inactive: bool=False, active: bool=False) -> str:
+def timestamp(dt: Dateish, *, inactive: bool=False, active: bool=False) -> str:
     """
     default is active
     >>> dt = datetime.strptime('19920110 04:45', '%Y%m%d %H:%M')
@@ -89,16 +104,16 @@ def timestamp_with_style(dt: Dateish, style: TimestampStyle) -> str:
     return beg + r + end
 
 
-import textwrap
 def literal(text: str) -> str:
     """
     Quick way of 'quoting' the text
     https://orgmode.org/manual/Literal-Examples.html
     """
-    return textwrap.indent(text, ': ', lambda line: True)
+    return textwrap.indent(text, ': ', lambda _line: True)
 
 
-class Quoted(NamedTuple):
+@dataclass
+class Quoted:
     '''
     Special object to markup 'literal' paragraphs
     https://orgmode.org/manual/Literal-Examples.html
@@ -115,15 +130,16 @@ Body = Union[str, Quoted]
 # TODO priority
 # TODO for sanitizing, have two strategies: error and replace?
 def asorgoutline(
-        heading: Optional[str] = None,
-        todo: Optional[str] = None,
-        tags: Sequence[str] = [],
-        scheduled: Optional[Dateish] = None,
-        # TODO perhaps allow list of tuples? properties might be repeating
-        properties: Optional[Mapping[str, str]]=None,
-        body: Optional[Body] = None,
-        level: int=1,
-        escaped: bool=False,
+    heading: Optional[str] = None,
+    *,
+    todo: Optional[str] = None,
+    tags: Sequence[str] = [],
+    scheduled: Optional[Dateish] = None,
+    # TODO perhaps allow list of tuples? properties might be repeating
+    properties: Optional[Mapping[str, str]] = None,
+    body: Optional[Body] = None,
+    level: int = 1,
+    escaped: bool = False,
 ) -> str:
     r"""
     Renders Org mode outline (apart from children)
@@ -215,22 +231,12 @@ T = TypeVar('T')
 Lazy = Union[T, Callable[[], T]]
 
 
-# jeez...
-# otherwise it struggles to resolve recursive type
-# could as well make it dataclass... just dunno if should introduce dependency for py36
-if TYPE_CHECKING:
-    from dataclasses import dataclass as mypy_dataclass
-    Base = object
-else:
-    mypy_dataclass = lambda x: x
-    Base = NamedTuple
-
-
-@mypy_dataclass
-class OrgNode(Base):
+@dataclass
+class OrgNode:
     """
     Meant to be somewhat compatible with https://orgparse.readthedocs.io/en/latest/#orgparse.node.OrgNode
     """
+
     heading: Lazy[str]
     todo: Optional[str] = None
     tags: Sequence[str] = ()
@@ -241,7 +247,7 @@ class OrgNode(Base):
     children: Sequence['OrgNode'] = ()
 
     # NOTE: this is a 'private' attribute
-    escaped: bool=False
+    escaped: bool = False
 
     def _render_self(self) -> str:
         return asorgoutline(
@@ -263,7 +269,7 @@ class OrgNode(Base):
             res.extend((l + 1, x) for l, x in ch._render_hier())
         return res
 
-    def render(self, level: int=1) -> str:
+    def render(self, level: int = 1) -> str:
         r"""
         >>> OrgNode('something', todo='TODO').render()
         '* TODO something'
@@ -278,10 +284,12 @@ class OrgNode(Base):
         rh = [(level + l, x) for l, x in rh]
         return '\n'.join('*' * l + (' ' if l > 0 else '') + x for l, x in rh)
 
+
 node = OrgNode
 
 
 ## helper functions
+
 
 def asorgdate(t: Dateish) -> str:
     return t.strftime("%Y-%m-%d %a")
@@ -299,7 +307,6 @@ def _from_lazy(x: Lazy[T]) -> T:
         return x
 
 
-from typing import Mapping
 def maketrans(d: Dict[str, str]) -> Dict[int, str]:
     # make mypy happy... https://github.com/python/mypy/issues/4374
     return str.maketrans(d)
@@ -343,8 +350,7 @@ def _sanitize_tag(tag: str) -> str:
     'test_d@shes'
     """
     # https://orgmode.org/manual/Tags.html
-    # Tags are normal words containing letters, numbers, ‘_’, and ‘@’.
+    # Tags are normal words containing letters, numbers, '_', and '@'.
     # TODO not sure, perhaps we want strict mode for formatting?
     # TODO reuse orgparse regexes?
     return re.sub(r'[^@\w]', '_', tag)
-

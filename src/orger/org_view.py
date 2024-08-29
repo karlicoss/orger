@@ -1,20 +1,18 @@
-#!/usr/bin/env python3
 import argparse
-from argparse import ArgumentParser, Namespace
-from collections import Counter
 import inspect
 import json
+import sys
+from argparse import ArgumentParser, Namespace
+from collections import Counter
 from pathlib import Path
 from subprocess import check_call
-import sys
-from typing import Any, List, Tuple, Iterable, Optional, Union, Callable, Dict
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
-from .inorganic import OrgNode, TimestampStyle
-from .state import JsonState
-from .atomic_append import atomic_append_check, assert_not_edited
+from .atomic_append import assert_not_edited, atomic_append_check
 from .common import orger_user_dir
+from .inorganic import OrgNode, TimestampStyle
 from .logging_helper import make_logger
-
+from .state import JsonState
 
 # TODO tests for determinism? not sure where should they be...
 # think of some generic thing to test that?
@@ -119,7 +117,7 @@ class Mirror(OrgView):
     def get_items(self) -> Iterable:
         raise NotImplementedError
 
-    def _run(self, to: Path, stdout: bool) -> None:
+    def _run(self, to: Path, *, stdout: bool) -> None:
         org_tree = self.make_tree()
         rtree = org_tree.render(level=0)
 
@@ -164,11 +162,10 @@ class Mirror(OrgView):
             if text in _from_lazy(root.heading):
                 return root
             for ch in root.children:
-                chr = pick_heading(ch, text)
-                if chr is not None:
-                    return chr
-            else:
-                return None
+                ch_res = pick_heading(ch, text)
+                if ch_res is not None:
+                    return ch_res
+            return None
 
         def test():
             tree = cls().make_tree() # TODO make sure it works on both static and interactive?
@@ -197,12 +194,13 @@ class Queue(OrgView):
     Results = Iterable[OrgWithKey]
 
     def _run(
-            self,
-            to: Path,
-            stdout: bool,
-            state_path: Path,
-            init: bool=False,
-            dry_run: bool=False,
+        self,
+        to: Path,
+        *,
+        stdout: bool,
+        state_path: Path,
+        init: bool = False,
+        dry_run: bool = False,
     ) -> None:
         self.logger.info('Using state file %s', state_path)
 
@@ -316,8 +314,7 @@ def test_org_view_append(tmp_path: Path) -> None:
             self.items = items
 
         def get_items(self):
-            for i in self.items:
-                yield i
+            yield from self.items
 
     rpath = tmp_path / 'res.org'
     spath = tmp_path / 'state.json'

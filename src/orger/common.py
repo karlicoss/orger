@@ -1,8 +1,10 @@
+import traceback
+import warnings
 from datetime import datetime
-from typing import Optional
 from pathlib import Path
+from typing import TYPE_CHECKING, Optional
 
-from .inorganic import OrgNode, timestamp, timestamp_with_style, TimestampStyle
+from .inorganic import OrgNode, TimestampStyle, timestamp, timestamp_with_style
 
 
 # todo add error policy here?
@@ -23,7 +25,6 @@ def dt_heading(dt: Optional[datetime], heading: str) -> str:
     tz = dt.tzinfo
     # todo come up with a better way of reporting this..
     if tz not in _timezones and len(_timezones) > 0:
-        import warnings
         warnings.warn(f"Seems that a mixture of timezones is used. Org-mode doesn't support timezones, so this might end up confusing: {_timezones} {tz} {heading}")
     _timezones.add(tz)
 
@@ -31,7 +32,6 @@ def dt_heading(dt: Optional[datetime], heading: str) -> str:
 
 
 def error(e: Exception) -> OrgNode:
-    import traceback
     return OrgNode(
         heading="ERROR!",
         body='\n'.join(traceback.format_exception(Exception, e, None)),
@@ -58,4 +58,6 @@ def orger_user_dir() -> Path:
     return Path(appdirs.user_config_dir('orger'))
 
 
-from .logging_helper import LazyLogger, setup_logger  # legacy imports for bwd compatibility
+if not TYPE_CHECKING:
+    # legacy imports for bwd compatibility
+    from .logging_helper import LazyLogger, setup_logger

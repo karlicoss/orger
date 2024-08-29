@@ -24,7 +24,7 @@ def roam_text_to_org(text: str) -> str:
     return org
 
 
-def roam_note_to_org(node: roamresearch.Node, top=False) -> Iterable[OrgNode]:
+def roam_note_to_org(node: roamresearch.Node, *, top: bool = False) -> Iterable[OrgNode]:
     """
     Converts Roam node into Org-mode representation
     """
@@ -84,7 +84,7 @@ class RoamView(Mirror):
             items = list(chain.from_iterable(pool.map(roam_note_to_org, rr.notes)))
 
         # move the ones with no children to the bottom
-        items = list(sorted(items, key=lambda n: len(n.children), reverse=True))
+        items = sorted(items, key=lambda n: len(n.children), reverse=True)
 
         yield from items
 
