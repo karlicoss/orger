@@ -128,7 +128,7 @@ Example pocket.org output:
 * [2016-05-31 Tue 18:24] [[https://app.getpocket.com/read/1188624587][pocket]] · [[https://packetzoom.com/blog/how-to-test-your-app-in-different-network-conditions.html][How to test your app in different network conditions -]]
 * [2016-05-31 Tue 18:24] [[https://app.getpocket.com/read/1191143185][pocket]] · [[http://www.schibsted.pl/2016/02/hood-okhttps-cache/][What's under the hood of the OkHttp's cache?]]
 * [2016-03-15 Tue 17:27] [[https://app.getpocket.com/read/1187239791][pocket]] · [[http://joeduffyblog.com/2016/02/07/the-error-model/][Joe Duffy - The Error Model]]
-** [2019-09-25 Wed 18:20] A bug is a kind of error the programmer didn’t expect. Inputs weren’t validated correctly, logic was written wrong, or any host of problems have arisen.
+** [2019-09-25 Wed 18:20] A bug is a kind of error the programmer didn't expect. Inputs weren't validated correctly, logic was written wrong, or any host of problems have arisen.
 ** [2019-09-25 Wed 18:19] First, throwing an exception is usually ridiculously expensive. This is almost always due to the gathering of a stack trace.
 ** [2019-09-25 Wed 18:20] In other words, an exception, as with error codes, is just a different kind of return value!
 """

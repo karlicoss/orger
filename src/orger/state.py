@@ -1,25 +1,27 @@
 import json
-from pathlib import Path
-from typing import List, Union, Dict, Any, Optional, Callable
 import logging
 import os
 import sys
 import warnings
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Union
+
+from atomicwrites import atomic_write  # type: ignore[import-untyped]
 
 PathIsh = Union[str, Path]
 State = Dict[str, Any]
 
-from atomicwrites import atomic_write  # type: ignore[import-untyped]
 
 # TODO hmm. state should be ordered ideally? so it's easy to add/remove items?
 # would require storing as list of lists? or use that https://stackoverflow.com/a/6921760/706389
 class JsonState:
     def __init__(
-            self,
-            path: PathIsh,
-            dry_run: bool=False,
-            default: Optional[State]=None,
-            logger: logging.Logger=logging.getLogger('orger'),
+        self,
+        path: PathIsh,
+        *,
+        dry_run: bool = False,
+        default: Optional[State] = None,
+        logger: logging.Logger=logging.getLogger('orger'),  # noqa: B008
     ) -> None:
         self.path = Path(path)
         self.dry_run = dry_run
@@ -59,7 +61,7 @@ class JsonState:
 
     def feed(self, key: str, value: Any, action: Callable[[], None]) -> None:
         # just to be safe so we don't dump int by accident
-        assert isinstance(key, str), f"key/id has to be a str! key: {repr(key)}, value: {repr(value)}"
+        assert isinstance(key, str), f"key/id has to be a str! key: {key!r}, value: {value!r}"
 
         if key in self:
             self.logger.debug('already handled: %s: %s', key, value)

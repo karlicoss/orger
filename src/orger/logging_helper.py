@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from functools import lru_cache
 import logging
 import os
 import sys
-from typing import Union
 import warnings
+from functools import lru_cache
+from typing import Union
 
 
 def test() -> None:
@@ -15,7 +15,7 @@ def test() -> None:
 
     ## prepare exception for later
     try:
-        None.whatever  # type: ignore[attr-defined]
+        None.whatever  # type: ignore[attr-defined]  # noqa: B018
     except Exception as e:
         ex = e
     ##
@@ -209,7 +209,9 @@ def make_logger(name: str, *, level: LevelIsh = None) -> logging.Logger:
 # OK, when stdout is not a tty, enlighten doesn't log anything, good
 def get_enlighten():
     # TODO could add env variable to disable enlighten for a module?
-    from unittest.mock import Mock  # Mock to return stub so cients don't have to think about it
+    from unittest.mock import (
+        Mock,  # Mock to return stub so cients don't have to think about it
+    )
 
     # for now hidden behind the flag since it's a little experimental
     if os.environ.get('ENLIGHTEN_ENABLE', None) is None:
