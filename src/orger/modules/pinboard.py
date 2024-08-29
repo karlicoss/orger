@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from typing import List
+from __future__ import annotations
 
 from orger import Mirror
 from orger.common import dt_heading, error
@@ -10,7 +10,7 @@ import my.pinboard as pinboard
 
 class PinboardView(Mirror):
     def get_items(self) -> Mirror.Results:
-        items: List[pinboard.Bookmark] = []
+        items: list[pinboard.Bookmark] = []
         for b in pinboard.bookmarks():
             if isinstance(b, Exception):
                 yield error(b)

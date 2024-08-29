@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import traceback
 import warnings
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from .inorganic import OrgNode, TimestampStyle, timestamp, timestamp_with_style
 
@@ -14,7 +16,7 @@ class settings:
 
 
 _timezones = set()  # type: ignore
-def dt_heading(dt: Optional[datetime], heading: str) -> str:
+def dt_heading(dt: datetime | None, heading: str) -> str:
     """
     Helper to inline datetime in heading
     """

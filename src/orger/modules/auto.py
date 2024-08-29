@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 from orger import Mirror
 from orger.inorganic import node, link, Quoted
 from orger.common import dt_heading, error
 
 from datetime import datetime
-from typing import Optional, List, Iterator, Any
+from typing import Iterator, Any
 from pprint import pformat
 import string
 
@@ -22,12 +24,12 @@ class Auto(Mirror):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         # TODO move this functionality to base module? might be useful for all modules
-        self.extra_warnings: List[str] = []
+        self.extra_warnings: list[str] = []
 
         # these will be set below
-        self.group_by_attr: Optional[str] = None
-        self.body_attr    : Optional[str] = None
-        self.title_attr   : Optional[str] = None
+        self.group_by_attr: str | None = None
+        self.body_attr    : str | None = None
+        self.title_attr   : str | None = None
 
 
     def get_items(self) -> Mirror.Results:
@@ -91,7 +93,7 @@ class Auto(Mirror):
         cls = thing.__class__
 
         datetimes = [(k, v) for k, v in thing_dict.items() if isinstance(v, datetime)]
-        dt: Optional[datetime] = None
+        dt: datetime | None = None
         if len(datetimes) == 1:
             [(k, dt)] = datetimes
             # todo maybe warn that datetime is guessed
@@ -107,7 +109,7 @@ class Auto(Mirror):
             except KeyError as e:
                 yield error(e)
 
-        def fmt_attr(attr: Optional[str]) -> Optional[str]:
+        def fmt_attr(attr: str | None) -> str | None:
             if attr is None:
                 return None
 

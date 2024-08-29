@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import os
 import re
@@ -12,12 +14,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Mapping,
-    Optional,
     Sequence,
-    Tuple,
     TypeVar,
     Union,
 )
@@ -36,7 +34,7 @@ Dateish = Union[datetime, date]
 PathIsh = Union[str, Path]
 
 
-def link(*, url: PathIsh, title: Optional[str]) -> str:
+def link(*, url: PathIsh, title: str | None) -> str:
     """
     >>> link(url='http://reddit.com', title='[R]eddit!')
     '[[http://reddit.com][Reddit!]]'
@@ -53,7 +51,7 @@ def link(*, url: PathIsh, title: Optional[str]) -> str:
         return f'[[{U}]]'
 
 
-def docview_link(*, path: PathIsh, title: Optional[str], page1: Optional[int]=None) -> str:
+def docview_link(*, path: PathIsh, title: str | None, page1: int | None = None) -> str:
     """
     Generates a docview link to open pdfs.
     page1: 1-indexed (!) pdf page number.
@@ -130,14 +128,14 @@ Body = Union[str, Quoted]
 # TODO priority
 # TODO for sanitizing, have two strategies: error and replace?
 def asorgoutline(
-    heading: Optional[str] = None,
+    heading: str | None = None,
     *,
-    todo: Optional[str] = None,
+    todo: str | None = None,
     tags: Sequence[str] = [],
-    scheduled: Optional[Dateish] = None,
+    scheduled: Dateish | None = None,
     # TODO perhaps allow list of tuples? properties might be repeating
-    properties: Optional[Mapping[str, str]] = None,
-    body: Optional[Body] = None,
+    properties: Mapping[str, str] | None = None,
+    body: Body | None = None,
     level: int = 1,
     escaped: bool = False,
 ) -> str:
@@ -176,7 +174,7 @@ def asorgoutline(
         heading = re.sub(r'\s', ' ', heading)
 
     # TODO not great that we always pad body I guess. maybe needs some sort of raw_body argument?
-    safe_body: Optional[str] = None
+    safe_body: str | None = None
     if body is not None:
         # todo https://github.com/karlicoss/orger/issues/16
         # maybe need a policy for body behaviour... I guess policy could be Union[Literate]; controlled by env variables?
@@ -205,7 +203,7 @@ def asorgoutline(
         'SCHEDULED: ' + timestamp(scheduled, active=True)
     ]
 
-    props_lines: List[str] = []
+    props_lines: list[str] = []
     props = {} if properties is None else properties
     if len(props) > 0:
         props_lines.append(':PROPERTIES:')
@@ -238,13 +236,13 @@ class OrgNode:
     """
 
     heading: Lazy[str]
-    todo: Optional[str] = None
+    todo: str | None = None
     tags: Sequence[str] = ()
-    scheduled: Optional[Dateish] = None
-    properties: Optional[Mapping[str, str]] = None
+    scheduled: Dateish | None = None
+    properties: Mapping[str, str] | None = None
     # TODO make body lazy as well?
-    body: Optional[Body] = None
-    children: Sequence['OrgNode'] = ()
+    body: Body | None = None
+    children: Sequence[OrgNode] = ()
 
     # NOTE: this is a 'private' attribute
     escaped: bool = False
@@ -261,7 +259,7 @@ class OrgNode:
             escaped=self.escaped,
         )
 
-    def _render_hier(self) -> List[Tuple[int, str]]:
+    def _render_hier(self) -> list[tuple[int, str]]:
         res = [(0, self._render_self())]
         for ch in self.children:
             # TODO make sure there is a space??
@@ -307,7 +305,7 @@ def _from_lazy(x: Lazy[T]) -> T:
         return x
 
 
-def maketrans(d: Dict[str, str]) -> Dict[int, str]:
+def maketrans(d: dict[str, str]) -> dict[int, str]:
     # make mypy happy... https://github.com/python/mypy/issues/4374
     return str.maketrans(d)
 
