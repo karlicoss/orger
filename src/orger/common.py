@@ -60,9 +60,9 @@ def todo(dt: datetime, **kwargs):
 
 
 def orger_user_dir() -> Path:
-    import appdirs  # type: ignore[import-untyped]
+    import platformdirs
 
-    return Path(appdirs.user_config_dir('orger'))
+    return Path(platformdirs.user_config_dir('orger'))
 
 
 if not TYPE_CHECKING:

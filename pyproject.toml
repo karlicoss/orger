@@ -3,7 +3,7 @@
 dynamic = ["version"]  # version is managed by setuptools_scm
 name = "orger"
 dependencies = [
-    "appdirs"     , # to keep state files
+    "platformdirs", # to keep state files
     "atomicwrites", # to safely append data to a file
 ]
 requires-python = ">= 3.9"
