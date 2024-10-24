@@ -15,7 +15,7 @@ class YoutubeView(Mirror):
         return self.cmdline_args.mode
 
     def get_items(self) -> Mirror.Results:
-        from my.media.youtube import watched
+        from my.youtube.takeout import watched
 
         good = []
         for i in watched():

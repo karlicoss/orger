@@ -2,16 +2,12 @@ from __future__ import annotations
 
 import json
 import logging
-import os
-import sys
-import warnings
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Union
+from typing import Any, Callable
 
 from atomicwrites import atomic_write  # type: ignore[import-untyped]
 
-PathIsh = Union[str, Path]
-State = Dict[str, Any]
+State = dict[str, Any]
 
 
 # TODO hmm. state should be ordered ideally? so it's easy to add/remove items?
@@ -19,7 +15,7 @@ State = Dict[str, Any]
 class JsonState:
     def __init__(
         self,
-        path: PathIsh,
+        path: Path | str,
         *,
         dry_run: bool = False,
         default: State | None = None,

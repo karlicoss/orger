@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node, link, Quoted
-from orger.common import dt_heading, error
+from my.vk.favorites import Favorite, favorites
 
-from my.vk.favorites import favorites, Favorite
+from orger import Mirror
+from orger.common import dt_heading, error
+from orger.inorganic import Quoted, link, node
+
 
 class VkFavs(Mirror):
     def get_items(self) -> Mirror.Results:

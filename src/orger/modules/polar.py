@@ -15,10 +15,9 @@ Example output:
 """
 
 
-from orger import Mirror
-from orger.inorganic import node, link, docview_link, OrgNode, literal
+from orger import Mirror, pandoc
 from orger.common import dt_heading, error
-from orger import pandoc
+from orger.inorganic import OrgNode, docview_link, literal, node
 
 
 class PolarView(Mirror):

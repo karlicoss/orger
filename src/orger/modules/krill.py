@@ -7,11 +7,10 @@ It uses [[https://github.com/karlicoss/kobuddy][kobuddy]] to extract data from K
 
 The name stands for K[oboD]rill.
 """
-from orger import Queue
-from orger.inorganic import node, link
-from orger.common import todo
+from my.kobo import Highlight, get_highlights
 
-from my.books.kobo import get_highlights, Highlight
+from orger import Queue
+from orger.common import todo
 
 
 def is_drill(i: Highlight) -> bool:

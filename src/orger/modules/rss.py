@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-from orger import StaticView
-from orger.inorganic import node, link
-from orger.common import dt_heading
-
 import my.rss.all as rss
 
+from orger import Mirror
+from orger.inorganic import link, node
 
-class RssSubscriptions(StaticView):
+
+class RssSubscriptions(Mirror):
     def get_items(self):
         for s in rss.subscriptions():
             yield node(

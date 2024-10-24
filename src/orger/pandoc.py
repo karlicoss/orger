@@ -1,11 +1,11 @@
 """
 Helper for converting stuff to pandoc
 """
+
 import logging
 import shutil
 from functools import lru_cache
 from subprocess import PIPE, run
-from typing import Optional
 
 from .common import settings
 
@@ -20,6 +20,7 @@ def should_use_pandoc() -> bool:
         return True
 
     import warnings
+
     warnings.warn("Install 'pandoc' to convert HTML to org-mode. See https://pandoc.org/installing.html")
     return False
 
@@ -42,7 +43,7 @@ def to_org(data: str, *, from_: str, logger=logging) -> str:
         )
     except Exception as e:
         logger.exception(e)
-        return data # fallback
+        return data  # fallback
     res = r.stdout.decode('utf8')
     return res
 

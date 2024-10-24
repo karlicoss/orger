@@ -4,11 +4,12 @@ Module for Materialistic app for Hackernews
 https://play.google.com/store/apps/details?id=io.github.hidroh.materialistic
 """
 
-from orger import Queue
-from orger.inorganic import node, link
-from orger.common import dt_heading
+from my.hackernews.materialistic import saves
 
-from my.materialistic import saves
+from orger import Queue
+from orger.common import dt_heading
+from orger.inorganic import link, node
+
 
 class Materialistic(Queue):
     def get_items(self):

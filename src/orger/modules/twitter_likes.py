@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node, link
-from orger.common import dt_heading, error
-
-import my.config
 import my.twitter.all as twi
+
+from orger import Mirror
+from orger.common import error
+from orger.inorganic import link, node
 
 
 class TwitterLikesView(Mirror):

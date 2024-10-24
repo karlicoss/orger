@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
-from orger import Mirror
-from orger.inorganic import node, link, Quoted
-from orger.common import dt_heading, error
-from orger import pandoc
-
 from more_itertools import bucket
-
 from my.zulip.organization import messages
+
+from orger import Mirror, pandoc
+from orger.common import dt_heading, error
+from orger.inorganic import link, node
 
 
 class Zulip(Mirror):

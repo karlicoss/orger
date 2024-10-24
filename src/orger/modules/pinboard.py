@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import my.pinboard as pinboard
+
 from orger import Mirror
 from orger.common import dt_heading, error
-from orger.inorganic import node, link
-
-import my.pinboard as pinboard
+from orger.inorganic import link, node
 
 
 class PinboardView(Mirror):

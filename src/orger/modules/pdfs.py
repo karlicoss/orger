@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node, link, docview_link, literal
-from orger.common import dt_heading, error
-
 from datetime import datetime
+
+from orger import Mirror
+from orger.common import dt_heading, error
+from orger.inorganic import docview_link, literal, node
 
 
 class PdfView(Mirror):

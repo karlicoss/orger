@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node, link
-from orger.common import dt_heading, error
-from orger import pandoc
-
 import my.github.all as github
+
+from orger import Mirror, pandoc
+from orger.common import dt_heading, error
+from orger.inorganic import link, node
+
 # todo use later: import my.github.ghexport as gh. also careful about using events() -- need to sort?
 # I guess makes sense to generally expose get_ methods?
 

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-from orger import Queue
-from orger.inorganic import node, link
-from orger.common import todo
+from my.kobo import get_todos
 
-from my.books.kobo import get_todos, Highlight
+from orger import Queue
+from orger.common import todo
 
 
 class KoboTodos(Queue):

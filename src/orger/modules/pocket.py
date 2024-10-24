@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node, link
-from orger.common import dt_heading
-
 # TODO add tags?
 from my.pocket import articles
+
+from orger import Mirror
+from orger.common import dt_heading
+from orger.inorganic import link, node
 
 
 class PocketMirror(Mirror):
