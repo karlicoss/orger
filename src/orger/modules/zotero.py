@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from orger import Mirror
-from orger.inorganic import node, link, docview_link, literal
-from orger.common import dt_heading, error
-
 from textwrap import indent, wrap
 
 from more_itertools import bucket
+
+from orger import Mirror
+from orger.common import dt_heading, error
+from orger.inorganic import docview_link, literal, node
 
 
 class config:

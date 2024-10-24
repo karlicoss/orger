@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node, link, Quoted
-from orger.common import dt_heading
-
 from my.instapaper import pages
+
+from orger import Mirror
+from orger.common import dt_heading
+from orger.inorganic import Quoted, link, node
 
 
 class Instapaper(Mirror):

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from orger import Queue
-from orger.inorganic import node, link
-from orger.common import todo
+from my.instapaper import is_todo, pages
 
-from my.instapaper import pages, is_todo
+from orger import Queue
+from orger.common import todo
+from orger.inorganic import link
 
 
 class IpTodos(Queue):

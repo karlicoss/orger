@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node, link, OrgNode
-from orger.common import dt_heading
+from my.kobo import Highlight, get_books_with_highlights
 
-from my.kobo import get_books_with_highlights, Highlight
+from orger import Mirror
+from orger.common import dt_heading
+from orger.inorganic import OrgNode, node
 
 
 class KoboView(Mirror):

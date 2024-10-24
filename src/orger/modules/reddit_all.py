@@ -2,12 +2,11 @@
 """
 Read-only reddit mirror of comments, submissions and upvoted posts; everything except saved
 """
+from my.reddit.all import comments, submissions, upvoted
+
 from orger import Mirror
-from orger.inorganic import node, link, Quoted
 from orger.common import dt_heading
-
-
-from my.reddit import upvoted, submissions, comments
+from orger.inorganic import Quoted, link, node
 
 
 class RedditAllView(Mirror):

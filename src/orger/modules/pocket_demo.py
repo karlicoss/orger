@@ -14,9 +14,11 @@ Also see https://github.com/karlicoss/HPI package for some inspiration.
 """
 
 
+from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
-from typing import NamedTuple, Sequence, Any
+from typing import Any, NamedTuple
+
 
 class Highlight(NamedTuple):
     """
@@ -75,11 +77,12 @@ def get_articles(json_path: Path) -> Sequence[Article]:
 Ok, now we can get to implementing the adapter.
 """
 from orger import Mirror
+
 """
 Mirror means it's meant to be read-only view onto data (as opposed to Queue).
 """
-from orger.inorganic import node, link
 from orger.common import dt_heading
+from orger.inorganic import link, node
 
 
 class Pocket(Mirror):

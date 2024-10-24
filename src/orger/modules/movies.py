@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import StaticView
-from orger.inorganic import node, link
-from orger.common import dt_heading
-
-
 from my.media.movies import get_movies
 
-class Movies(StaticView):
+from orger import Mirror
+from orger.common import dt_heading
+from orger.inorganic import node
+
+
+class Movies(Mirror):
     def get_items(self):
         movies = get_movies()
         for m in movies:

@@ -2,11 +2,11 @@
 """
 Better interface for reading saved reddit posts/comments
 """
-from orger import Queue
-from orger.inorganic import node, link, Quoted
-from orger.common import dt_heading
+from my.reddit.all import saved
 
-from my.reddit import saved
+from orger import Queue
+from orger.common import dt_heading
+from orger.inorganic import Quoted, link, node
 
 
 class RedditView(Queue):
@@ -28,7 +28,7 @@ class RedditView(Queue):
         # TODO this is probably easier to control via env variables, more malleable
         if not self.cmdline_args.mark_dead:
             return False
-        from kython.knetwork import is_alive # type: ignore
+        from kython.knetwork import is_alive  # type: ignore
         return is_alive(url)
         # todo should somehow track handle DELETED comments...
         # sometimes it's also [removed]

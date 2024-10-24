@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node, link, timestamp, OrgNode
-from orger.common import dt_heading, error
-
 import datetime
-from typing import Iterable, Any
+from collections.abc import Iterable
 
 # shit... this is annoying, need to 'nudge' the config so it picks up all.py override?
-import my.config
 import my.twitter.all as twi
-
 from my.core import Res
+
+from orger import Mirror
+from orger.common import dt_heading, error
+from orger.inorganic import OrgNode, link, node, timestamp
 
 today = datetime.datetime.now()
 

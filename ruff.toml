@@ -1,4 +1,4 @@
-target-version = "py38"  # NOTE: inferred from pyproject.toml if present
+target-version = "py39"  # NOTE: inferred from pyproject.toml if present
 
 lint.extend-select = [
     "F",    # flakes rules -- default, but extend just in case
@@ -9,7 +9,7 @@ lint.extend-select = [
     "C4",   # flake8-comprehensions -- unnecessary list/map/dict calls
     "COM",  # trailing commas
     "EXE",  # various checks wrt executable files
-    # "I",    # sort imports
+    "I",    # sort imports
     "ICN",  # various import conventions
     "FBT",  # detect use of boolean arguments
     "FURB", # various rules
@@ -30,6 +30,7 @@ lint.extend-select = [
     "PTH",  # pathlib migration
     "ARG",  # unused argument checks
     "A",    # builtin shadowing
+    "G",    # logging stuff
     # "EM",  # TODO hmm could be helpful to prevent duplicate err msg in traceback.. but kinda annoying
 
     # "ALL", # uncomment this to check for new rules!
@@ -63,10 +64,9 @@ lint.ignore = [
     "E402",  # Module level import not at top of file
 
 ### maybe consider these soon
-# sometimes it's useful to give a variable a name even if we don't use it as a documentation
-# on the other hand, often is a sign of error
+    # sometimes it's useful to give a variable a name even if we don't use it as a documentation
+    # on the other hand, often is a sign of error
     "F841",  # Local variable `count` is assigned to but never used
-    "F401",  # imported but unused
 ###
 
     "RUF100",  # unused noqa -- handle later
@@ -126,6 +126,8 @@ lint.ignore = [
     "PGH",  # TODO force error code in mypy instead
 
     "TID252",  # Prefer absolute imports over relative imports from parent modules
+
+    "UP038",  # suggests using | (union) in isisntance checks.. but it results in slower code
 
     ## too annoying
     "T20",     # just complains about prints and pprints

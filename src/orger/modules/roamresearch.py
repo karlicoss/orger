@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
+from collections.abc import Iterable
 from itertools import chain
-from typing import Iterable
-
-from orger import Mirror
-from orger.inorganic import node, link, OrgNode
-from orger.common import dt_heading
-from orger import pandoc
 
 import my.roamresearch as roamresearch
+
+from orger import Mirror, pandoc
+from orger.common import dt_heading
+from orger.inorganic import OrgNode, link
 
 
 # todo ^^ ^^ things are highlight?

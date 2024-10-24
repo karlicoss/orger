@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from orger import Mirror
-from orger.inorganic import node
-from orger.common import dt_heading, error
 
-
-import my.config
 # todo later, use .all?
 import my.tinder.android as tinder
+
+from orger import Mirror
+from orger.common import dt_heading, error
+from orger.inorganic import node
+
 
 class TinderView(Mirror):
     def get_items(self) -> Mirror.Results:

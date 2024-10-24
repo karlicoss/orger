@@ -1,13 +1,13 @@
+from __future__ import annotations
+
 import logging
 from os.path import lexists
 from pathlib import Path
-from typing import Union
 
-PathIsh = Union[str, Path]
 
 def atomic_append_raw(
-        path: PathIsh,
-        data: str,
+    path: Path | str,
+    data: str,
 ) -> None:
     path = Path(path)
     # https://stackoverflow.com/a/13232181
@@ -25,13 +25,13 @@ def assert_not_edited(path: Path) -> None:
     emacs = '.#' + path.name
     for x in [vim, emacs]:
         lf = path.parent / x
-        if lexists(lf): # lexist is necessary because emacs uses symlink for lock file
+        if lexists(lf):  # lexist is necessary because emacs uses symlink for lock file
             raise RuntimeError(f'File is being edited: {lf}')
 
 
 def atomic_append_check(
-        path: PathIsh,
-        data: str,
+    path: Path | str,
+    data: str,
 ) -> None:
     """
     This is editor (emacs/vim)-aware and checks for existence of swap file first.
@@ -56,8 +56,9 @@ def test_atomic_append_check(tmp_path: Path) -> None:
     of.touch()
 
     from contextlib import contextmanager
-    from subprocess import PIPE, Popen, check_call
+    from subprocess import PIPE, Popen
     from time import sleep
+
     @contextmanager
     def tmp_popen(*args, **kwargs):
         with Popen(*args, **kwargs) as p:
@@ -70,7 +71,7 @@ def test_atomic_append_check(tmp_path: Path) -> None:
     atomic_append_check(of, 'data2')
     assert of.read_text() == 'data1data2'
 
-    with tmp_popen(['vi', '-c', 'startinsert', str(of)], stdin=PIPE, stdout=PIPE, stderr=PIPE) as p: # enter insert mode
+    with tmp_popen(['vi', '-c', 'startinsert', str(of)], stdin=PIPE, stdout=PIPE, stderr=PIPE) as p:  # enter insert mode
         for _attempt in range(10):
             # ugh, needs long pause for some reason
             sleep(1)

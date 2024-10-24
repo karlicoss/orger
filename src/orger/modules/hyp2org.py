@@ -12,11 +12,11 @@ Items get scheduled and appear on my org-mode agenda,
 so I can un/reschedule them if they don't require immediate attention.
 """
 
-from orger import Queue
-from orger.inorganic import node, link
-from orger.common import todo
+from my.hypothesis import Highlight, highlights
 
-from my.hypothesis import highlights, Highlight
+from orger import Queue
+from orger.common import todo
+from orger.inorganic import link
 
 
 def is_todo(e: Highlight) -> bool:
