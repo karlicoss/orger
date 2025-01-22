@@ -28,11 +28,12 @@ class RedditView(Queue):
         # TODO this is probably easier to control via env variables, more malleable
         if not self.cmdline_args.mark_dead:
             return False
-        from kython.knetwork import is_alive  # type: ignore
+        from kython.knetwork import is_alive  # type: ignore[import-not-found]
         return is_alive(url)
         # todo should somehow track handle DELETED comments...
         # sometimes it's also [removed]
         # TODO maybe, track that in reddit provider? since we have all version of saved items over time
+        # or even better we could do it for all urls in orger? e.g. maybe special package that can tell if the url is dead..
 
 
 def setup_parser(p) -> None:

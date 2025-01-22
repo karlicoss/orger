@@ -109,7 +109,6 @@ lint.ignore = [
     "PLW0603",  # global variable update.. we usually know why we are doing this
     "PLW2901",  # for loop variable overwritten, usually this is intentional
 
-    "PT004",  # deprecated rule, will be removed later
     "PT011",  # pytest raises should is too broad
     "PT012",  # pytest raises should contain a single statement
 
