@@ -27,6 +27,8 @@ Homepage = "https://github.com/karlicoss/orger"
 optional = [
     "colorlog",
 ]
+
+[dependency-groups]
 testing = [
     "pytest",
     "ruff",
@@ -42,3 +44,8 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools_scm]
 version_scheme = "python-simplified-semver"
 local_scheme = "dirty-tag"
+
+# workaround for error during uv publishing
+# see https://github.com/astral-sh/uv/issues/9513#issuecomment-2519527822
+[tool.setuptools]
+license-files = []

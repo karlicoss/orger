@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import traceback
 import warnings
-from datetime import datetime
+from datetime import datetime, tzinfo
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -15,7 +15,7 @@ class settings:
     USE_PANDOC: bool = True
 
 
-_timezones = set()  # type: ignore
+_timezones: set[tzinfo | None] = set()
 
 
 def dt_heading(dt: datetime | None, heading: str) -> str:
