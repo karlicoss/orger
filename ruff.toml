@@ -1,5 +1,3 @@
-target-version = "py39"  # NOTE: inferred from pyproject.toml if present
-
 lint.extend-select = [
     "F",    # flakes rules -- default, but extend just in case
     "E",    # pycodestyle  -- default, but extend just in case
@@ -36,6 +34,11 @@ lint.extend-select = [
     # "ALL", # uncomment this to check for new rules!
 ]
 
+# Preserve types, even if a file imports `from __future__ import annotations`
+# we need this for cachew to work with HPI types on 3.9
+# can probably remove after 3.10?
+lint.pyupgrade.keep-runtime-typing = true
+
 lint.ignore = [
     "D",     # annoying nags about docstrings
     "N",     # pep naming
@@ -62,12 +65,6 @@ lint.ignore = [
 
 ## might be nice .. but later and I don't wanna make it strict
     "E402",  # Module level import not at top of file
-
-### maybe consider these soon
-    # sometimes it's useful to give a variable a name even if we don't use it as a documentation
-    # on the other hand, often is a sign of error
-    "F841",  # Local variable `count` is assigned to but never used
-###
 
     "RUF100",  # unused noqa -- handle later
     "RUF012",  # mutable class attrs should be annotated with ClassVar... ugh pretty annoying for user configs
@@ -122,7 +119,7 @@ lint.ignore = [
     "TRY400",  # TODO double check this, might be useful
     "TRY401",  # redundant exception in logging.exception call? TODO double check, might result in excessive logging
 
-    "PGH",  # TODO force error code in mypy instead
+    "PGH",  # TODO force error code in mypy instead? although it also has blanket noqa rule
 
     "TID252",  # Prefer absolute imports over relative imports from parent modules
 

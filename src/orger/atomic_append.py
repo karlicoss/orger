@@ -71,7 +71,7 @@ def test_atomic_append_check(tmp_path: Path) -> None:
     atomic_append_check(of, 'data2')
     assert of.read_text() == 'data1data2'
 
-    with tmp_popen(['vi', '-c', 'startinsert', str(of)], stdin=PIPE, stdout=PIPE, stderr=PIPE) as p:  # enter insert mode
+    with tmp_popen(['vi', '-c', 'startinsert', str(of)], stdin=PIPE, stdout=PIPE, stderr=PIPE):  # enter insert mode
         for _attempt in range(10):
             # ugh, needs long pause for some reason
             sleep(1)

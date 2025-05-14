@@ -19,7 +19,7 @@ class JsonState:
         *,
         dry_run: bool = False,
         default: State | None = None,
-        logger: logging.Logger=logging.getLogger('orger'),  # noqa: B008
+        logger: logging.Logger = logging.getLogger('orger'),  # noqa: B008
     ) -> None:
         self.path = Path(path)
         self.dry_run = dry_run
@@ -37,7 +37,7 @@ class JsonState:
 
     def __setitem__(self, key: str, value: Any) -> None:
         current = self.get()
-        assert key not in current # just in case
+        assert key not in current  # just in case
         current[key] = value
 
         if self.dry_run:
@@ -71,6 +71,7 @@ class JsonState:
 
 def test_state(tmp_path: Path) -> None:
     import pytest
+
     path = tmp_path / 'state.json'
     state = JsonState(path)
 
@@ -84,6 +85,7 @@ def test_state(tmp_path: Path) -> None:
     def feed(k, v):
         def action() -> None:
             res.append(v)
+
         state.feed(k, v, action=action)
 
     feed('a', 123)
@@ -94,11 +96,11 @@ def test_state(tmp_path: Path) -> None:
     feed('a', 456)
     assert res == [123]
 
-    assert mtime() == m1 # shouldn't touch file at all
+    assert mtime() == m1  # shouldn't touch file at all
 
     state = JsonState(path)
 
-    assert mtime() == m1 # shouldn't touch either
+    assert mtime() == m1  # shouldn't touch either
 
     feed('b', 'abacaba')
 
@@ -116,7 +118,7 @@ def test_state(tmp_path: Path) -> None:
     with pytest.raises(AttributeError):
         state.feed('hiii', 'error 2 ', lambda: None.whatever)  # type: ignore[attr-defined]
 
-    assert mtime() == m2 # shouldn't corrupt or modify the file
+    assert mtime() == m2  # shouldn't corrupt or modify the file
 
     state = JsonState(path, dry_run=True)
     feed('c', 'c')
@@ -124,6 +126,4 @@ def test_state(tmp_path: Path) -> None:
     feed('a', 'whatever')
 
     assert res == [123, 'abacaba', 'c', 'y']
-    assert mtime() == m2 # should't modify state in dry run mode
-
-
+    assert mtime() == m2  # should't modify state in dry run mode

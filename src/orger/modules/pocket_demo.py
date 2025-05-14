@@ -24,6 +24,7 @@ class Highlight(NamedTuple):
     """
     Abstract representation of Pocket highlight
     """
+
     json: Any
 
     @property
@@ -39,6 +40,7 @@ class Article(NamedTuple):
     """
     Abstract representation of Pocket saved page
     """
+
     json: Any
 
     @property
@@ -70,8 +72,10 @@ def get_articles(json_path: Path) -> Sequence[Article]:
     Parses Pocket export produced by https://github.com/karlicoss/pockexport
     """
     import json
+
     raw = json.loads(json_path.read_text())['list']
     return list(map(Article, raw.values()))
+
 
 """
 Ok, now we can get to implementing the adapter.
@@ -91,17 +95,20 @@ class Pocket(Mirror):
         get_items returns a sequence/iterator of nodes
         see orger.inorganic.OrgNode to find out about attributes you can use
         """
-        export_file = self.cmdline_args.file # see setup_parser
+        export_file = self.cmdline_args.file  # see setup_parser
         for a in get_articles(export_file):
             yield node(
                 heading=dt_heading(
                     a.added,
                     # 'pocket' permalink is pretty convenient to jump straight into Pocket app
-                    link(title='pocket', url=a.pocket_link)  + ' · ' + link(title=a.title, url=a.url),
+                    link(title='pocket', url=a.pocket_link) + ' · ' + link(title=a.title, url=a.url),
                 ),
-                children=[node( # comments are displayed as org-mode child entries
-                    heading=dt_heading(hl.created, hl.text)
-                ) for hl in a.highlights]
+                children=[
+                    node(  # comments are displayed as org-mode child entries
+                        heading=dt_heading(hl.created, hl.text)
+                    )
+                    for hl in a.highlights
+                ],
             )
 
 

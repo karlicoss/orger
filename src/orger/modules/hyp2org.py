@@ -39,14 +39,16 @@ class HypTodos(Queue):
             ann = t.annotation
             anns = '' if ann is None else ann + '\n'
             hl = t.highlight or ''
-            yield t.hid, todo(
-                dt=t.created,
-
-                heading=link(title="X", url=t.hyp_link) + ' ' + hl,
-                body=f'{anns}from {link(title=t.title, url=t.url)}',
-                # todo maybe get rid of hyp2org?
-                # or make tagging an option?
-                tags=['hyp2org', *t.tags],
+            yield (
+                t.hid,
+                todo(
+                    dt=t.created,
+                    heading=link(title="X", url=t.hyp_link) + ' ' + hl,
+                    body=f'{anns}from {link(title=t.title, url=t.url)}',
+                    # todo maybe get rid of hyp2org?
+                    # or make tagging an option?
+                    tags=['hyp2org', *t.tags],
+                ),
             )
 
 

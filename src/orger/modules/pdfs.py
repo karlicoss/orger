@@ -11,8 +11,8 @@ class PdfView(Mirror):
         import my.pdfs as pdfs
 
         for pdf in sorted(
-                pdfs.annotated_pdfs(),
-                key=lambda p: datetime.min if isinstance(p, Exception) or p.created is None else p.created.replace(tzinfo=None),
+            pdfs.annotated_pdfs(),
+            key=lambda p: datetime.min if isinstance(p, Exception) or p.created is None else p.created.replace(tzinfo=None),
         ):
             if isinstance(pdf, Exception):
                 yield error(pdf)
@@ -21,9 +21,11 @@ class PdfView(Mirror):
             def chit(pdf: pdfs.Pdf):
                 for a in pdf.annotations:
                     parts = []
+                    # fmt: off
                     highlight = (a.highlight or '').strip()
                     author    = (a.author    or '').strip()
                     comment   = (a.comment   or '').strip()
+                    # fmt: on
                     if highlight:
                         parts.append(literal(highlight))
                     if author:
@@ -39,10 +41,7 @@ class PdfView(Mirror):
                     )
 
             pdf_link = docview_link(path=pdf.path, title=str(pdf.path))  # todo would be nice to extract metadata for title
-            yield node(
-                dt_heading(pdf.created, pdf_link),
-                children=list(chit(pdf))
-            )
+            yield node(dt_heading(pdf.created, pdf_link), children=list(chit(pdf)))
 
 
 if __name__ == '__main__':

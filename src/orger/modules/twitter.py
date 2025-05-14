@@ -14,6 +14,7 @@ today = datetime.datetime.now()
 
 Tweet = twi.Tweet
 
+
 class TwitterView(Mirror):
     @property
     def mode(self) -> str:
@@ -39,12 +40,12 @@ class TwitterView(Mirror):
             )
         else:
             dd = dtime.replace(year=today.year)
-            text = '  ' + text if text.startswith('@') else text # pad replies a bit
+            text = '  ' + text if text.startswith('@') else text  # pad replies a bit
+            heading = timestamp(dd.date(), active=True) + ' ' + f"{link(title='TW', url=url)} at {timestamp(dtime, inactive=True)} {text}"
             return node(
-                heading=timestamp(dd.date(), active=True) + ' ' + f"{link(title='TW', url=url)} at {timestamp(dtime, inactive=True)} {text}",
+                heading=heading,
                 tags=['ttweet'],
             )
-
 
     def get_items(self) -> Mirror.Results:
         good = []
@@ -64,4 +65,3 @@ def setup_parser(p) -> None:
 
 if __name__ == '__main__':
     TwitterView.main(setup_parser=setup_parser)
-

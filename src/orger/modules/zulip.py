@@ -29,7 +29,7 @@ class Zulip(Mirror):
                     )
 
             yield node(
-                heading=dt_heading(group[0].sent, subject), # TODO link
+                heading=dt_heading(group[0].sent, subject),  # TODO link
                 children=list(chit()),
             )
 

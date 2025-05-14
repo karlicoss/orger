@@ -14,7 +14,6 @@ Example output:
 *** [2019-01-20 Sun 15:25] Right. so here I think I missed the bit where he only restricted to spin 1/2
 """
 
-
 from orger import Mirror, pandoc
 from orger.common import dt_heading, error
 from orger.inorganic import OrgNode, docview_link, literal, node
@@ -60,8 +59,10 @@ class PolarView(Mirror):
                     tags=book.tags,
                     children=[make_highlight(book=book, hl=hl) for hl in book.items],
                 )
+
         for res in polar.get_entries():
             yield make_item(res)
+
 
 # not sure about this.. r.g. if the users define their own colors in the future
 def hex2name(hexc: str) -> str:
@@ -71,12 +72,9 @@ def hex2name(hexc: str) -> str:
     }
     return m.get(hexc.lower(), hexc)
 
-test = PolarView.make_test(
-    heading='I missed the bit where he only restricted to spin'
-)
 
+test = PolarView.make_test(heading='I missed the bit where he only restricted to spin')
 
 
 if __name__ == '__main__':
     PolarView.main()
-

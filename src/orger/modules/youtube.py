@@ -27,18 +27,18 @@ class YoutubeView(Mirror):
         by_when = lambda w: w.when
         if self.mode == 'last':
             by_url = lambda w: w.url
+            # fmt: off
             items = [
                 max(group, key=by_when)
                 for _, group in groupby(sorted(good, key=by_url), key=by_url)
             ]
-        items = sorted(good, key=by_when)
+            # fmt: on
+        else:
+            items = sorted(good, key=by_when)
         for item in items:
             deleted = item.url == item.title  # todo move to HPI?
             l = link(title=item.title + (' (DELETED)' if deleted else ''), url=item.url)
-            yield (
-                item.url,
-                node(heading=dt_heading(item.when, l))
-            )
+            yield (item.url, node(heading=dt_heading(item.when, l)))
 
 
 def setup_parser(p) -> None:

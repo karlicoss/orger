@@ -19,9 +19,9 @@ from typing import (
 # todo use mypy literals later?
 class TimestampStyle(Enum):
     INACTIVE = ('[', ']')
-    ACTIVE   = ('<', '>')
-    PLAIN    = ('' , '')
-    NONE     = ()
+    ACTIVE = ('<', '>')
+    PLAIN = ('', '')
+    NONE = ()
 
 
 Dateish = Union[datetime, date]
@@ -59,7 +59,7 @@ def docview_link(*, path: PathIsh, title: str | None, page1: int | None = None) 
     return link(url=url, title=title)
 
 
-def timestamp(dt: Dateish, *, inactive: bool=False, active: bool=False) -> str:
+def timestamp(dt: Dateish, *, inactive: bool = False, active: bool = False) -> str:
     """
     default is active
     >>> dt = datetime.strptime('19920110 04:45', '%Y%m%d %H:%M')
@@ -75,7 +75,7 @@ def timestamp(dt: Dateish, *, inactive: bool=False, active: bool=False) -> str:
         style = TimestampStyle.ACTIVE
     elif inactive:
         style = TimestampStyle.INACTIVE
-    else: # active
+    else:  # active
         style = TimestampStyle.ACTIVE
     return timestamp_with_style(dt=dt, style=style)
 
@@ -111,6 +111,7 @@ class Quoted:
     Special object to markup 'literal' paragraphs
     https://orgmode.org/manual/Literal-Examples.html
     '''
+
     body: str
 
     def quoted(self) -> str:
@@ -175,9 +176,9 @@ def asorgoutline(
         # maybe need a policy for body behaviour... I guess policy could be Union[Literate]; controlled by env variables?
         if isinstance(body, Quoted):
             safe_body = body.quoted()
-        else: # str
+        else:  # str
             safe_body = body if escaped else _sanitize_body(body)
-    del body # just so it's not used by accident
+    del body  # just so it's not used by accident
 
     parts = []
 
@@ -194,9 +195,7 @@ def asorgoutline(
         tags_s = ':' + ':'.join(map(_sanitize_tag, tags)) + ':'
         parts.append(tags_s)
 
-    sch_lines = [] if scheduled is None else [
-        'SCHEDULED: ' + timestamp(scheduled, active=True)
-    ]
+    sch_lines = [] if scheduled is None else ['SCHEDULED: ' + timestamp(scheduled, active=True)]
 
     props_lines: list[str] = []
     props = {} if properties is None else properties
@@ -211,7 +210,7 @@ def asorgoutline(
         # means it's only got level stars, so we need to make sure space is present (otherwise it's not an outline)
         parts.append('')
     lines = [
-        ' '.join(parts), # TODO just in case check that parts doesn't have newlines?
+        ' '.join(parts),  # TODO just in case check that parts doesn't have newlines?
         *sch_lines,
         *props_lines,
         *body_lines,
@@ -312,10 +311,14 @@ def _sanitize_url(x: str) -> str:
     '/path/to/\\[Baez\\] Lectures on Classical Mechanics.pdf'
     '''
     # might be incomplete..
-    return x.translate(maketrans({
-        '[': r'\[',
-        ']': r'\]',
-    }))
+    return x.translate(
+        maketrans(
+            {
+                '[': r'\[',
+                ']': r'\]',
+            }
+        )
+    )
 
 
 def _sanitize_heading(x: str) -> str:

@@ -17,7 +17,7 @@ class VkFavs(Mirror):
                     ),
                     body=Quoted(f.text),
                 )
-            else: # Exception
+            else:  # Exception
                 yield error(f)
 
 

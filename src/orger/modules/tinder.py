@@ -19,14 +19,22 @@ class TinderView(Mirror):
                 res = i
         assert res is not None
 
-        for match, messages in sorted(res.items(), key=lambda p: p[0].when):
+        for match_, messages in sorted(res.items(), key=lambda p: p[0].when):
+            # fmt: off
             yield node(
-                dt_heading(match.when, match.person.name),
-                children=[node(
-                    dt_heading(m.sent, f'{m.from_.name}: {m.text}'),
-                ) for m in messages]
+                dt_heading(
+                    dt=match_.when,
+                    heading=match_.person.name,
+                ),
+                children=[
+                    node(dt_heading(
+                        dt=m.sent,
+                        heading=f'{m.from_.name}: {m.text}',
+                    ))
+                    for m in messages
+                ],
             )
-
+            # fmt: on
 
 
 if __name__ == '__main__':

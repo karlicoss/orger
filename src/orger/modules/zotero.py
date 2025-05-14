@@ -46,10 +46,10 @@ class Zotero(Mirror):
         for e in errors:
             yield error(e)
 
-
         groups = bucket(good, key=lambda a: a.item)
         for item in groups:
             file_annotations = groups[item]
+
             def chit():
                 for a in file_annotations:
                     parts = []
@@ -97,16 +97,20 @@ class Zotero(Mirror):
                         properties=properties,
                         body=body,
                     )
+
             body = ''
             url = item.url
             if url is not None:
                 body = url
+            # fmt: off
             yield node(
                 heading=docview_link(path=item.file, title=item.title),
                 tags=item.tags,
                 body=body,
-                children=list(chit())
+                children=list(chit()),
             )
+            # fmt: on
+
 
 if __name__ == '__main__':
     Zotero.main()

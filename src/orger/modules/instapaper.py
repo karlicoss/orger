@@ -9,23 +9,30 @@ from orger.inorganic import Quoted, link, node
 class Instapaper(Mirror):
     def get_items(self) -> Mirror.Results:
         for page in pages():
+            # fmt: off
             yield node(
                 heading=dt_heading(
-                    page.dt,
-                    f'{link(title="x", url=page.bookmark.instapaper_link)}   {link(title=page.title, url=page.url)}',
+                    dt=page.dt,
+                    heading=f'{link(title="x", url=page.bookmark.instapaper_link)}   {link(title=page.title, url=page.url)}',
                 ),
-                children=[node(
-                    heading=dt_heading(hl.dt, link(title="x", url=page.bookmark.instapaper_link)),
-                    body=Quoted(hl.text),
-                    children=[] if hl.note is None else [
-                        node(heading=hl.note),
-                    ],
-                ) for hl in page.highlights]
+                children=[
+                    node(
+                        heading=dt_heading(
+                            dt=hl.dt,
+                            heading=link(title="x", url=page.bookmark.instapaper_link),
+                        ),
+                        body=Quoted(hl.text),
+                        children=[] if hl.note is None else [node(heading=hl.note)],
+                    )
+                    for hl in page.highlights
+                ],
             )
+            # fmt: on
         # TODO autostrip could be an option for formatter
         # TODO reverse order? not sure...
         # TODO spacing top level items could be option of dumper as well?
         # TODO better error handling, cooperate with org_tools
+
 
 # todo move tests to separate files, otherwise they would annoy other people
 test = Instapaper.make_test(

@@ -15,11 +15,11 @@ def roam_text_to_org(text: str) -> str:
     Cleans up Roam artifacts and adapts for better Org rendering
     """
     for f, t in [
-            ('{{[[slider]]}}', ''),
+        ('{{[[slider]]}}', ''),
     ]:
         text = text.replace(f, t)
     org = pandoc.to_org(text, from_='markdown')
-    org = org.replace(r'\_', '_') # unescape, it's a bit aggressive..
+    org = org.replace(r'\_', '_')  # unescape, it's a bit aggressive..
     return org
 
 
@@ -51,7 +51,7 @@ def roam_note_to_org(node: roamresearch.Node, *, top: bool = False) -> Iterable[
             ts = '{{[[' + t + ']]}}'
             if body.startswith(ts):
                 todo = t
-                body = body[len(ts):]
+                body = body[len(ts) :]
 
         body = roam_text_to_org(body)
 
@@ -78,6 +78,7 @@ class RoamView(Mirror):
     def get_items(self):
         rr = roamresearch.roam()
         from concurrent.futures import ThreadPoolExecutor
+
         # todo might be an overkill, only using because of pandoc..
         with ThreadPoolExecutor() as pool:
             items = list(chain.from_iterable(pool.map(roam_note_to_org, rr.notes)))
