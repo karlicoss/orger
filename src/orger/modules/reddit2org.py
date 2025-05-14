@@ -2,6 +2,7 @@
 """
 Better interface for reading saved reddit posts/comments
 """
+
 from my.reddit.all import saved
 
 from orger import Queue
@@ -12,14 +13,17 @@ from orger.inorganic import Quoted, link, node
 class RedditView(Queue):
     def get_items(self) -> Queue.Results:
         for s in saved():
-            yield s.sid, node(
-                # need to make heading lazy due to is_alive
-                # eh, can't guess the type of lambda??
-                heading=lambda s=s: dt_heading( # type: ignore[misc]
-                    s.created,
-                    ('[#A] *DEAD*' if self.is_dead_url(s.url) else '') + link(title=s.title, url=s.url) + f' /r/{s.subreddit}'
+            yield (
+                s.sid,
+                node(
+                    # need to make heading lazy due to is_alive
+                    # eh, can't guess the type of lambda??
+                    heading=lambda s=s: dt_heading(  # type: ignore[misc]
+                        s.created,
+                        ('[#A] *DEAD*' if self.is_dead_url(s.url) else '') + link(title=s.title, url=s.url) + f' /r/{s.subreddit}',
+                    ),
+                    body=Quoted(s.text),
                 ),
-                body=Quoted(s.text),
             )
 
     # todo this could be generic, i.e. checking all urls?
@@ -29,6 +33,7 @@ class RedditView(Queue):
         if not self.cmdline_args.mark_dead:
             return False
         from kython.knetwork import is_alive  # type: ignore[import-not-found]
+
         return is_alive(url)
         # todo should somehow track handle DELETED comments...
         # sometimes it's also [removed]
@@ -43,9 +48,9 @@ def setup_parser(p) -> None:
         help="Mark deleted/unavailable content so you could process it ASAP. Mostly useful on first run",
     )
 
+
 if __name__ == '__main__':
     RedditView.main(setup_parser=setup_parser)
-
 
 
 # TODO actually might be useful to store forever a read only version...
@@ -59,4 +64,3 @@ if __name__ == '__main__':
 #     # if len(dead) / (len(saves) + 1) > 0.3:
 #     #     raise RuntimeError('something must be wrong with reddit! bailing')
 #     return res
-

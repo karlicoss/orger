@@ -14,12 +14,15 @@ from orger.inorganic import link, node
 class Materialistic(Queue):
     def get_items(self):
         for s in saves():
-            yield s.uid, node(
-                heading=dt_heading(
-                    s.when,
-                    link(title=s.title, url=s.hackernews_link),
+            yield (
+                s.uid,
+                node(
+                    heading=dt_heading(
+                        dt=s.when,
+                        heading=link(title=s.title, url=s.hackernews_link),
+                    ),
+                    body=s.url,
                 ),
-                body=s.url,
             )
 
 

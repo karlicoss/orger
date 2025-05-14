@@ -7,6 +7,7 @@ It uses [[https://github.com/karlicoss/kobuddy][kobuddy]] to extract data from K
 
 The name stands for K[oboD]rill.
 """
+
 from my.kobo import Highlight, get_highlights
 
 from orger import Queue
@@ -35,13 +36,16 @@ def get_drill_items():
 class Krill(Queue):
     def get_items(self) -> Queue.Results:
         for i in get_drill_items():
-            yield i.eid, todo(
-                i.dt,
-
-                heading=i.text,
-                tags=['drill'],
-                body=f'from {i.book.title}\n',
+            yield (
+                i.eid,
+                todo(
+                    i.dt,
+                    heading=i.text,
+                    tags=['drill'],
+                    body=f'from {i.book.title}\n',
+                ),
             )
+
 
 if __name__ == '__main__':
     Krill.main()

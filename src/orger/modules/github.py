@@ -23,16 +23,14 @@ class Github(Mirror):
                 lines = summary.splitlines(keepends=True)
                 if len(lines) > 1:
                     summary = lines[0].strip()
-                body = ''.join(lines[1:]) # todo meh. hacky, better to extract bodies in the provider properly
+                body = ''.join(lines[1:])  # todo meh. hacky, better to extract bodies in the provider properly
             if body.strip() == '':
                 body = None
 
+            heading = link(url=e.link, title=summary) if e.link is not None else summary
             yield node(
-                dt_heading(
-                    e.dt,
-                    link(url=e.link, title=summary) if e.link is not None else summary
-                ),
-                body=None if body is None else pandoc.to_org(body, from_='gfm'), # github flavored markdown
+                dt_heading(e.dt, heading),
+                body=None if body is None else pandoc.to_org(body, from_='gfm'),  # github flavored markdown
             )
 
 

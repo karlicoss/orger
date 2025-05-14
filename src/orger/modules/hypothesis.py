@@ -13,17 +13,20 @@ class HypView(Mirror):
             if isinstance(page, Exception):
                 yield error(page)
                 continue
+            # fmt: off
             yield node(
                 heading=dt_heading(page.created, link(title=page.title, url=page.url)),
-                children=[node(
-                    heading=dt_heading(hl.created, link(title='context', url=hl.hyp_link)),
-                    tags=hl.tags,
-                    body=hl.highlight,
-                    children=[] if hl.annotation is None else [node(
-                        heading=hl.annotation,
-                    )]
-                ) for hl in page.highlights]
+                children=[
+                    node(
+                        heading=dt_heading(hl.created, link(title='context', url=hl.hyp_link)),
+                        tags=hl.tags,
+                        body=hl.highlight,
+                        children=[] if hl.annotation is None else [node(heading=hl.annotation)],
+                    )
+                    for hl in page.highlights
+                ],
             )
+            # fmt: on
 
 
 # TODO tests for determinism

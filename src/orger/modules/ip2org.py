@@ -13,12 +13,15 @@ class IpTodos(Queue):
             for hl in page.highlights:
                 if not is_todo(hl):
                     continue
-                yield hl.hid, todo(
-                    # todo dt_heading? not sure. Maybe this should be configurable
-                    dt=hl.dt,
-                    heading=link(title="X", url=hl.instapaper_link) + ' ' + hl.text,
-                    tags=['ip2org'],
-                    body=f'{hl.note}\nfrom {link(title=bm.title, url=bm.url)}',
+                yield (
+                    hl.hid,
+                    todo(
+                        # todo dt_heading? not sure. Maybe this should be configurable
+                        dt=hl.dt,
+                        heading=link(title="X", url=hl.instapaper_link) + ' ' + hl.text,
+                        tags=['ip2org'],
+                        body=f'{hl.note}\nfrom {link(title=bm.title, url=bm.url)}',
+                    ),
                 )
 
 

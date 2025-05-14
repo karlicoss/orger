@@ -10,9 +10,12 @@ class Movies(Mirror):
     def get_items(self):
         movies = get_movies()
         for m in movies:
-            yield m.title, node(
-                dt_heading(m.created, m.title),
-                body=f'rating: {m.rating}',
+            yield (
+                m.title,
+                node(
+                    dt_heading(m.created, m.title),
+                    body=f'rating: {m.rating}',
+                ),
             )
 
 

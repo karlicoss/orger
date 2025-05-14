@@ -48,12 +48,15 @@ def to_org(data: str, *, from_: str, logger=logging) -> str:
     return res
 
 
-def test():
+def test() -> None:
     # html = "<p>and a <i>comment</i> too&nbsp;</p><p><br></p><p><b>multiline</b>!</p>"
     # TODO ok, it's annoying... not sure what to do with nonpritable crap
     html = "<p>and a <i>comment</i> too</p><p><br></p><p><b>multiline</b>!</p>"
-    assert to_org(data=html, from_='html') == r'''
+    assert (
+        to_org(data=html, from_='html')
+        == r'''
 and a /comment/ too
 
 *multiline*!
 '''.lstrip()
+    )

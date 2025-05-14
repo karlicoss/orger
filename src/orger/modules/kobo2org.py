@@ -9,13 +9,16 @@ class KoboTodos(Queue):
     def get_items(self) -> Queue.Results:
         for t in get_todos():
             # TODO shit judging by the state.json, looks like eid might be flaky?
-            yield t.eid, todo(
-                t.dt,
-
-                heading=t.text,
-                tags=['kobo2org'], # todo allow to override tag from cmdline?
-                body=f'{t.annotation}\nfrom {t.book}\n',
+            yield (
+                t.eid,
+                todo(
+                    t.dt,
+                    heading=t.text,
+                    tags=['kobo2org'],  # todo allow to override tag from cmdline?
+                    body=f'{t.annotation}\nfrom {t.book}\n',
+                ),
             )
+
 
 # TODO test?
 

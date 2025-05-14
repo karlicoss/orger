@@ -11,16 +11,19 @@ class KoboView(Mirror):
         def render_highlight(h: Highlight) -> OrgNode:
             # TODO FIXME could use bookmark page??
             heading = 'bookmark' if h.kind == 'bookmark' else (h.text or '')
-            body = h.annotation # TODO check if empty
+            body = h.annotation  # TODO check if empty
             return node(
                 heading=dt_heading(h.dt, heading),
                 body=body,
             )
 
         for page in get_books_with_highlights():
-            yield str(page.book), node(
-                heading=dt_heading(page.dt, str(page.book)),
-                children=[render_highlight(h) for h in page.highlights],
+            yield (
+                str(page.book),
+                node(
+                    heading=dt_heading(page.dt, str(page.book)),
+                    children=[render_highlight(h) for h in page.highlights],
+                ),
             )
 
 

@@ -14,10 +14,8 @@ class TwitterLikesView(Mirror):
                 continue
             # likes don't have timestamps (at least from GDPR export data)
             # TODO support it and handle None
-            yield node(
-                link(url=tweet.permalink, title='liked'),
-                body=tweet.text
-            )
+            yield node(link(url=tweet.permalink, title='liked'), body=tweet.text)
+
 
 if __name__ == '__main__':
     TwitterLikesView.main()
