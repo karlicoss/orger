@@ -34,7 +34,10 @@ def resolve_package_path(path: pathlib.Path) -> Optional[pathlib.Path]:
     raise RuntimeError("Couldn't determine path for ", path)
 
 
-_pytest.pathlib.resolve_package_path = resolve_package_path
+# NOTE: seems like it's not necessary anymore?
+# keeping it for now just in case
+# after https://github.com/pytest-dev/pytest/pull/13426 we should be able to remove the whole conftest
+# _pytest.pathlib.resolve_package_path = resolve_package_path
 
 
 # without patching, the orig function returns just a package name for some reason

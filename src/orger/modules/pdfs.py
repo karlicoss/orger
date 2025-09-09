@@ -12,7 +12,9 @@ class PdfView(Mirror):
 
         for pdf in sorted(
             pdfs.annotated_pdfs(),
-            key=lambda p: datetime.min if isinstance(p, Exception) or p.created is None else p.created.replace(tzinfo=None),
+            key=lambda p: (
+                datetime.min if (isinstance(p, Exception) or p.created is None) else p.created.replace(tzinfo=None)
+            ),
         ):
             if isinstance(pdf, Exception):
                 yield error(pdf)
@@ -40,7 +42,9 @@ class PdfView(Mirror):
                         body=body,
                     )
 
-            pdf_link = docview_link(path=pdf.path, title=str(pdf.path))  # todo would be nice to extract metadata for title
+            pdf_link = docview_link(
+                path=pdf.path, title=str(pdf.path)
+            )  # todo would be nice to extract metadata for title
             yield node(dt_heading(pdf.created, pdf_link), children=list(chit(pdf)))
 
 

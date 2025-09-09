@@ -32,17 +32,19 @@ optional = [
 testing = [
     "pytest",
     "ruff",
-    "mypy",
-    "lxml",  # for mypy html coverage
 ]
+typecheck = [
+    { include-group = "testing" },
+    "mypy",
+    "lxml",  # for mypy coverage
+    "ty>=0.0.1a20",
 
-
-
-# workaround for error during uv publishing
-# see https://github.com/astral-sh/uv/issues/9513#issuecomment-2519527822
-[tool.setuptools]
-license-files = []
-
+    "orger[optional]",
+]
+typecheck-all = [
+    { include-group = "typecheck" },
+    "HPI",
+]
 
 [build-system]
 requires = ["hatchling", "hatch-vcs"]

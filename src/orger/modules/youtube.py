@@ -43,7 +43,10 @@ class YoutubeView(Mirror):
 
 def setup_parser(p) -> None:
     p.add_argument(
-        '--mode', choices=['all', 'last'], default='last', help="'all' would dump all watch history, 'last' only last watch for each video"
+        '--mode',
+        choices=['all', 'last'],
+        default='last',
+        help="'all' would dump all watch history, 'last' only last watch for each video",
     )
 
 
