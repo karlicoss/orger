@@ -4,11 +4,6 @@ lint.extend-select = [
     "ALL",
 ]
 
-# Preserve types, even if a file imports `from __future__ import annotations`
-# we need this for cachew to work with HPI types on 3.9
-# can probably remove after 3.10?
-lint.pyupgrade.keep-runtime-typing = true
-
 lint.ignore = [
     "D",     # annoying nags about docstrings
     "N",     # pep naming
