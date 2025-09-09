@@ -4,16 +4,12 @@ import os
 import re
 import textwrap
 import warnings
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime
 from enum import Enum
 from pathlib import Path
-from typing import (
-    Callable,
-    TypeVar,
-    Union,
-)
+from typing import TypeAlias, TypeVar
 
 
 # todo use mypy literals later?
@@ -24,9 +20,9 @@ class TimestampStyle(Enum):
     NONE = ()
 
 
-Dateish = Union[datetime, date]
+Dateish = datetime | date
 
-PathIsh = Union[str, Path]
+PathIsh = Path | str
 
 
 def link(*, url: PathIsh, title: str | None) -> str:
@@ -118,7 +114,7 @@ class Quoted:
         return ''.join(': ' + x for x in self.body.splitlines(keepends=True))
 
 
-Body = Union[str, Quoted]
+Body = str | Quoted
 
 
 # TODO priority
@@ -220,7 +216,7 @@ def asorgoutline(
 
 
 T = TypeVar('T')
-Lazy = Union[T, Callable[[], T]]
+Lazy: TypeAlias = T | Callable[[], T]
 
 
 @dataclass

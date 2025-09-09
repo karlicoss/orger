@@ -6,10 +6,10 @@ import json
 import sys
 from argparse import ArgumentParser, Namespace
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from pathlib import Path
 from subprocess import check_call
-from typing import Any, Callable, Union
+from typing import Any
 
 from .atomic_append import assert_not_edited, atomic_append_check
 from .common import orger_user_dir
@@ -103,7 +103,7 @@ class Mirror(OrgView):
 '''.lstrip()
 
     # allowed to be either for Mirror
-    Results = Iterable[Union[OrgNode, OrgWithKey]]
+    Results = Iterable[OrgNode | OrgWithKey]
 
     @classmethod
     def main(cls, setup_parser=None) -> None:
