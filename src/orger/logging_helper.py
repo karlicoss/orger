@@ -22,16 +22,24 @@ def test() -> None:
 
     M("   Logging module's defaults are not great:")
     l = logging.getLogger('default_logger')
-    l.error("For example, this should be logged as error. But it's not even formatted properly, doesn't have logger name or level")
+    l.error(
+        "For example, this should be logged as error. But it's not even formatted properly, doesn't have logger name or level"
+    )
 
     M("\n   The reason is that you need to remember to call basicConfig() first. Let's do it now:")
     logging.basicConfig()
-    l.error("OK, this is better. But the default format kinda sucks, I prefer having timestamps and the file/line number")
+    l.error(
+        "OK, this is better. But the default format kinda sucks, I prefer having timestamps and the file/line number"
+    )
 
-    M("\n   Also exception logging is kinda lame, doesn't print traceback by default unless you remember to pass exc_info:")
+    M(
+        "\n   Also exception logging is kinda lame, doesn't print traceback by default unless you remember to pass exc_info:"
+    )
     l.exception(ex)  # type: ignore[possibly-undefined]
 
-    M("\n\n    With make_logger you get a reasonable logging format, colours (via colorlog library) and other neat things:")
+    M(
+        "\n\n    With make_logger you get a reasonable logging format, colours (via colorlog library) and other neat things:"
+    )
 
     ll = make_logger('test')  # No need for basicConfig!
     ll.info("default level is INFO")
@@ -41,7 +49,9 @@ def test() -> None:
     M("\n    Exceptions print traceback by default now:")
     ll.exception(ex)
 
-    M("\n    You can (and should) use it via regular logging.getLogger after that, e.g. let's set logging level to DEBUG now")
+    M(
+        "\n    You can (and should) use it via regular logging.getLogger after that, e.g. let's set logging level to DEBUG now"
+    )
     logging.getLogger('test').setLevel(logging.DEBUG)
     ll.debug("... now debug messages are also displayed")
 
@@ -133,7 +143,7 @@ def _setup_handlers_and_formatters(name: str) -> None:
         # try colorlog first, so user gets nice colored logs
         import colorlog
     except ModuleNotFoundError:
-        warnings.warn("You might want to 'pip install colorlog' for nice colored logs")
+        warnings.warn("You might want to 'pip install colorlog' for nice colored logs", stacklevel=2)
         formatter = logging.Formatter(FORMAT_NOCOLOR)
     else:
         # log_color/reset are specific to colorlog
@@ -220,7 +230,7 @@ def get_enlighten():
     try:
         import enlighten  # type: ignore[import-not-found]
     except ModuleNotFoundError:
-        warnings.warn("You might want to 'pip install enlighten' for a nice progress bar")
+        warnings.warn("You might want to 'pip install enlighten' for a nice progress bar", stacklevel=2)
 
         return Mock()
 

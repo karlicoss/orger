@@ -20,7 +20,9 @@ class RedditView(Queue):
                     # eh, can't guess the type of lambda??
                     heading=lambda s=s: dt_heading(  # type: ignore[misc]
                         s.created,
-                        ('[#A] *DEAD*' if self.is_dead_url(s.url) else '') + link(title=s.title, url=s.url) + f' /r/{s.subreddit}',
+                        ('[#A] *DEAD*' if self.is_dead_url(s.url) else '')
+                        + link(title=s.title, url=s.url)
+                        + f' /r/{s.subreddit}',
                     ),
                     body=Quoted(s.text),
                 ),

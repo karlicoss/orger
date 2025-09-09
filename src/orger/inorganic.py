@@ -70,7 +70,7 @@ def timestamp(dt: Dateish, *, inactive: bool = False, active: bool = False) -> s
     """
     style: TimestampStyle
     if inactive and active:
-        warnings.warn(f"Please specify one of 'inactive' or 'active' for {dt}")
+        warnings.warn(f"Please specify one of 'inactive' or 'active' for {dt}", stacklevel=2)
         # arbitrary choice: we let active win. So the uses sees the offending entry on agenda
         style = TimestampStyle.ACTIVE
     elif inactive:

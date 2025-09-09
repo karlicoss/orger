@@ -41,7 +41,11 @@ class TwitterView(Mirror):
         else:
             dd = dtime.replace(year=today.year)
             text = '  ' + text if text.startswith('@') else text  # pad replies a bit
-            heading = timestamp(dd.date(), active=True) + ' ' + f"{link(title='TW', url=url)} at {timestamp(dtime, inactive=True)} {text}"
+            heading = (
+                timestamp(dd.date(), active=True)
+                + ' '
+                + f"{link(title='TW', url=url)} at {timestamp(dtime, inactive=True)} {text}"
+            )
             return node(
                 heading=heading,
                 tags=['ttweet'],

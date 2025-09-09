@@ -21,7 +21,7 @@ def should_use_pandoc() -> bool:
 
     import warnings
 
-    warnings.warn("Install 'pandoc' to convert HTML to org-mode. See https://pandoc.org/installing.html")
+    warnings.warn("Install 'pandoc' to convert HTML to org-mode. See https://pandoc.org/installing.html", stacklevel=2)
     return False
 
 

@@ -30,7 +30,8 @@ def dt_heading(dt: datetime | None, heading: str) -> str:
     # todo come up with a better way of reporting this..
     if tz not in _timezones and len(_timezones) > 0:
         warnings.warn(
-            f"Seems that a mixture of timezones is used. Org-mode doesn't support timezones, so this might end up confusing: {_timezones} {tz} {heading}"
+            f"Seems that a mixture of timezones is used. Org-mode doesn't support timezones, so this might end up confusing: {_timezones} {tz} {heading}",
+            stacklevel=2,
         )
     _timezones.add(tz)
 
@@ -52,7 +53,7 @@ def todo(dt: datetime, **kwargs):
     props = kwargs.get('properties', {})
     props.update({'CREATED': timestamp(dt, inactive=True)})
     kwargs['properties'] = props
-    return OrgNode(
+    return OrgNode(  # ty: ignore[missing-argument]
         todo='TODO',
         scheduled=dt.date(),
         **kwargs,

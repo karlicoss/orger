@@ -110,7 +110,9 @@ class Mirror(OrgView):
         p = cls.parser()
         og = p.add_mutually_exclusive_group()
         og.add_argument('--to', type=Path, default=Path(cls.name() + '.org'), help='Filename to output')
-        og.add_argument('--stdout', action='store_true', help='pass to print output to stdout, useful for testing/debugging')
+        og.add_argument(
+            '--stdout', action='store_true', help='pass to print output to stdout, useful for testing/debugging'
+        )
         if setup_parser is not None:
             setup_parser(p)
 
@@ -265,8 +267,12 @@ class Queue(OrgView):
         p = cls.parser()
         og = p.add_mutually_exclusive_group()
         og.add_argument('--to', type=Path, default=Path(cls.name() + '.org'), help='file where new items are added')
-        og.add_argument('--stdout', action='store_true', help='pass to print output to stdout, useful for testing/debugging')
-        p.add_argument('--state', type=Path, default=default_state, help='state file for keeping track of handled items')
+        og.add_argument(
+            '--stdout', action='store_true', help='pass to print output to stdout, useful for testing/debugging'
+        )
+        p.add_argument(
+            '--state', type=Path, default=default_state, help='state file for keeping track of handled items'
+        )
         p.add_argument('--init', action='store_true')  # todo not sure if I really need it?
         p.add_argument('--dry-run', action='store_true', help='Run without modifying the state file')
         if setup_parser is not None:

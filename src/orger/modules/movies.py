@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from my.media.movies import get_movies
+from my.media.imdb import get_movies
 
 from orger import Mirror
 from orger.common import dt_heading
