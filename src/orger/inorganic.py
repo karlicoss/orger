@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from enum import Enum
 from pathlib import Path
-from typing import TypeAlias, TypeVar
 
 
 # todo use mypy literals later?
@@ -20,9 +19,9 @@ class TimestampStyle(Enum):
     NONE = ()
 
 
-Dateish = datetime | date
+type Dateish = datetime | date
 
-PathIsh = Path | str
+type PathIsh = Path | str
 
 
 def link(*, url: PathIsh, title: str | None) -> str:
@@ -114,7 +113,7 @@ class Quoted:
         return ''.join(': ' + x for x in self.body.splitlines(keepends=True))
 
 
-Body = str | Quoted
+type Body = str | Quoted
 
 
 # TODO priority
@@ -215,8 +214,7 @@ def asorgoutline(
     return '\n'.join(lines)
 
 
-T = TypeVar('T')
-Lazy: TypeAlias = T | Callable[[], T]
+type Lazy[T] = T | Callable[[], T]
 
 
 @dataclass
@@ -288,11 +286,11 @@ def asorgtime(t: datetime) -> str:
 
 
 # meh
-def _from_lazy(x: Lazy[T]) -> T:
+def _from_lazy[T](x: Lazy[T]) -> T:
     if callable(x):
         return x()
     else:
-        return x
+        return x  # ty: ignore[invalid-return-type]
 
 
 def maketrans(d: dict[str, str]) -> dict[int, str]:

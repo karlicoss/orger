@@ -166,7 +166,7 @@ class Mirror(OrgView):
         from .inorganic import _from_lazy
 
         def pick_heading(root: OrgNode, text: str) -> OrgNode | None:
-            if text in _from_lazy(root.heading):
+            if text in _from_lazy(root.heading):  # ty: ignore[unsupported-operator]
                 return root
             for ch in root.children:
                 ch_res = pick_heading(ch, text)

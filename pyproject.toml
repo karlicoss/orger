@@ -6,7 +6,7 @@ dependencies = [
     "platformdirs", # to keep state files
     "atomicwrites", # to safely append data to a file
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 
 ## these need to be set if you're planning to upload to pypi
 description = "Converts data into org-mode"
@@ -37,7 +37,7 @@ typecheck = [
     { include-group = "testing" },
     "mypy",
     "lxml",  # for mypy coverage
-    "ty>=0.0.1a20",
+    "ty>=0.0.1a21",
 
     "orger[optional]",
 ]
