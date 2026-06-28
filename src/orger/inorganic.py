@@ -288,9 +288,9 @@ def asorgtime(t: datetime) -> str:
 # meh
 def _from_lazy[T](x: Lazy[T]) -> T:
     if callable(x):
-        return x()
+        return x()  # ty: ignore[call-top-callable, invalid-return-type]
     else:
-        return x  # ty: ignore[invalid-return-type]
+        return x
 
 
 def maketrans(d: dict[str, str]) -> dict[int, str]:

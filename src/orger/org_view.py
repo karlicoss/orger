@@ -9,7 +9,7 @@ from collections import Counter
 from collections.abc import Callable, Iterable
 from pathlib import Path
 from subprocess import check_call
-from typing import Any
+from typing import Any, cast
 
 from .atomic_append import assert_not_edited, atomic_append_check
 from .common import orger_user_dir
@@ -25,8 +25,7 @@ OrgWithKey = tuple[Key, OrgNode]
 
 
 _style_map: dict[str, TimestampStyle] = {
-    k.lower(): v  # type: ignore[misc]
-    for k, v in TimestampStyle._member_map_.items()
+    k.lower(): cast(TimestampStyle, v) for k, v in TimestampStyle._member_map_.items()
 }
 
 
@@ -166,7 +165,7 @@ class Mirror(OrgView):
         from .inorganic import _from_lazy
 
         def pick_heading(root: OrgNode, text: str) -> OrgNode | None:
-            if text in _from_lazy(root.heading):  # ty: ignore[unsupported-operator]
+            if text in _from_lazy(root.heading):
                 return root
             for ch in root.children:
                 ch_res = pick_heading(ch, text)
@@ -216,9 +215,11 @@ class Queue(OrgView):
 
         appender: Callable[[str], Any]
         if stdout:
-            appender = lambda s: sys.stdout.write(s)
+            appender = sys.stdout.write
         else:
-            appender = lambda s: atomic_append_check(to, s)
+
+            def appender(s: str) -> None:
+                atomic_append_check(to, s)
 
             if not to.exists() and not init:
                 err = RuntimeError(f"{to} doesn't exist! Try running with --init")

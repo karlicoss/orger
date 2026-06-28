@@ -53,7 +53,7 @@ def todo(dt: datetime, **kwargs):
     props = kwargs.get('properties', {})
     props.update({'CREATED': timestamp(dt, inactive=True)})
     kwargs['properties'] = props
-    return OrgNode(  # ty: ignore[missing-argument]
+    return OrgNode(
         todo='TODO',
         scheduled=dt.date(),
         **kwargs,

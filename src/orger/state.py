@@ -114,10 +114,10 @@ def test_state(tmp_path: Path) -> None:
     assert mtime() == m2
 
     # shouldn't trigger because item is already present
-    state.feed('a', 'err', lambda: None.whatever)  # type: ignore[attr-defined]
+    state.feed('a', 'err', lambda: None.whatever)  # type: ignore[attr-defined]  # ty: ignore[unresolved-attribute]
 
     with pytest.raises(AttributeError):
-        state.feed('hiii', 'error 2 ', lambda: None.whatever)  # type: ignore[attr-defined]
+        state.feed('hiii', 'error 2 ', lambda: None.whatever)  # type: ignore[attr-defined]  # ty: ignore[unresolved-attribute]
 
     assert mtime() == m2  # shouldn't corrupt or modify the file
 

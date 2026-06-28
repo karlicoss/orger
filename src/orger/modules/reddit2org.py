@@ -34,7 +34,7 @@ class RedditView(Queue):
         # TODO this is probably easier to control via env variables, more malleable
         if not self.cmdline_args.mark_dead:
             return False
-        from kython.knetwork import is_alive  # type: ignore[import-not-found]
+        from kython.knetwork import is_alive  # type: ignore[import-not-found]  # ty: ignore[unresolved-import]
 
         return is_alive(url)
         # todo should somehow track handle DELETED comments...
