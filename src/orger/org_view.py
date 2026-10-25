@@ -11,10 +11,11 @@ from pathlib import Path
 from subprocess import check_call
 from typing import Any, cast
 
+import kloggy
+
 from .atomic_append import assert_not_edited, atomic_append_check
 from .common import orger_user_dir
 from .inorganic import OrgNode, TimestampStyle
-from .logging_helper import make_logger
 from .state import JsonState
 
 # TODO tests for determinism? not sure where should they be...
@@ -41,7 +42,7 @@ class OrgView:
     ) -> None:
         self.cmdline_args: Namespace = cmdline_args if cmdline_args is not None else Namespace()
         tag = self.name() if self.logger_tag is None else self.logger_tag
-        self.logger = make_logger(tag, level='debug')
+        self.logger = kloggy.get_logger(f'orger.{tag}')
 
         tool = Path(inspect.getfile(self.__class__)).absolute()
         self.file_header = file_header if file_header is not None else self.DEFAULT_HEADER.format(tool=tool)

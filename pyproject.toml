@@ -5,6 +5,8 @@ name = "orger"
 dependencies = [
     "platformdirs",  # to keep state files
     "atomicwrites",  # to safely append data to a file
+    "kloggy",
+    "typing_extensions; python_version < '3.13'",  # deprecated decorator on Python 3.12
 ]
 requires-python = ">=3.12"
 
@@ -22,9 +24,7 @@ Homepage = "https://github.com/karlicoss/orger"
 
 
 [project.optional-dependencies]
-optional = [
-    "colorlog",
-]
+optional = []  # Keep orger[optional] installs working for backwards compatibility.
 
 [dependency-groups]
 # TODO: not sure, on the one hand could just use 'standard' dev dependency group
@@ -38,8 +38,6 @@ typecheck = [
     "mypy",
     "lxml", # not used by default but keeping for convenience of running mypy html coverage
     "ty",
-
-    "orger[optional]",
 
     { include-group = "testing" },
 ]

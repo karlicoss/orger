@@ -1,10 +1,19 @@
 from __future__ import annotations
 
+import logging
+import sys
 import traceback
 import warnings
 from datetime import datetime, tzinfo
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+import kloggy
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
 
 from .inorganic import OrgNode, TimestampStyle, timestamp, timestamp_with_style
 
@@ -67,5 +76,12 @@ def orger_user_dir() -> Path:
 
 
 if not TYPE_CHECKING:
-    # legacy imports for bwd compatibility
-    from .logging_helper import LazyLogger, setup_logger  # noqa: F401
+
+    @deprecated('Use kloggy.get_logger(name, default_level=level) instead.')
+    def LazyLogger(name: str, *, level: int | str | None = None) -> logging.Logger:
+        return kloggy.get_logger(name, default_level=level)
+
+    @deprecated('Use kloggy.get_logger(name, default_level=level) instead.')
+    def setup_logger(logger: str | logging.Logger, *, level: int | str | None = None) -> None:
+        name = logger if isinstance(logger, str) else logger.name
+        kloggy.get_logger(name, default_level=level)

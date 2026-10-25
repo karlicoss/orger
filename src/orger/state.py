@@ -6,6 +6,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+import kloggy
 from atomicwrites import atomic_write  # type: ignore[import-untyped]
 
 State = dict[str, Any]
@@ -20,7 +21,7 @@ class JsonState:
         *,
         dry_run: bool = False,
         default: State | None = None,
-        logger: logging.Logger = logging.getLogger('orger'),  # noqa: B008
+        logger: logging.Logger = kloggy.get_logger(__name__),  # noqa: B008
     ) -> None:
         self.path = Path(path)
         self.dry_run = dry_run

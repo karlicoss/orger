@@ -7,7 +7,11 @@ import shutil
 from functools import lru_cache
 from subprocess import PIPE, run
 
+import kloggy
+
 from .common import settings
+
+logger = kloggy.get_logger(__name__)
 
 
 @lru_cache(1)
@@ -25,7 +29,7 @@ def should_use_pandoc() -> bool:
     return False
 
 
-def to_org(data: str, *, from_: str, logger=logging) -> str:
+def to_org(data: str, *, from_: str, logger: logging.Logger = logger) -> str:
     if not should_use_pandoc():
         return data
     # TODO batch??
