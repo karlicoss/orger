@@ -13,6 +13,8 @@ from orger.inorganic import Quoted, link, node
 class RedditView(Queue):
     def get_items(self) -> Queue.Results:
         for s in saved():
+            if isinstance(s, Exception):
+                raise s
             yield (
                 s.id,
                 node(

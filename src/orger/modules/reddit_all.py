@@ -6,7 +6,7 @@ Read-only reddit mirror of comments, submissions and upvoted posts; everything e
 from my.reddit.all import comments, submissions, upvoted
 
 from orger import Mirror
-from orger.common import dt_heading
+from orger.common import dt_heading, error
 from orger.inorganic import Quoted, link, node
 
 
@@ -15,7 +15,9 @@ class RedditAllView(Mirror):
         yield node(
             'Submissions',
             children=[
-                node(  # TODO can also be iterable?
+                error(s)
+                if isinstance(s, Exception)
+                else node(  # TODO can also be iterable?
                     dt_heading(s.created, link(title=s.title, url=s.url)),
                     body=Quoted(s.text),
                 )
@@ -25,7 +27,9 @@ class RedditAllView(Mirror):
         yield node(
             'Comments',  # todo parent thread??
             children=[
-                node(
+                error(c)
+                if isinstance(c, Exception)
+                else node(
                     dt_heading(c.created, link(title=c.url, url=c.url)),
                     body=Quoted(c.text),
                 )
@@ -35,7 +39,9 @@ class RedditAllView(Mirror):
         yield node(
             'Upvoted',
             children=[
-                node(
+                error(u)
+                if isinstance(u, Exception)
+                else node(
                     dt_heading(u.created, link(title=u.title, url=u.url)),
                     body=Quoted(u.text),
                 )
