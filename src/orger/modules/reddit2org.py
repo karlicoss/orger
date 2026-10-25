@@ -14,14 +14,15 @@ class RedditView(Queue):
     def get_items(self) -> Queue.Results:
         for s in saved():
             yield (
-                s.sid,
+                s.id,
                 node(
                     # need to make heading lazy due to is_alive
                     # eh, can't guess the type of lambda??
                     heading=lambda s=s: dt_heading(  # type: ignore[misc]
                         s.created,
                         ('[#A] *DEAD*' if self.is_dead_url(s.url) else '')
-                        + link(title=s.title, url=s.url)
+                        # rexport provides title, but HPI's Save protocol omits it.
+                        + link(title=s.title, url=s.url)  # ty: ignore[unresolved-attribute]
                         + f' /r/{s.subreddit}',
                     ),
                     body=Quoted(s.text),
