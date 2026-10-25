@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import datetime
+import datetime as dt
 from collections.abc import Iterable
 
 # shit... this is annoying, need to 'nudge' the config so it picks up all.py override?
@@ -10,7 +10,7 @@ from orger import Mirror
 from orger.common import dt_heading, error
 from orger.inorganic import OrgNode, link, node, timestamp
 
-today = datetime.datetime.now()
+today = dt.datetime.now()
 
 Tweet = twi.Tweet
 
