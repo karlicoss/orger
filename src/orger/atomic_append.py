@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-import logging
 from os.path import lexists
 from pathlib import Path
+
+import kloggy
+
+logger = kloggy.get_logger(__name__)
 
 
 def atomic_append_raw(
@@ -14,7 +17,11 @@ def atomic_append_raw(
     enc = data.encode('utf8')
     # TODO handle windows properly? https://www.notthewizard.com/2014/06/17/are-files-appends-really-atomic/
     if len(enc) > 4096:
-        logging.warning("writing out %s might be non-atomic (see https://stackoverflow.com/a/1154599/706389)", data)  # noqa: LOG015
+        logger.warning(
+            "writing out %d bytes to %s might be non-atomic (see https://stackoverflow.com/a/1154599/706389)",
+            len(enc),
+            path,
+        )
     with path.open('ab') as fo:
         fo.write(enc)
 

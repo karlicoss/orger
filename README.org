@@ -119,6 +119,15 @@ print(orger.Queue.__doc__)
 
    : ./orger_module.py --to /path/to/output.org --state /path/to/state.json
 
+* Logging
+
+Orger uses [[https://github.com/karlicoss/kloggy][kloggy]] and defaults to =INFO= logging.
+Enable debug output with:
+
+: KLOGGY_LEVEL=orger=debug python3 -m orger.modules.instapaper --stdout
+
+To target one view, use e.g. =KLOGGY_LEVEL=orger.Github=debug=.
+
 * FAQ
 - Why are the files output by some modules read only?
 
