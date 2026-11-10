@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import re
 import textwrap
 import warnings
@@ -330,7 +329,9 @@ def _sanitize_body(text: str) -> str:
     """
     # TODO hmm. maybe just tabulating with 1 space is enough?...
     # todo don't really remember why we replace \r\n specifically here?
-    text = text.replace('\r\n', os.linesep)
+    # NOTE: normalize to '\n' unconditionally (not os.linesep): org files use LF,
+    # and on Windows an embedded '\r' would otherwise be doubled to '\r\r\n' on write.
+    text = text.replace('\r\n', '\n')
     return ''.join(' ' + l for l in text.splitlines(keepends=True))
 
 
