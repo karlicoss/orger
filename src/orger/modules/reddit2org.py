@@ -24,7 +24,7 @@ class RedditView(Queue):
                         s.created,
                         ('[#A] *DEAD*' if self.is_dead_url(s.url) else '')
                         # rexport provides title, but HPI's Save protocol omits it.
-                        + link(title=s.title, url=s.url)  # ty: ignore[unresolved-attribute]
+                        + link(title=s.title, url=s.url)  # ty: ignore[missing-union-attribute]
                         + f' /r/{s.subreddit}',
                     ),
                     body=Quoted(s.text),
@@ -37,7 +37,7 @@ class RedditView(Queue):
         # TODO this is probably easier to control via env variables, more malleable
         if not self.cmdline_args.mark_dead:
             return False
-        from kython.knetwork import is_alive  # type: ignore[import-not-found]  # ty: ignore[unresolved-import]
+        from kython.knetwork import is_alive  # type: ignore[import-not-found]  # ty: ignore[import-not-found]
 
         return is_alive(url)
         # todo should somehow track handle DELETED comments...
