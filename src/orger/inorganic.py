@@ -288,7 +288,7 @@ def asorgtime(t: datetime) -> str:
 # meh
 def _from_lazy[T](x: Lazy[T]) -> T:
     if callable(x):
-        return x()  # ty: ignore[invalid-return-type]
+        return x()  # ty: ignore[invalid-explicit-return]
     else:
         return x
 
